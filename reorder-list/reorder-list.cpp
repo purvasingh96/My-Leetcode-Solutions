@@ -46,8 +46,8 @@ public:
             - create two LL
             - reverse 2nd half of LL
             - Merge sort
-        TC:
-        SC:
+        TC: O(n) + O(n/2) + O(n/2) = O(n)
+        SC: O(1)
         */
         
         ListNode* slow=head;
