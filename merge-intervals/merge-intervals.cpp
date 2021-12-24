@@ -2,6 +2,8 @@
 class Solution {
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        // TC: O(nlogn) + O(n), dominant: O(nlogn)
+        // SC: O(logn), sorting
         
         sort(intervals.begin(), intervals.end(), [](const vector<int>& a, const vector<int>&b) {
            if(a[0]!=b[0]) return a[0] < b[0];
