@@ -2,8 +2,8 @@ class Solution {
 public:
     bool carPooling(vector<vector<int>>& trips, int capacity) {
         /*
-        TC: 
-        
+        TC: O(max(N, 1001))
+        SC: O(1001) => O(1)
         */
         vector<int> total_passengers(1001, 0);
         
