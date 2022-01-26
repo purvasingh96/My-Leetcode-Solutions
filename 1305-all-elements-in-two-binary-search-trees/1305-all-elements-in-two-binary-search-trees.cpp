@@ -33,15 +33,7 @@ vector<int> merge(vector<int> list1, vector<int> list2) {
 	    l2 = list1.size() < list2.size() ? list1:list2;
     } 
     
-        
-    for(auto x:l1) {
-        cout<<x<<" ";
-    }
-    
-    for(auto x:l2) {
-        cout<<x<<" ";
-    }
-    
+
 	
 	vector<int> res;
 	
