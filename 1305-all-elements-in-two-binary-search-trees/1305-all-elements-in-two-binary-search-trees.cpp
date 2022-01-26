@@ -10,82 +10,33 @@
  * };
  */
 class Solution {
+
 public:
-    void inorder(TreeNode* root, vector<int>& traversal) {
-	if(!root) return;
-	if(root) {
-		inorder(root->left, traversal);
-		traversal.push_back(root->val);
-		inorder(root->right, traversal);	
-}
-
-}
-
-vector<int> merge(vector<int> list1, vector<int> list2) {
-		
-	int i = 0, j=0;
+    void pushLeft(stack<TreeNode*>& st, TreeNode* root) {
+        while(root!=NULL) {
+            st.push(root);
+            root=root->left;
+        }
+    }
     
-    vector<int> l1 = list1;
-    vector<int> l2 = list2;
-
-    if(l1.size() != l2.size()) {
-        l1 = list1.size() > list2.size() ? list1:list2;
-	    l2 = list1.size() < list2.size() ? list1:list2;
-    } 
-    
-
-	
-	vector<int> res;
-	
-    
-    
-	while(i < l1.size() && j < l2.size()) {
-		if(l1[i] < l2[j]) {
-			res.push_back(l1[i]);
-            i+=1;
-		} else if(l1[i] == l2[j]) {
-			res.push_back(l1[i]);
-            res.push_back(l1[i]);
-            i+=1;
-            j+=1;
-		} else {
-            res.push_back(l2[j]);
-			j+=1;
-		}
-
-	}
-    
-    if(i < l1.size()) {
+    vector<int> getAllElements(TreeNode* root1, TreeNode* root2) {
+        stack<TreeNode*> s1, s2;
+        vector<int> res;
         
-        while(i<l1.size()) {
-            res.push_back(l1[i]);
-            i+=1;
+        pushLeft(s1, root1);
+        pushLeft(s2, root2);
+        
+        while(!s1.empty() || !s2.empty()) {
+            stack<TreeNode*>& s = s1.empty()?s2 : s2.empty() ?  s1 : s1.top()->val < s2.top()->val ? s1:s2;
+            
+            TreeNode* n = s.top();
+            s.pop();
+            res.push_back(n->val);
+            pushLeft(s, n->right);
+            
         }
         
-    } else if(j < l2.size()) {
-        
-        while(j < l2.size()) {
-            res.push_back(l2[j]);
-            j+=1;
-        }
+        return res;
         
     }
-
-	return res;
-}
-
-vector<int> getAllElements(TreeNode* root1, TreeNode* root2) {
-	
-	vector<int> traversal1;
-    vector<int> traversal2;
-
-	inorder(root1, traversal1);
-	inorder(root2, traversal2);
-	
-    return merge(traversal1, traversal2);
-        
-    }
-
-
-
 };
