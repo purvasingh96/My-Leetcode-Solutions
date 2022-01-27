@@ -1,58 +1,33 @@
 class Solution {
 public:
-    string minRemoveToMakeValid(string s) {
-        stack<pair<int, char>> st;
+    string balanceString(string s, char open, char close) {
+        int balance=0;
+        string ans="";
         
         for(int i=0;i<s.length();i++) {
+            if(s[i] == open) {
+                balance+=1;
+            } 
             
-            if(s[i] == '(') {
-                
-                st.push(make_pair(i, '('));
-                
-            } else if(s[i] == ')') {
-                
-               if(st.empty()) {
-                   
-                   st.push(make_pair(i, ')'));
-                   
-               } else {
-                   
-                   auto top = st.top();
-                   
-                   if(top.second == ')') {
-                       
-                       st.push(make_pair(i, ')'));
-                       
-                   } else {
-                       
-                       st.pop();
-                       
-                   }
-                   
-               }
-                
+            if(s[i] == close) {
+                if(balance == 0) continue;
+                balance -= 1;
             }
             
+            ans += s[i];
         }
         
-        string ans = "";
+        return ans;
+    }
+    
+    
+    string minRemoveToMakeValid(string s) {
         
-        if(!st.empty()) {
-            
-            while(!st.empty()) {
-                
-                auto pos = st.top();
-                st.pop();
-                
-                s[pos.first] = '#';
-                
-            }
-            
-        }
-        
-        s.erase(remove(s.begin(), s.end(), '#'), s.end());
-        
-        return s;
+        string res = balanceString(s, '(', ')');
+        reverse(res.begin(), res.end());
+        res = balanceString(res, ')', '(');
+        reverse(res.begin(), res.end());
+        return res;
         
     }
 };
