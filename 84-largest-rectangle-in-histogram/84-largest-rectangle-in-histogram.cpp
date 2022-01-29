@@ -1,6 +1,10 @@
 class Solution {
 public:
     int largestRectangleArea(vector<int>& heights) {
+        // increasing monotonic queue
+        // TC: O(n)
+        // SC: O(n), only using queue
+        
         int max_area = 0;
         deque<int> q;
         q.push_back(-1);
@@ -32,12 +36,13 @@ public:
         
         while(q.back() != -1) {
             
-                    int cur_height = heights[q.back()];
-                    q.pop_back();
-                    int cur_width = (heights.size() - q.back() - 1);
-                    int cur_area = cur_height * cur_width;
+                int cur_height = heights[q.back()];
+                q.pop_back();
+                // formula changes here
+                int cur_width = (heights.size() - q.back() - 1);
+                int cur_area = cur_height * cur_width;
                     
-                    max_area = max(max_area, cur_area);
+                max_area = max(max_area, cur_area);
             
             
         }
