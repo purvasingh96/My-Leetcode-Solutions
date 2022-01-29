@@ -8,21 +8,15 @@ public:
         
         for(int right=0;right<s.length();right++) {
             
-            if(m[s[right]] == 1)  {
+            if(m.find(s[right]) != m.end())  {
                 
-                while(left <= right && m[s[right]] == 1) {
-                    
-                    m[s[left]] -= 1;
-                    left+=1;
-                    
-                    
-                }
+                left = max(m[s[right]], left);
                 
                 
             }
             
             
-            m[s[right]] += 1;
+            m[s[right]] = right+1;
             int cur_len = right-left+1;
             max_len = max(max_len, cur_len);
             
