@@ -1,13 +1,30 @@
 class Solution {
 public:
     char findTheDifference(string s, string t) {
-        sort(s.begin(), s.end());
-        sort(t.begin(), t.end());
+        vector<int> bucket1(26, -1);
+        vector<int> bucket2(26, -1);
         
-        for(auto int i=0;i<s.length();i++) {
-            if(s[i]!=t[i]) return t[i];
+        for(auto c:s) {
+            bucket1[(c - 'a')] +=1;
         }
         
-        return t[t.length()-1];        
+        for(auto c:t) {
+            bucket2[(c - 'a')] +=1;
+        }
+        
+        for(int i=0;i<26;i++) {
+            
+            if(bucket1[i]!=bucket2[i]) {
+                char k = (i+'a');
+                return k;
+            }
+            
+        }
+        
+        
+        
+        return t[t.length()-1];
+        
+        
     }
 };
