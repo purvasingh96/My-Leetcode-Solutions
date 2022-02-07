@@ -1,16 +1,13 @@
 class Solution {
 public:
     char findTheDifference(string s, string t) {
-       unordered_map<int, int> m;
-        for(auto c:s){
-            m[c]+=1;
+        sort(s.begin(), s.end());
+        sort(t.begin(), t.end());
+        
+        for(auto int i=0;i<s.length();i++) {
+            if(s[i]!=t[i]) return t[i];
         }
         
-        for(auto c:t){
-            m[c]-=1;
-            if(m[c]==0) m.erase(c);
-        }
-        
-        return m.begin()->first;
+        return t[t.length()-1];        
     }
 };
