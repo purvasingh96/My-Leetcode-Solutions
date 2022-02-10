@@ -4,22 +4,19 @@ public:
         
         int res=0;
         map<int, int> m;
-        
-        for(int i=1;i<nums.size();i++) {
-            nums[i] += nums[i-1];
-        }
+        int prefix_sum = 0;
         
         for(int i=0;i<nums.size();i++) {
             
-            if(nums[i] == k) res+=1;
-                
-              if(m.find((nums[i] - k))!=m.end()) {
-                  
-                  res += m[(nums[i] - k)];
-                  
-              }
+            m[prefix_sum]+=1;
             
-            m[nums[i]] += 1;
+            prefix_sum += nums[i];
+            
+            if(m.find(prefix_sum - k)!=m.end()) {
+                
+                res += m[prefix_sum - k];
+                
+            }
                 
             
         }
