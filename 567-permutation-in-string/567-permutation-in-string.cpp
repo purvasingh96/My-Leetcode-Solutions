@@ -1,40 +1,46 @@
 class Solution {
 public:
-    bool checkInclusion(string s1, string s2) {
-        vector<int> m(26, 0);
-        vector<int> t(26, 0);
+    bool checkPermutation(vector<int> s1, vector<int> s2) {
         
-        for(auto c:s1) {
+        for(int i=0;i<26;i++) {
             
-            t[c - 'a'] += 1;
+            if(s1[i] != s2[i]) return false;
+        }
+        
+        return true;
+        
+    }
+    
+    
+    bool checkInclusion(string s1, string s2) {
+        if(s1.length() > s2.length()) return false;
+        
+        vector<int> s1_map(26, 0);
+        
+        for(int i=0;i<s1.length();i++){
+            
+            s1_map[(s1[i] - 'a')] += 1;
             
         }
         
-        int left=0, right=0;
         
-        while(right < s2.length()) {
+        for(int i=0;i<=(s2.length() - s1.length());i++) {
             
-            m[s2[right] - 'a'] += 1;
+            vector<int> s2_map(26, 0);
             
-            if(m[s2[right] - 'a'] > t[s2[right] - 'a']) {
+            for(int j=0;j<s1.length();j++) {
                 
-                int c = s2[right] - 'a';
-                
-                while(left <= right && m[c] > t[c]) {
-                    
-                    m[s2[left] - 'a'] -= 1;
-                    left += 1;
-                    
-                }
+                s2_map[(s2[i+j] - 'a')] += 1;
                 
             }
             
-            if(right - left + 1 == s1.length()) return true;
+            if(checkPermutation(s1_map, s2_map)) return true;
             
-            right+=1;
             
         }
         
         return false;
+        
+        
     }
 };
