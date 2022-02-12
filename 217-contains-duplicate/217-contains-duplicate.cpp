@@ -1,12 +1,8 @@
 class Solution {
 public:
     bool containsDuplicate(vector<int>& nums) {
-        set<int> visited;
+        set<int> visited(nums.begin(), nums.end());
         
-        for(auto x:nums) {
-            if(visited.find(x) != visited.end()) return true;
-            visited.insert(x);
-        }
-        return false;
+        return visited.size() < nums.size();
     }
 };
