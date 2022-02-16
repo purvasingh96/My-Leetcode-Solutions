@@ -17,10 +17,9 @@ public:
         ListNode* curr = head;
         ListNode* prev = NULL;
         
-        while(curr!=NULL) {
+        while(curr!=NULL && curr->next!=NULL) {
             
             ListNode* temp = curr->next;
-            if(temp==NULL) break;
             curr->next = temp->next;
             temp->next = curr;
             if(prev!=NULL) prev->next = temp;
