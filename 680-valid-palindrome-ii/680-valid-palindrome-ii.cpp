@@ -18,7 +18,9 @@ public:
             if(s[left] != s[right]) {
                 
                 string a = s.substr(left, (right-left));
-                string b = s.substr(left+1, (right-left));
+                string b = a;
+                b.erase(0, 1);
+                b+=s[right];
                 
                 return (checkPal(a) || checkPal(b));
                 
