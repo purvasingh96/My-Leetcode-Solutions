@@ -9,29 +9,19 @@
  */
 class Solution {
 public:
-    bool find(TreeNode* root, int p, int q) {
-        if(!root) return false;
-        if(root->val == p || root->val == q) return true;
-        
-        return (find(root->left, p, q) || find(root->right, p, q));
-    }
     
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(!root) return root;
-        if(root->val == p->val || root->val ==  q->val) return root;
+        if(!root) return NULL;
         
-        bool left = find(root->left, p->val, q->val);
-        bool right = find(root->right, p->val, q->val);
+        if(root==p || root==q) return root;
+        
+        auto left = lowestCommonAncestor(root->left, p, q);
+        auto right = lowestCommonAncestor(root->right, p, q);
         
         if(left && right) return root;
         
-        else if(left && !right) {
-            return lowestCommonAncestor(root->left, p, q);
-        }
-        
-       
-        return lowestCommonAncestor(root->right, p, q);
-        
+        if(left && !right) return left;
+        else return right;
         
         
     }
