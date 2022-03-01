@@ -9,20 +9,47 @@
  */
 class Solution {
 public:
-    
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(!root) return NULL;
+        stack<TreeNode*> st;
+        map<TreeNode*, TreeNode*> parent;
         
-        if(root==p || root==q) return root;
+        parent[root]=NULL;
+        st.push(root);
         
-        auto left = lowestCommonAncestor(root->left, p, q);
-        auto right = lowestCommonAncestor(root->right, p, q);
+        while((parent.find(p)==parent.end()) || parent.find(q)==parent.end()) {
+            
+            TreeNode* top = st.top();
+            st.pop();
+            
+            if(top->left) {
+                
+                parent[top->left] = top;
+                st.push(top->left);
+            }
+            
+            if(top->right) {
+                
+                parent[top->right] = top;
+                st.push(top->right);
+                
+            }
+            
+        }
         
-        if(left && right) return root;
+        cout<<parent.size();
         
-        if(left && !right) return left;
-        else return right;
+        set<TreeNode*> p_ancestors;
         
+        while(p!=NULL) {
+            p_ancestors.insert(p);
+            p = parent[p];
+        }
+        
+        while(p_ancestors.find(q)==p_ancestors.end()) {
+            q = parent[q];
+        }
+        
+        return q;
         
     }
 };
