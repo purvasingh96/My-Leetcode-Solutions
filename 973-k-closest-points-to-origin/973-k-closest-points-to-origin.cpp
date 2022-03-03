@@ -1,86 +1,62 @@
 class Solution {
 public:
-    int getDist(vector<int> points) {
+      int getDist(vector<int> points) {
         int x = points[0];
         int y = points[1];
         return (pow(x, 2) + pow(y, 2));
     }
     
-    vector<vector<int>> splitDistances(vector<int>& remaining, int mid, vector<double>& distances) {
+    int pivotIdx(int left, int right) {
+        int idx = left + (rand()%(right - left + 1));
+        return idx;
+    }
+    
+    // parition, quickSelect
+    int partition(vector<vector<int>>& points, int left, int right) {
         
-        vector<vector<int>> res(2);
-        vector<int>& closer = res[0];
-        vector<int>& farther = res[1];
+        int partitionIdx = left;
+        int pi = pivotIdx(left, right);
+        vector<int> pivot = points[pi];
         
-        for(int i:remaining) {
-            if(distances[i] <= mid) {
-                closer.push_back(i);
-            } else {
-                farther.push_back(i);
+        swap(points[pi], points[right]);
+        
+        for(int i=left;i<right;i++) {
+            
+            if(getDist(points[i]) <= getDist(pivot)) {
+                
+                swap(points[partitionIdx], points[i]);
+                partitionIdx+=1;
+                
             }
+            
         }
         
-        return res;
+        swap(points[partitionIdx], points[right]);
+        return partitionIdx;
         
     }
     
+    
+    void quickSelect(vector<vector<int>>& points, int left, int right, int k) {
+        
+        while(left <= right) {
+            
+            int partitionIdx = partition(points, left, right);
+            
+            if(partitionIdx == k) return;
+            else if(partitionIdx < k) left = partitionIdx + 1;
+            else right = partitionIdx - 1;
+            
+        }
+        
+    }
+    
+    
     vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
         
-        vector<double> distance;
-        vector<int> remaining;
-        double low =0, high = 0;
-        
-        for(int i=0;i<points.size();i++) {
-            double d = getDist(points[i]);
-            distance.push_back(d);
-            high = max(high, d);
-            remaining.push_back(i);
-            
-        }
-        
-        vector<int> closest;
-        
-        while(k) {
-            
-            double mid = low + (high - low)/2;
-            vector<vector<int>> res = splitDistances(remaining, mid, distance);
-            
-            vector<int> closer = res[0];
-            vector<int> farther = res[1];
-            
-            if(closer.size() > k) {
-                remaining.swap(closer);
-                high = mid;
-            } else {
-                
-                k -= closer.size();
-                closest.insert(closest.end(), closer.begin(), closer.end());
-                remaining.swap(farther);
-                low=mid;
-                
-            }
-            
-        }
-        
-        vector<vector<int>> final_res;
-        
-        for(auto i:closest) {
-            final_res.push_back(points[i]);
-        }
-        return final_res;
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+        int left= 0, right=points.size()-1;
+        quickSelect(points, left, right, k);
+        return vector<vector<int>>(points.begin(), points.begin()+k);
         
     }
 };
