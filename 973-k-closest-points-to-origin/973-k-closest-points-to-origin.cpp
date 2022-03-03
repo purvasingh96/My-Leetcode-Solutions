@@ -6,34 +6,81 @@ public:
         return (pow(x, 2) + pow(y, 2));
     }
     
+    vector<vector<int>> splitDistances(vector<int>& remaining, int mid, vector<double>& distances) {
+        
+        vector<vector<int>> res(2);
+        vector<int>& closer = res[0];
+        vector<int>& farther = res[1];
+        
+        for(int i:remaining) {
+            if(distances[i] <= mid) {
+                closer.push_back(i);
+            } else {
+                farther.push_back(i);
+            }
+        }
+        
+        return res;
+        
+    }
+    
     vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
         
-        priority_queue<pair<int, int>> pq;
+        vector<double> distance;
+        vector<int> remaining;
+        double low =0, high = 0;
         
         for(int i=0;i<points.size();i++) {
+            double d = getDist(points[i]);
+            distance.push_back(d);
+            high = max(high, d);
+            remaining.push_back(i);
             
-            auto entry = make_pair(getDist(points[i]), i);
+        }
+        
+        vector<int> closest;
+        
+        while(k) {
             
-            if(pq.size() < k) {
-                pq.push(entry);
-                        
-            } else if(entry.first < pq.top().first) {
+            double mid = low + (high - low)/2;
+            vector<vector<int>> res = splitDistances(remaining, mid, distance);
+            
+            vector<int> closer = res[0];
+            vector<int> farther = res[1];
+            
+            if(closer.size() > k) {
+                remaining.swap(closer);
+                high = mid;
+            } else {
                 
-                pq.pop();
-                pq.push(entry);
+                k -= closer.size();
+                closest.insert(closest.end(), closer.begin(), closer.end());
+                remaining.swap(farther);
+                low=mid;
                 
             }
             
         }
         
-        vector<vector<int>> res;
+        vector<vector<int>> final_res;
         
-        while(pq.size()!=0) {
-            res.push_back(points[pq.top().second]);
-            pq.pop();
+        for(auto i:closest) {
+            final_res.push_back(points[i]);
         }
-        
-        return res;
+        return final_res;
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         
     }
 };
