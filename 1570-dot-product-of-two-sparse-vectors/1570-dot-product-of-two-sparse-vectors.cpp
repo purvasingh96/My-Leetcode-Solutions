@@ -14,20 +14,17 @@ public:
     int returnLen() {
         return n;
     }
-    
-    map<int, int> returnM() {
-        return m;
-    }
-    
+
     // Return the dotProduct of two sparse vectors
     int dotProduct(SparseVector& vec) {
         int res=0;
-        map<int, int> vec_map = vec.returnM();
         
-        for(int i=0;i<m.size();i++) {
-            if(m[i]!=0 && vec_map[i]!=0) {
-                res+= (m[i] * vec_map[i]);
+        for(auto x:m) {
+            
+            if(vec.m.find(x.first)!=vec.m.end()) {
+                res += (x.second*vec.m[x.first]);
             }
+            
         }
         
         return res;
