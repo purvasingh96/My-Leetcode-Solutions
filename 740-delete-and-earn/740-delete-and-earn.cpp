@@ -2,51 +2,46 @@ class Solution {
 public:
     int deleteAndEarn(vector<int>& nums) {
         
-        sort(nums.begin(), nums.end());
-        int left=0;
-        vector<int> dp(nums.size(), 0);
+        map<int, int> m;
+        for(auto x:nums) {
+            m[x] += x;
+        }
         
-        dp[0]=nums[0];
+        vector<int> arr;
         
-        for(int i=1;i<nums.size();i++) {
-            int left = i-1;
-            while(left >=0 && (nums[left] == nums[i] || nums[i]-nums[left] == 1)) {
-                left-=1;
-            }
+        for(auto x:m) {
+            arr.push_back(x.first);
+        }
+        
+        
+        sort(arr.begin(), arr.end());
+        
+        
+        for(auto x: arr){
+            cout<<x<<" ";
+        }
+        
+        int twoback = 0, oneback = m[arr[0]];
+        
+        for(int i=1;i<arr.size();i++) {
             
-            if(nums[i] == nums[i-1]) {
-                
-                
-                    int x = nums[i];
-                    while(i<nums.size() && nums[i]==nums[i-1]) {
-                        x+=nums[i];
-                        if(left<0) dp[i] = max(x, dp[i-1]);
-                        else dp[i] = max(dp[left]+x, dp[i-1]);
-                        i+=1;
-                    }
-                
-                i-=1;
-                
-                
-            }
+            int temp = oneback;
             
-            else if(nums[i] - nums[i-1] == 1) {
+            if(arr[i] == arr[i-1]+1) {
                 
-                if(left<0) dp[i] = max(nums[i], dp[i-1]);
-                 else dp[i] = max((nums[i] + dp[left]), dp[i-1]);
-                
+                oneback = max(oneback, twoback+m[arr[i]]);
                 
             } else {
                 
-                dp[i] = nums[i] + dp[i-1];
-                
-                
+                oneback += m[arr[i]];
                 
             }
             
+            twoback = temp;
+            
         }
         
-        return dp.back();
+        return oneback;
         
         
         
