@@ -29,28 +29,39 @@
  */
 class Solution {
 public:
-    void helper(vector<NestedInteger>& nums, int i, int& res, int depth) {
-        
-        if(nums[i].isInteger()) {
-            int x = nums[i].getInteger();
-            res += (x*depth);
-        }
-        
-        auto a = nums[i].getList();
-        if(a.size()!=0) {
-            for(int j=0;j<a.size();j++) {
-                helper(a, j, res, depth+1);
-            }
-        }
-        
-    }
-    
-    
-    
     int depthSum(vector<NestedInteger>& nestedList) {
-        int res=0, depth=1;
-        for(int i=0;i<nestedList.size();i++) {
-            helper(nestedList, i, res, depth);
+        queue<NestedInteger> q;
+        for(auto c:nestedList) {
+            q.push(c);
+        }
+        int depth=1, res=0;
+        
+        while(!q.empty()) {
+            
+            int s = q.size();
+            
+            for(int i=0;i<s;i++) {
+                
+                auto f = q.front();
+                q.pop();
+                
+                if(f.isInteger()) {
+                    res += ((f.getInteger())*depth);
+                } else {
+                    
+                    for(auto d:f.getList()) {
+                        
+                        q.push(d);
+                        
+                    }
+                    
+                }
+                    
+                
+            }
+            
+            depth += 1;
+            
         }
         
         return res;
