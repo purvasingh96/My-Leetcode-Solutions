@@ -3,28 +3,20 @@ public:
     vector<int> findBuildings(vector<int>& heights) {
         // monotonic decreasing queue
         vector<int> q;
+        int maxheight = -1;
         
-        q.push_back(0);
         
-        for(int i=1;i<heights.size();i++) {
+        for(int i=heights.size()-1;i>=0;i--) {
             
-            if(heights[q.back()] <= heights[i]) {
-                
-                while(q.size()!=0 && heights[q.back()] <= heights[i]) {
-                    q.pop_back();
-                }
-                
-                
-            }
-            
-            if(q.size()==0 || heights[q.back()] > heights[i]) {
+            if(maxheight < heights[i]) {
                 q.push_back(i);
+                maxheight = heights[i];
             }
             
             
         }
         
-        
+        reverse(q.begin(), q.end());
         
         return q;
     }
