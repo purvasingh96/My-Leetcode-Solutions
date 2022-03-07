@@ -19,10 +19,10 @@ public:
         
         while(left!=NULL && right!=NULL) {
             if(left->val < right->val) {
-                res->next=new ListNode(left->val);
+                res->next=left;
                 left=left->next;
             } else {
-                res->next = new ListNode(right->val);
+                res->next = right;
                 right=right->next;
             }
             
