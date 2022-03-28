@@ -1,21 +1,14 @@
 class Solution {
 public:
     bool binary_search(vector<int>& nums, int start, int end, int target) {
-        int mid = start + (end-start)/2;
-        
-        if(start <= end) {
+        while(start <= end) {
+            int mid = start + (end-start)/2;
             
             if(nums[mid] == target) return true;
-        
-            else if(nums[mid] > target) {
-                return binary_search(nums, start, mid-1, target);
-            }
-            else if(nums[mid] < target){
-                return binary_search(nums, mid+1, end, target);
-            }
             
+            else if(target > nums[mid]) start = mid+1;
+            else end = mid-1;
         }
-        
         return false;
         
     }
