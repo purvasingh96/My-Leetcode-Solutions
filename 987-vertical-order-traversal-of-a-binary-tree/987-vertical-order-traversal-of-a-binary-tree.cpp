@@ -9,10 +9,11 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+typedef map<int, vector<priority_queue<int, vector<int>, greater<int>>>> CACHE;
 
 class Solution {
 public:
-    void dfs(TreeNode* root, map<int, vector<priority_queue<int, vector<int>, greater<int>>>>& m, int row, int col) {
+    void dfs(TreeNode* root, CACHE& m, int row, int col) {
         
         if(!root) return;
         m[col].resize(20);
@@ -32,7 +33,7 @@ public:
     }
     vector<vector<int>> verticalTraversal(TreeNode* root) {
         
-        map<int, vector<priority_queue<int, vector<int>, greater<int>>>> m;
+        CACHE m;
         vector<vector<int>> res;
         
         dfs(root, m, 0, 0);
