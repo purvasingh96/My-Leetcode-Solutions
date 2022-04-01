@@ -16,7 +16,9 @@ public:
     void dfs(TreeNode* root, CACHE& m, int row, int col) {
         
         if(!root) return;
-        m[col].resize(20);
+        int s = m[col].size();
+        int sz = max(row+1, s);
+        m[col].resize(sz);
         
         //cout<<(m[col][row].size())<<"\n";
         m[col][row].push(root->val);
