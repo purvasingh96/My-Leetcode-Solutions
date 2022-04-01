@@ -8,69 +8,41 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
+class MyComp{
+public:
+    bool operator()(const ListNode* a, const ListNode* b) {
+        return a->val > b->val;
+    }
+    
+};
+
 class Solution {
 public:
-    ListNode* mergeTwoLists(ListNode* a, ListNode* b) {
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
         
-        ListNode* ha = a;
-        ListNode* hb = b;
+        priority_queue<ListNode*, vector<ListNode*>, MyComp> pq;
+        
+        for(auto l: lists) {
+            if(l) {
+                pq.push(l);
+            }
+        }
+        
         ListNode* res = new ListNode(0);
         ListNode* ans = res;
         
-        while(ha && hb) {
+        while(!pq.empty()) {
+            ListNode* temp = pq.top();
+            res->next = pq.top();
+            pq.pop();
+            res = res->next;
             
-            if(ha->val <= hb->val) {
-                res->next = new ListNode(ha->val);
-                ha = ha->next;
-            } else {
-                res->next = new ListNode(hb->val);
-                hb = hb->next;
-            }
-            res=res->next;
-        }
-        
-        if(ha) {
-            while(ha) {
-                res->next = new ListNode(ha->val);
-                ha = ha->next;
-                res=res->next;
-            }
-        } else if(hb) {
-            while(hb) {
-                res->next = new ListNode(hb->val);
-                hb = hb->next;
-                res=res->next;
+            if(temp->next) {
+                pq.push(temp->next);
             }
         }
         
         return ans->next;
-    }
-    
-    
-    ListNode* mergeKLists(vector<ListNode*>& lists) {
-        
-        if(lists.size()==0) return NULL;
-        if(lists.size() == 1) return lists[0];
-        
-        int i=0 ,last = lists.size()-1;
-        
-        while(last > i) {
-            
-            int i=0, j=last;
-            
-            while(i<j) {
-                
-                lists[i] = mergeTwoLists(lists[i], lists[j]);
-                i+=1;
-                j-=1;
-                
-                if(i>=j) last = j;
-                
-            }
-            
-        }
-        
-        return lists[0];
         
     }
 };
