@@ -1,33 +1,29 @@
 class Solution {
 public:
-    bool checkPal(string s) {
-        int left=0, right=s.length()-1;
-        
-        while(left < right) {
-            if(s[left++] != s[right--]) return false;
+    bool checkPalindrome(string s, int l, int r) {
+        while(l<r) {
+            if(s[l]!=s[r]) return false;
+            l+=1;
+            r-=1;
         }
         return true;
     }
     
+    
     bool validPalindrome(string s) {
         
-        int left=0, right=s.length()-1;
+        int l = 0, r=s.length()-1;
         
-        while(left < right) {
+        while(l<r) {
             
-            if(s[left] != s[right]) {
+            if(s[l]!=s[r]) {
                 
-                string a = s.substr(left, (right-left));
-                string b = a;
-                b.erase(0, 1);
-                b+=s[right];
+                return (checkPalindrome(s, l, r-1) || checkPalindrome(s, l+1, r));
                 
-                return (checkPal(a) || checkPal(b));
-                
-            } 
+            }
             
-            left+=1;
-            right-=1;
+            l+=1;
+            r-=1;
             
         }
         
