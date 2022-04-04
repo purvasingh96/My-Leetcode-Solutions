@@ -11,28 +11,27 @@
 class Solution {
 public:
     ListNode* swapNodes(ListNode* head, int k) {
-        int listLength=0;
-        ListNode* frontNode=NULL;
-        ListNode* endNode = NULL;
-        ListNode* currNode = head;
+       ListNode* dummy = new ListNode(0);
+        dummy->next=head;
         
-        while(currNode) {
-            
-            listLength +=1;
-            if(endNode) {
-                endNode = endNode->next;
-            }
-            
-            if(listLength == k) {
-                frontNode = currNode;
-                endNode=head;
-            }
-            
-            currNode = currNode->next;
-            
+        ListNode* first=dummy;
+        ListNode* second = dummy;
+        ListNode* currNode = dummy;
+        
+        for(int i=0;i<k;i++) {
+            currNode=currNode->next;
         }
         
-        swap(frontNode->val, endNode->val);
+        first=currNode;
+        
+        while(currNode) {
+            currNode=currNode->next;
+            second = second->next;
+        }
+        
+        //cout<<first->val<<" "<<second->val<<"\n";
+        
+        swap(first->val, second->val);
         return head;
         
     }
