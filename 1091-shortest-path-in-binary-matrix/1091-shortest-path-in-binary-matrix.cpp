@@ -28,7 +28,7 @@ public:
                 
                 int x = f[0], y = f[1], level=f[2];
                 
-                if(x == n-1 && y == n-1 && grid[x][y] == 0) return level;
+                if(x == n-1 && y == n-1) return level;
                 
                 for(int j=0;j<8;j++) {
                     
@@ -39,7 +39,7 @@ public:
                         //cout<<"nx: "<<new_x<<" "<<new_y<<"\n";
                         grid[new_x][new_y] = 1;
                         
-                        if(new_x == n-1 && new_y == n-1) return level+1;
+                        //if(new_x == n-1 && new_y == n-1) return level+1;
                         
                         q.push({new_x, new_y, level+1});
                         
