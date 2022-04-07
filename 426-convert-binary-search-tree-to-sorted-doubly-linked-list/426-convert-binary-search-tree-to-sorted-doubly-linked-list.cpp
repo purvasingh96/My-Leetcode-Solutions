@@ -56,7 +56,7 @@ public:
                     predecesor->right=curr;
                     curr=curr->left;
                 }  else{
-                    predecesor->right=nullptr;
+                    //predecesor->right=nullptr;
                     if(prev!=nullptr){
                         prev->right=curr;
                         curr->left=prev;
