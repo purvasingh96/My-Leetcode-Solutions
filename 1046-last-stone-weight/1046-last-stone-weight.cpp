@@ -31,7 +31,7 @@ public:
                 buckets[curr_weight] -= 1;
                 
                 if(biggest_weight - curr_weight <= curr_weight) {
-                    cout<<biggest_weight - curr_weight<<"\n";
+                    //cout<<biggest_weight - curr_weight<<"\n";
                     buckets[biggest_weight - curr_weight] += 1;
                     biggest_weight = 0;
                 } else {
