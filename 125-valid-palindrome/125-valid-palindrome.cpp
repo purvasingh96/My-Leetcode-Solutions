@@ -17,14 +17,7 @@ public:
                         right -= 1;
                     }
             
-            
-            if(left == right) {
-                
-                return true;
-                
-                
-            }
-          
+      
             
             if(tolower(s[left]) != tolower(s[right]) ) return false;
             
