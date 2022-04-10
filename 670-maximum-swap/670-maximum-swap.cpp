@@ -1,35 +1,39 @@
 class Solution {
 public:
     int maximumSwap(int num) {
-        map<int, vector<int>> m;
+        vector<int> freq(10, 0);
+        vector<int> last_idx(10);
         
         string original = to_string(num);
         
         for(int i=0;i<original.length();i++) {
-            m[original[i] - '0'].push_back(i);
+            freq[original[i]-'0'] +=1;
+            last_idx[original[i] - '0'] = i;
         }
+        
         int idx=0;
         
-        //cout<<"===\n";
-        map<int, vector<int>>::reverse_iterator it;
         
-        for(auto it=m.rbegin();it!=m.rend();it++) {
+        for(int i=9;i>=0;i--) {
             
-            int n = it->second.size();
-            
-            while(n>0) {
-                //cout<<"n: "<<n<<" it.first "<<it->first<<" original[idx]: "<<original[idx]<<"\n";
+            if(freq[i] > 0) {
                 
-                if(it->first!=original[idx]-'0') {
-                        //cout<<"not qual"<<it->first<<" "<<original[idx];
-                        char t = original[idx];
-                        original[idx] = it->first + '0';
-                        original[it->second.back()] = t;
-                        return stoi(original);
+                int n = freq[i];
+            
+                while(n>0) {
+
+                    if(i!=original[idx]-'0') {
+                            char t = original[idx];
+                            original[idx] = i + '0';
+                            original[last_idx[i]] = t;
+                            return stoi(original);
+                    }
+
+                    n-=1;
+                    idx += 1;
                 }
                 
-                n-=1;
-                idx += 1;
+                
             }
             
             
