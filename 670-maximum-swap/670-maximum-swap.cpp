@@ -24,8 +24,8 @@ public:
 
                     if(i!=original[idx]-'0') {
                             char t = original[idx];
-                            original[idx] = i + '0';
-                            original[last_idx[i]] = t;
+                            original[idx] = original[last_idx[i]];
+                            original[last_idx[i]]  = t;
                             return stoi(original);
                     }
 
