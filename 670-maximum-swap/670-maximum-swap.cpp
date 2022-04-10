@@ -1,40 +1,32 @@
 class Solution {
 public:
     int maximumSwap(int num) {
-        map<int, vector<int>> m;
+        //vector<int> freq(10, 0);
+        vector<int> last_idx(10,-1);
         
-        string original = to_string(num);
+        string s = to_string(num);
         
-        for(int i=0;i<original.length();i++) {
-            m[original[i] - '0'].push_back(i);
+        // O(N)
+        for(int i=0;i<s.length();i++) {
+            //freq[original[i]-'0'] +=1;
+            last_idx[s[i] - '0'] = i;
         }
+        
         int idx=0;
         
-        //cout<<"===\n";
-        map<int, vector<int>>::reverse_iterator it;
-        
-        for(auto it=m.rbegin();it!=m.rend();it++) {
+        // O(10)
+        for(int i=0, j=0;i<s.length();i++) {
             
-            int n = it->second.size();
+            for(j=9;j>s[i]-'0' && last_idx[j]==-1; j--);
             
-            while(n>0) {
-                //cout<<"n: "<<n<<" it.first "<<it->first<<" original[idx]: "<<original[idx]<<"\n";
-                
-                if(it->first!=original[idx]-'0') {
-                        //cout<<"not qual"<<it->first<<" "<<original[idx];
-                        char t = original[idx];
-                        original[idx] = it->first + '0';
-                        original[it->second.back()] = t;
-                        return stoi(original);
-                }
-                
-                n-=1;
-                idx += 1;
+            if(j > s[i]-'0') {
+                swap(s[i], s[last_idx[j]]);
+                break;
             }
             
-            
+            if(i == last_idx[s[i] - '0']) last_idx[s[i] - '0'] = -1;
             
         }
-        return stoi(original);
+        return stoi(s);
     }
 };
