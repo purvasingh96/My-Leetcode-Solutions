@@ -23,9 +23,7 @@ public:
                 while(n>0) {
 
                     if(i!=original[idx]-'0') {
-                            char t = original[idx];
-                            original[idx] = original[last_idx[i]];
-                            original[last_idx[i]]  = t;
+                            swap(original[idx], original[last_idx[i]]);
                             return stoi(original);
                     }
 
