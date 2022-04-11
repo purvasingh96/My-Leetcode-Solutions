@@ -3,8 +3,8 @@ public:
     vector<vector<int>> shiftGrid(vector<vector<int>>& grid, int k) {
         
         int m = grid.size(), n = grid[0].size();
-        vector<int> temp(m*n);
         vector<int> temp_res(m*n);
+        vector<vector<int>> res(m, vector<int>(n));
         
         for(int i=0;i<grid.size();i++) {
             
@@ -17,14 +17,9 @@ public:
             
         }
         
-        
-        
-        
-       
-        
         //for(auto x:temp_res) cout<<x<<" ";
         
-        vector<vector<int>> res(m, vector<int>(n));
+        
         int row=0, col=0;
         
         for(int i=0;i<temp_res.size();i++) {
