@@ -4,23 +4,23 @@ public:
         
         int m = grid.size(), n = grid[0].size();
         vector<int> temp(m*n);
+        vector<int> temp_res(m*n);
         
         for(int i=0;i<grid.size();i++) {
             
             for(int j=0;j<grid[i].size();j++) {
                 
-                temp.push_back(grid[i][j]);
+                int cur_idx = (n*i) + j;
+                int new_idx = (cur_idx+k)%(m*n);
+                temp_res[new_idx] = grid[i][j];
             }
             
         }
         
         
         
-        vector<int> temp_res(m*n);
         
-        for(int i=0;i<temp.size();i++) {
-            temp_res[(i+k)%(m*n)] = temp[i];
-        }
+       
         
         //for(auto x:temp_res) cout<<x<<" ";
         
