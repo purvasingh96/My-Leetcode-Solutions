@@ -1,6 +1,6 @@
 class MovingAverage {
 private:
-    deque<int> q;
+    queue<int> q;
     int n;
     int prefix_sum=0;
     
@@ -11,12 +11,12 @@ public:
     }
     
     double next(int val) {
-        q.push_back(val);
+        q.push(val);
         prefix_sum += val;
         if(q.size()>n) {
-              int front = q.front();
+            int front = q.front();
             prefix_sum -= front;
-            q.pop_front();
+            q.pop();
         }
         
         return (double)prefix_sum/q.size();
