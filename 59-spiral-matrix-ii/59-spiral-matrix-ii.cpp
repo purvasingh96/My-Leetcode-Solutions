@@ -60,11 +60,8 @@ public:
                 
             }
             
-            //if(!found) return grid;
             
         }
-        
-        cout<<row<<" "<<col;
         
         
         return grid;
