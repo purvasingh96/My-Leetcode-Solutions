@@ -7,16 +7,9 @@ public:
         int count=0;
         
         for(auto it:m) {
-            if(it.second%2==1) {
-                if(s.length()%2 == 1) {
-                    if(count != 0) return false;
-                    else count+=1;
-                } else {
-                    return false;
-                }
-            }
+            count += (it.second)%2;
         }
         
-        return true;
+        return count<=1;
     }
 };
