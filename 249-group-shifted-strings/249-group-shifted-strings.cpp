@@ -12,8 +12,6 @@ public:
             mp[t].push_back(st);
         }
         vector<vector<string>> ans;
-        cout<<('z' - 'a')<<"\n";
-        cout<<(26 + 'z' - 'a')%26;
         
         
         for(auto &t:mp) ans.push_back(t.second);
