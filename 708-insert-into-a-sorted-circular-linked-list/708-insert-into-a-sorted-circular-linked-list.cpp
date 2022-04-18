@@ -29,47 +29,31 @@ public:
             return newnode;
         }
         
-        Node* ans=head;
-        
-        while(head->val < head->next->val) head=head->next;
-        
-        head=head->next;
-        
-        cout<<head->next->val;
-        
-        Node* curr = head->next;
-        Node* prev=head;
-        
-        while(true) {
+        Node* node=head;
+       
+        while(node->next!=head) {
             
-            int x = insertVal;
-            int y = prev->val;
-            int z = curr->val;
-            
-            if((y <= x && x<= z)) {
-                prev->next=newnode;
-                newnode->next=curr;
-                break;
-            }
-            
-            if(y>=z && (x<z || x>y)){
-                while(prev->val <= curr->val) {
-                    if(prev->next==head) break;
-                    prev=prev->next;
-                    curr=curr->next;
+            if(node->val<=node->next->val) {
+                
+                // basic check
+                if(node->val <= insertVal && insertVal<=node->next->val) {
+                    break;
                 }
-                //cout<<prev->val<<" "<<curr->val;
-                prev->next=newnode;
-                newnode->next=curr;
-                break;
+                
+            } else {
+                
+                if(node->val <= insertVal || insertVal<=node->next->val){
+                    break;
+                }
                 
             }
-                
             
-            prev=curr;
-            curr=curr->next;
+            node=node->next;
+            
         }
-     
-        return ans;
+        
+        Node* next = node->next;
+        node->next = new Node(insertVal, next);
+        return head;
     }
 };
