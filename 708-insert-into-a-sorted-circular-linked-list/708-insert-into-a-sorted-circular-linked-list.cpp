@@ -29,12 +29,6 @@ public:
             return newnode;
         }
         
-        if(head->next==head) {
-            head->next=newnode;
-            newnode->next=head;
-            return head;
-        }
-        
         Node* ans=head;
         
         while(head->val < head->next->val) head=head->next;
