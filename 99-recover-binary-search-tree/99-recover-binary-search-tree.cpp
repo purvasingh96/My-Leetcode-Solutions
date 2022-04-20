@@ -11,31 +11,37 @@
  */
 class Solution {
 public:
-    TreeNode* first=NULL;
-    TreeNode* second=NULL;
-    TreeNode* prev=new TreeNode(INT_MIN);
-    
-    void inorder(TreeNode* root) {
-        if(!root) return;
-        
-        inorder(root->left);
-        
-        if(first==NULL && prev->val > root->val){
-            first = prev;
-        }
-        
-        if(first!=NULL && prev->val > root->val){
-            second = root;
-        }
-        prev=root;
-        inorder(root->right);
-    }
-    
     void recoverTree(TreeNode* root) {
+        stack<TreeNode*> st;
         
-        inorder(root);
+        TreeNode* first=NULL; 
+        TreeNode* second=NULL;
+        TreeNode* prev=new TreeNode(INT_MIN);
+        
+        while(!st.empty() || root!=NULL){
+            
+            while(root!=NULL) {
+                st.push(root);
+                root=root->left;
+            }
+            
+            root = st.top();
+            st.pop();
+            
+            if(first==NULL && prev->val > root->val){
+                first = prev;
+            }            
+            
+            if(first!=NULL && prev->val > root->val) {
+                second=root;
+            }
+            
+            prev=root;
+            root=root->right;
+        }
+       
         int t = first->val;
-        first->val=second->val;
+        first->val = second->val;
         second->val=t;
         
     }
