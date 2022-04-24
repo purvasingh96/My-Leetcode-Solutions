@@ -1,7 +1,7 @@
 class UndergroundSystem {
 private:
     map<int, pair<string, int>> cache;
-    map<pair<string, string>, vector<int>> m;
+    map<pair<string, string>, pair<int, int>> m;
     
 public:
     UndergroundSystem() {
@@ -11,6 +11,7 @@ public:
     void checkIn(int id, string stationName, int t) {
         auto info = make_pair(stationName, t);
         cache[id] = info;
+        
     }
     
     void checkOut(int id, string stationName, int t) {
@@ -20,20 +21,28 @@ public:
         
         int time_diff = t - checkInInfo.second;
       
-        m[make_pair(checkInInfo.first, stationName)].push_back(time_diff);
+        auto p = make_pair(checkInInfo.first, stationName);
+        
+        
+            // last time, cur size
+        auto timeInfo = m[p];
+        int total_time =   timeInfo.first + time_diff;
+        int size = timeInfo.second+1;
+        auto new_info = make_pair(total_time, size);
+        m[p] = new_info;
+            
+         
+         
+       
     }
     
     double getAverageTime(string startStation, string endStation) {
         double avg = 0.0;
         auto p = make_pair(startStation, endStation);
         
-        for(auto t:m[p]) {
-            
-            avg += t;
-            
-        }
+        avg = (double)m[p].first/m[p].second;
         
-        return avg/(m[p].size());
+        return avg;
     }
 };
 
