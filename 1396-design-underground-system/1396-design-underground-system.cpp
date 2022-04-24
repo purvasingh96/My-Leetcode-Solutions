@@ -1,11 +1,11 @@
 class UndergroundSystem {
 private:
-    vector<pair<string, int>> cache;
+    map<int, pair<string, int>> cache;
     map<vector<string>, vector<int>> m;
     
 public:
     UndergroundSystem() {
-        cache.resize(1000000);    
+        //cache.resize(1000000);    
     }
     
     void checkIn(int id, string stationName, int t) {
