@@ -2,6 +2,9 @@ class Solution {
 private:
     vector<int> root;
 public:
+    /*
+     Idea here is to divide vertices into two independent subsets which are not           having any edge between them, now we are iterating through all edges of a           single vertex. As there should not be any edge between final two indepedent         subsets we are making all edges of this vertex into single group, before that       we are checking if the source vertex and destination vertex has same parent         if yes, they belong to same disjoint set and dividing these vertices into two       independent subsets is not possible
+     */  
     bool isBipartite(vector<vector<int>>& graph) {
         int n = graph.size();
         root.resize(n);
