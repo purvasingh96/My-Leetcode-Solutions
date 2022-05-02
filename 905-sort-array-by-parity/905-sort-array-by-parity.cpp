@@ -5,36 +5,14 @@ public:
         
         while(left < right) {
             
-            if(nums[left]%2==0 && nums[right]%2==0) {
-                while(left<right && nums[left]%2==0) {
-                    left+=1;
-                }
-                if(left<right) {
-                    int t = nums[left];
-                    nums[left] = nums[right];
-                    nums[right] = t;
-                }
-            }
-            
-            else if(nums[left]%2 != 0 && nums[right]%2==0) {
+            if(nums[left]%2 > nums[right]%2) {
                 swap(nums[left], nums[right]);
             }
             
-            else if(nums[left]%2!=0 && nums[right]%2!=0) {
-                
-                while(right>left && nums[right]%2!=0) {
-                    right-=1;
-                }
-                
-                if(right > left) {
-                    int t = nums[left];
-                    nums[left] = nums[right];
-                    nums[right] = t;
-                }
-            }
+            if(nums[left]%2==0) left+=1;
+            if(nums[right]%2!=0) right-=1;
             
-            left += 1;
-            right -= 1;
+           
             
         }
         
