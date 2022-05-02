@@ -10,7 +10,9 @@ public:
                     left+=1;
                 }
                 if(left<right) {
-                    swap(nums[left], nums[right]);
+                    int t = nums[left];
+                    nums[left] = nums[right];
+                    nums[right] = t;
                 }
             }
             
@@ -25,7 +27,9 @@ public:
                 }
                 
                 if(right > left) {
-                    swap(nums[right], nums[left]);
+                    int t = nums[left];
+                    nums[left] = nums[right];
+                    nums[right] = t;
                 }
             }
             
