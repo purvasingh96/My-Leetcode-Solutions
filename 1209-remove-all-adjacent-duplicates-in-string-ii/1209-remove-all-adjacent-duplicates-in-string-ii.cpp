@@ -1,60 +1,51 @@
 class Solution {
 public:
     string removeDuplicates(string s, int k) {
-        stack<char> st;
+        stack<pair<char, int>> st;
+        
         int i=0;
         
         while(i<s.length()) {
             
-            if(st.empty() || st.top()!=s[i]) {
-                st.push(s[i]);
+            if(st.empty() || s[i]!=st.top().first)  {
+                st.push(make_pair(s[i], 1));
                 i+=1;
             } else{
                 
-                while(s[i] == st.top()) {
-                    st.push(s[i]);
-                    i+=1;
-                }
+                auto curr = st.top();
                 
-                int tk = 0;
-                int toprep = st.top();
-                
-                while(!st.empty() && st.top()==toprep) {
-                    
+                if(curr.second+1 == k) {
                     st.pop();
-                    tk+=1;
+                } else{
+                    st.pop();
+                    st.push(make_pair(curr.first, curr.second+1));
+                    
                     
                 }
-                
-                if(tk%k!=0) {
                     
-                    int rem = (tk%k);
-                    
-                    while(rem!=0) {
-                        
-                        st.push(toprep);
-                        rem -= 1;
-                        
-                    }
-                    
-                }
+                i+=1;
                 
-                
+            }
+            
+        }
+        
+        string res="";
+        
+        while(!st.empty()) {
+            
+            auto curr = st.top();
+            st.pop();
+            int f = curr.second;
+            
+            while(f!=0) {
+                res+= (curr.first);
+                f-=1;
             }
             
             
         }
         
-        string res(st.size(), '@');
-        //res.reserve
-        int j = st.size()-1;
-        
-        while(!st.empty()) {
-            res[j--] = st.top();
-            st.pop();
-        }
-        
-        //reverse(res.begin(), res.end());
+        reverse(res.begin(), res.end());
         return res;
         
         
