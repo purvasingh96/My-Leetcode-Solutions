@@ -32,18 +32,11 @@ public:
         string res="";
         
         while(!st.empty()) {
-            
-            auto curr = st.top();
+            auto x = st.top();
             st.pop();
-            int f = curr.second;
-            
-            while(f!=0) {
-                res+= (curr.first);
-                f-=1;
-            }
-            
-            
+            res += string(x.second, x.first);
         }
+        
         
         reverse(res.begin(), res.end());
         return res;
