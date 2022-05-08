@@ -45,14 +45,16 @@ public:
             
         }
         
-        string res="";
+        string res(st.size(), '@');
+        //res.reserve
+        int j = st.size()-1;
         
         while(!st.empty()) {
-            res += st.top();
+            res[j--] = st.top();
             st.pop();
         }
         
-        reverse(res.begin(), res.end());
+        //reverse(res.begin(), res.end());
         return res;
         
         
