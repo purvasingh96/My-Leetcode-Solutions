@@ -1,86 +1,71 @@
-class UnionFind {
-private:
-    vector<int> rank;
-    vector<int> root;
+class Edge{
 public:
-    UnionFind(int n): rank(n), root(n) {
-        for(int i=0;i<n;i++) {
-            rank[i]=1;
-            root[i]=i;
-        }
-    }
-    
-    int find(int x) {
-        if(root[x] == x) return x;
-        return root[x] = find(root[x]);
-    }
-    
-    bool merge(int x, int y) {
-        
-        int rx = find(x);
-        int ry = find(y);
-        
-        if(rx == ry) {
-            return false;
-        }        
-        
-        if(rank[rx] >= rank[ry]) {
-            
-            root[ry] = rx;
-            rank[rx] += 1;
-            
-        } else{
-            
-            root[rx] = ry;
-            rank[ry] += 1;
-            
-        }
-        
-        return true;
+    int u;
+    int v;
+    int w;
+    Edge(int u, int v, int w): u(u), v(v), w(w) {
         
     }
-    
-    
 };
 
-
+class MyCompare{
+public:
+    bool operator()(const Edge& a, const Edge& b){
+        return a.w > b.w;
+    }
+};
 
 class Solution {
 public:
     int minCostConnectPoints(vector<vector<int>>& points) {
-        int n = points.size(), mstCost=0, edgesUsed=0;
-        vector<vector<int>> edges;
+        int n = points.size();
+        priority_queue<Edge, vector<Edge>, MyCompare> pq;
+        vector<bool> visited(n, false);
         
-        for(int i=1;i<n;i++) {
-            for(int j=0;j<i;j++) {
-                
-                int weight = abs(points[i][0] - points[j][0]) + abs(points[i][1] - points[j][1]);
-                
-                edges.push_back({weight, i, j});
-                
-            }
-        }
+        int res=0, count=0;
         
-        sort(edges.begin(), edges.end());
-        
-        UnionFind uf(n);
-        
-        for(int i=0;i<edges.size();i++) {
+        for(int j=0;j<n;j++) {
             
-            int weight = edges[i][0];
-            int u = edges[i][1];
-            int v = edges[i][2];
+            int weight = abs(points[0][0] - points[j][0]) + abs(points[0][1] - points[j][1]);
             
-            if(uf.merge(u, v)){
-                mstCost += weight;
-                edgesUsed += 1;
-            }
+            Edge edge(0, j, weight);
             
-            if(edgesUsed == n-1) break;
+            pq.push(edge);
             
         }
         
-        return mstCost;
+        visited[0] = true;
+        
+        while(!pq.empty() && count!=n-1) {
+            
+            auto f = pq.top();
+            pq.pop();
+            
+            if(!visited[f.v]){
+                
+                visited[f.v] = true;
+                res += f.w;
+                
+                for(int j=0;j<n;j++) {
+                    
+                    if(!visited[j]) {
+                        
+                        int dist = abs(points[f.v][0] - points[j][0]) + abs(points[f.v][1] - points[j][1]);
+                        Edge edge(f.v, j, dist);
+                        pq.push(edge);
+                        
+                    }
+                    
+                }
+                
+                count += 1;
+                
+            }
+            
+            
+        }
+        
+        return res;
         
     }
 };
