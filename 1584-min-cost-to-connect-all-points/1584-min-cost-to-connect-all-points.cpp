@@ -1,43 +1,86 @@
+class UnionFind {
+private:
+    vector<int> rank;
+    vector<int> root;
+public:
+    UnionFind(int n): rank(n), root(n) {
+        for(int i=0;i<n;i++) {
+            rank[i]=1;
+            root[i]=i;
+        }
+    }
+    
+    int find(int x) {
+        if(root[x] == x) return x;
+        return root[x] = find(root[x]);
+    }
+    
+    bool merge(int x, int y) {
+        
+        int rx = find(x);
+        int ry = find(y);
+        
+        if(rx == ry) {
+            return false;
+        }        
+        
+        if(rank[rx] >= rank[ry]) {
+            
+            root[ry] = rx;
+            rank[rx] += 1;
+            
+        } else{
+            
+            root[rx] = ry;
+            rank[ry] += 1;
+            
+        }
+        
+        return true;
+        
+    }
+    
+    
+};
+
+
+
 class Solution {
 public:
     int minCostConnectPoints(vector<vector<int>>& points) {
-        int n = points.size();
-        int mstCost = 0;
-        int edgesUsed = 0;
+        int n = points.size(), mstCost=0, edgesUsed=0;
+        vector<vector<int>> edges;
         
-        // Track nodes which are visited.
-        vector<bool> inMST(n);
-        
-        vector<int> minDist(n, INT_MAX);
-        minDist[0] = 0;
-        
-        while (edgesUsed < n) {
-            int currMinEdge = INT_MAX;
-            int currNode = -1;
-            
-            // Pick least weight node which is not in MST.
-            for (int node = 0; node < n; ++node) {
-                if (!inMST[node] && currMinEdge > minDist[node]) {
-                    currMinEdge = minDist[node];
-                    currNode = node;
-                }
-            }
-            
-            mstCost += currMinEdge;
-            edgesUsed++;
-            inMST[currNode] = true;
-            
-            // Update adjacent nodes of current node.
-            for (int nextNode = 0; nextNode < n; ++nextNode) {
-                int weight = abs(points[currNode][0] - points[nextNode][0]) + 
-                             abs(points[currNode][1] - points[nextNode][1]);
+        for(int i=1;i<n;i++) {
+            for(int j=0;j<i;j++) {
                 
-                if (!inMST[nextNode] && minDist[nextNode] > weight) {
-                    minDist[nextNode] = weight;
-                }
+                int weight = abs(points[i][0] - points[j][0]) + abs(points[i][1] - points[j][1]);
+                
+                edges.push_back({weight, i, j});
+                
             }
         }
         
+        sort(edges.begin(), edges.end());
+        
+        UnionFind uf(n);
+        
+        for(int i=0;i<edges.size();i++) {
+            
+            int weight = edges[i][0];
+            int u = edges[i][1];
+            int v = edges[i][2];
+            
+            if(uf.merge(u, v)){
+                mstCost += weight;
+                edgesUsed += 1;
+            }
+            
+            if(edgesUsed == n-1) break;
+            
+        }
+        
         return mstCost;
+        
     }
 };
