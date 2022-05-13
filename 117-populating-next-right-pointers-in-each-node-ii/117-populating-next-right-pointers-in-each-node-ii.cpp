@@ -17,32 +17,48 @@ public:
 */
 
 class Solution {
+private:
+    Node* prev; // tracks nodes on curr+1 level;
+    Node* leftmost; // head of curr+1 level
+    
+    
+    void processChild(Node* child) {
+        if(child!=NULL) {
+            
+            if(prev == NULL) {
+                this->leftmost = child;
+            } else{
+                prev->next = child;
+            }
+            prev=child;
+        }
+        
+    }
 public:
     Node* connect(Node* root) {
+        
+        
         if(!root) return root;
+        this->leftmost = root;
         
-        queue<Node*> q;
-        q.push(root);
+        Node* curr; // head of curr level
+        curr = this->leftmost;
         
-        while(!q.empty()){
+        while(this->leftmost!=NULL) {
             
-            int n = q.size();
+            this->prev=NULL;
+            curr=this->leftmost;
+            this->leftmost=NULL;
             
-            for(int i=0;i<n;i++){
-                auto f = q.front();
-                q.pop();
-                
-                if(i==n-1){
-                    f->next=NULL;
-                } else{
-                    f->next = q.front();
-                }
-                
-                if(f->left) q.push(f->left);
-                if(f->right) q.push(f->right);
+            while(curr!=NULL) {
+                processChild(curr->left);
+                processChild(curr->right);
+                curr = curr->next;
             }
+            
         }
         
         return root;
+        
     }
 };
