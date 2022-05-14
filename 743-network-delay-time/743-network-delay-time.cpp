@@ -1,49 +1,59 @@
-class MyCompare{
+class MyCompare {
 public:
-    bool operator()(const pair<int, int>& a, const pair<int, int>& b) {
-        return a.second > b.second;
+    bool operator()(const vector<int>& a, const vector<int>& b) {
+        return a.back() > b.back();
     }
+    
 };
 
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        int totalTime = INT_MIN;
-        vector<int> dist(n+1, INT_MAX);
-        dist[k] = 0;
+        // single source + traverse all nodes => Dijkstra template
+        
         map<int, vector<pair<int, int>>> adj;
+        priority_queue<vector<int>, vector<vector<int>>, MyCompare> pq;
+        pq.push({k, 0});
+        
         
         for(auto x:times) {
-            adj[x[0]].push_back({x[1], x[2]});
+            int u = x[0];
+            int v = x[1];
+            int dist = x[2];
+            
+            adj[u].push_back({v, dist});
         }
         
-        priority_queue<pair<int, int>, vector<pair<int, int>>, MyCompare> pq;
-        
-        pq.push({k, 0});
+        vector<int> dist(n+1, INT_MAX);
+        dist[k]=0;
         
         while(!pq.empty()) {
             
-            auto top = pq.top();
+            auto parent_info = pq.top();
             pq.pop();
             
-            int parent = top.first, time = top.second;
+            int parent = parent_info[0];
+            int dp = parent_info[1];
             
-            for(auto x:adj[parent]) {
-                int child = x.first;
-                int newTime = x.second;
+            
+            for(auto c:adj[parent]){
+                int child = c.first;
+                int dc = c.second;
                 
-                if(dist[child] > time + newTime) {
-                    dist[child] = time + newTime;
+                if(dist[child] > dp + dc) {
+                    dist[child] = dp + dc;
                     pq.push({child, dist[child]});
                 }
+                
             }
             
         }
         
-        for(int i=1;i<dist.size();i++) {
-            totalTime = max(totalTime, dist[i]);
+        int res = INT_MIN;
+        for(int i=1;i<=n;i++) {
+            res = max(res, dist[i]);
         }
-        return totalTime==INT_MAX?-1:totalTime;
         
+        return  res == INT_MAX ? -1: res;
     }
 };
