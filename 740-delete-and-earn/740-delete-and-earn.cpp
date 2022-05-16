@@ -1,49 +1,32 @@
 class Solution {
 public:
     int deleteAndEarn(vector<int>& nums) {
-        
-        map<int, int> m;
-        for(auto x:nums) {
-            m[x] += x;
-        }
-        
+        map<int,int> m;
         vector<int> arr;
         
-        for(auto x:m) {
-            arr.push_back(x.first);
+        for(auto x:nums) {
+            if(m[x]==0) arr.push_back(x);
+            m[x]+=1;
         }
-        
         
         sort(arr.begin(), arr.end());
         
         
-        for(auto x: arr){
-            cout<<x<<" ";
+        vector<int> dp(arr.size());
+        
+        dp[0] = arr[0]*m[arr[0]];
+        
+        for(int i=1;i<dp.size();i++) {
+            
+            if(arr[i-1]+1==arr[i]){
+                if(i-2>=0) dp[i] = max(dp[i-1], (m[arr[i]]*arr[i] + dp[i-2]));
+                else dp[i] = max(dp[i-1], (m[arr[i]]*arr[i]));
+            } else{
+                dp[i] = dp[i-1] + m[arr[i]]*arr[i];
+            }            
         }
         
-        int twoback = 0, oneback = m[arr[0]];
-        
-        for(int i=1;i<arr.size();i++) {
-            
-            int temp = oneback;
-            
-            if(arr[i] == arr[i-1]+1) {
-                
-                oneback = max(oneback, twoback+m[arr[i]]);
-                
-            } else {
-                
-                oneback += m[arr[i]];
-                
-            }
-            
-            twoback = temp;
-            
-        }
-        
-        return oneback;
-        
-        
+        return dp.back();
         
     }
 };
