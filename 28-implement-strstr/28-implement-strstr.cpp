@@ -1,34 +1,65 @@
 class Solution {
 public:
-    int strStr(string h, string n) {
-        if(n.length() == 0) return 0;
-        int i=0, j=0;
-        int cur_pos = -1;
+    int strStr(string haystack, string needle) {
+        // KMP algorithm
+        int m = haystack.length();
+        int n = needle.length();
         
-        while(i<h.length() && j<n.length()){
+        vector<int> table(n, 0);
+        
+        int j=0;
+        
+        for(int i=1;i<n-1;) {
             
-            if(h[i]==n[j]){
-                int temp_i = i;
-                while(temp_i<h.length() && j<n.length() && h[temp_i] == n[j]) {
-                    temp_i+=1;
-                    j+=1;
+            if(needle[i] == needle[j]) {
+                
+                table[i] = j+1;
+                i+=1;
+                j+=1;
+                
+            } else{
+                
+                if(j>0) {
+                    j = table[j-1];
+                } else{
+                    i+=1;
                 }
                 
-                if(j!=n.length()) {
-                    cur_pos=-1;
-                    j=0;
+            }
+            
+        }
+        
+        
+        for(int i=0, match_pos=0;i<m;) {
+            
+            if(haystack[i] == needle[match_pos]) {
+                
+                if(match_pos == n-1) {
+                    
+                    return (i - (n - 1));
                     
                 } else{
-                    cur_pos = i;
-                    return cur_pos;
+                    
+                    i+=1;
+                    match_pos+=1;
+                    
                 }
                 
-            } 
+            } else{
+                
+                if(match_pos == 0) {
+                    i+=1;
+                } else{
+                    match_pos = table[match_pos-1];
+                }
+                
+            }
             
-            i+=1;
             
         }
         
         return -1;
+        
+        
     }
 };
