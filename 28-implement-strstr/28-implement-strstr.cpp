@@ -9,7 +9,7 @@ public:
         
         int j=0;
         
-        for(int i=1;i<n-1;) {
+        for(int i=1;i<n;) {
             
             if(needle[i] == needle[j]) {
                 
