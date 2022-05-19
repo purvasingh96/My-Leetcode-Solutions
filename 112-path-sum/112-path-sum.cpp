@@ -11,29 +11,32 @@
  */
 class Solution {
 public:
-    void dfs(TreeNode* root, int target, int cursum, bool& ans) {
-        if(!root) return;
-        if(cursum==INT_MAX) cursum=0;
-        cursum+= root->val;
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        stack<pair<TreeNode*, int>> st;
+        st.push({root, targetSum});
         
-        if(cursum==target && !root->left && !root->right){ 
-            ans=true;
-            return;
+        while(!st.empty()) {
+            
+            auto f = st.top();
+            st.pop();
+            TreeNode* node = f.first;
+            int remain = f.second;
+            
+            if(node!=NULL) {
+                remain -= node->val;
+                if(!node->left && !node->right && remain == 0) {
+                    return true;
+                }
+            
+                st.push({node->left, remain});
+                st.push({node->right, remain});
+                
+            }
+            
+            
         }
         
+        return false;
         
-        
-        
-        
-        
-        
-        dfs(root->left, target, cursum, ans);
-        dfs(root->right, target, cursum, ans);
-    }
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        if(!root) return false;
-        bool ans = false;
-        dfs(root, targetSum, INT_MAX, ans);
-        return ans;
     }
 };
