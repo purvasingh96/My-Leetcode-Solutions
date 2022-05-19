@@ -1,37 +1,41 @@
 class Solution {
 private:
-    vector<vector<int>> directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+    int xd[4] = {0, 1, 0, -1};
+    int yd[4] = {1, 0, -1, 0};
 public:
     int longestIncreasingPath(vector<vector<int>>& matrix) {
-        
-        int m = matrix.size();
-        int n = matrix[0].size();
+        int m = matrix.size(), n = matrix[0].size();
+        vector<vector<int>> indegree(m, vector<int>(n, 0));
+        int longest = 0;
         queue<pair<int, int>> q;
-        int longest=0;
         
-        vector<vector<int>> indegree(m, vector<int>(n));
-        
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
+        for(int i=0;i<m;i++) {
+            for(int j=0;j<n;j++) {
                 
-                for(auto d:directions) {
-                    int x = i+d[0];
-                    int y = j+d[1];
+                int x = i;
+                int y = j;
+                
+                for(int k=0;k<4;k++) {
                     
-                    if(x>=0 && y>=0 && x<m && y<n && matrix[i][j] > matrix[x][y]) {
-                        indegree[i][j] += 1;
+                    int new_x = x + xd[k];
+                    int new_y = y + yd[k];
+                    // find coords that are surrounded by only larger elements
+                    if(new_x>=0 && new_y>=0 && new_x<m && new_y<n && matrix[new_x][new_y] < matrix[x][y]) {
+                        indegree[x][y] += 1;
                     }
+                    
                 }
                 
-                if(indegree[i][j] == 0) q.push({i,j});
+                if(indegree[x][y] == 0) {
+                    q.push({x, y});
+                }
                 
             }
         }
         
-        // BFS
-        while(!q.empty()){
+        while(!q.empty()) {
             
-            int size = q.size();
+            int size=q.size();
             
             while(size--) {
                 
@@ -41,22 +45,21 @@ public:
                 int x = f.first;
                 int y = f.second;
                 
-                for(auto d:directions){
+                for(int i=0;i<4;i++) {
                     
-                    int new_x = x+d[0];
-                    int new_y = y+d[1];
+                    int new_x = x + xd[i];
+                    int new_y = y + yd[i];
                     
-                    if(new_x>=0 && new_y>=0 && new_x<m && new_y<n 
-                       && matrix[new_x][new_y] > matrix[x][y] && --indegree[new_x][new_y]==0){
-                        
+                    if(new_x>=0 && new_y>=0 && new_x<m && new_y<n && matrix[new_x][new_y] > matrix[x][y] 
+                      && --indegree[new_x][new_y] == 0) {
                         q.push({new_x, new_y});
                     }
+                
                     
-                }
+                } 
                 
             }
-            
-            longest += 1;
+            longest+=1;
             
         }
         
