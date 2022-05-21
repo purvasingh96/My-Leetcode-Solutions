@@ -1,26 +1,26 @@
 class Solution {
 public:
-    int coinChange(vector<int>& coins, int amount) {
+    int dfs(vector<int>& coins, int remaining, vector<int>& count) {
+        if(remaining <0) return -1;
+        if(remaining == 0) return 0;
         
-        vector<int> dp(amount+1, amount+1);
+        if(count[remaining-1]!=0) return count[remaining-1];
         
-        dp[0]=0;
+        int minval=INT_MAX;
         
-        for(int i=1;i<=amount;i++) {
-            
-            for(int j=0;j<coins.size();j++) {
-                
-                if(coins[j]<=i) {
-                    
-                    dp[i] = min(dp[i], 1+dp[i-coins[j]]);
-                    
-                }
-                
+        for(auto coin:coins){
+            int res  = dfs(coins, remaining-coin, count);
+            if(res>=0 && res<minval) {
+                minval = 1+res;
             }
-            
         }
         
-        return dp[amount] > amount ?-1:dp[amount];
+        count[remaining-1] = minval==INT_MAX?-1:minval;
+        return count[remaining-1];
         
+    }
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> count(amount, 0);
+        return dfs(coins, amount, count);
     }
 };
