@@ -3,72 +3,69 @@ public:
     string alienOrder(vector<string>& words) {
         map<char, vector<char>> adj;
         map<char, int> indegree;
-        int numzero=0;
-        string res="";
-        queue<char> q;
+        int z=0;
         
-        for(int i=0;i<words.size();i++){
-            for(auto c:words[i]){
-                indegree[c] = 0;
+        for(auto word:words){
+            for(auto c:word){
+                indegree[c]=0;
             }
         }
         
-        for(int i=0;i<words.size()-1;i++) {
+        for(int i=0;i<words.size()-1;i++){
+            string a = words[i], b = words[i+1];
             
-            string s = words[i];
-            string t = words[i+1];
-            
-            if(s.length() > t.length()) {
-                // if prefix comes later, no valid ordering can be generated
-                if(s.rfind(t, 0) == 0){
+            if(a.length() > b.length()) {
+                // searches for last occurance of t in s
+                if(a.rfind(b, 0) == 0){
+                    // implies t is prefix of s
                     return "";
                 }
             }
+            
+            
+            for(int j=0;j<min(a.length(), b.length());j++){
                 
-                for(int j=0;j<min(s.length(), t.length());j++) {
-                    if(s[j]!=t[j]) {
-                        indegree[t[j]]+=1;
-                        adj[s[j]].push_back(t[j]);
-                        break;
-                    }
+                if(a[j]!=b[j]){
+                    indegree[b[j]]+=1;
+                    adj[a[j]].push_back(b[j]);
+                    break;
                 }
                 
+            }
+           
             
         }
-            
-            for(auto x:indegree) {
-                if(x.second == 0){
-                    q.push(x.first);
-                    numzero+=1;
-                }    
-            }
-            
-            if(numzero == 0) return "";
-            
-            while(!q.empty()){
-                
-                char f = q.front();
-                q.pop();
-                
-                res += f;
-                
-                for(auto c:adj[f]){
-                    
-                    indegree[c] -= 1;
-                    
-                    if(indegree[c] == 0) {
-                        q.push(c);
-                        numzero+=1;
-                    }
-                    
-                }
-                
-            }
         
-        if(numzero!=indegree.size()) return "";
+        queue<char> q;
+        for(auto x:indegree){
             
-            return res;
+            if(x.second==0){
+                q.push(x.first);
+                z+=1;
+            }
+        }
+        
+        if(z==0) return "";
+        string ans="";
+        
+        while(!q.empty()){
             
+            auto f = q.front();
+            q.pop();
+            ans+=f;
+            
+            for(auto c:adj[f]){
+                indegree[c]-=1;
+                if(indegree[c]==0){
+                    q.push(c);
+                    z+=1;
+                }
+            }
+            
+        }
+        
+        if(z!=indegree.size()) return "";
+        return ans;
         
     }
 };
