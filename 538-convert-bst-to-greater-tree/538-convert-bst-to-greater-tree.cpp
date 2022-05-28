@@ -11,45 +11,19 @@
  */
 class Solution {
 private:
-    TreeNode* getSuccessor(TreeNode* root) {
-        TreeNode* succ = root->right;
-        while(succ->left!=NULL && succ->left!=root) {
-            succ = succ->left;
-        }
-        return succ;
-    }
+    int sum=0;
 public:
-    
-    TreeNode* convertBST(TreeNode* root) {
-        TreeNode* curr = root;
-        int sum =0;
-        
-        while(curr!=NULL) {
-            
-            if(curr->right == NULL) {
-                
-                sum += curr->val;
-                curr->val = sum;
-                curr = curr->left;
-                
-            } else {
-                
-                TreeNode* succ = getSuccessor(curr);
-                
-                if(succ->left==NULL) {
-                    succ->left = curr;
-                    curr = curr->right;
-                } else {
-                    succ->left=NULL;
-                    sum += curr->val;
-                    curr->val = sum;
-                    curr = curr->left;
-                }
-                
-            }
-            
+    TreeNode* helper(TreeNode* root){
+        if(root) {
+            helper(root->right);
+            sum += root->val;
+            root->val = sum;
+            helper(root->left);
         }
-        
         return root;
+    }
+    TreeNode* convertBST(TreeNode* root) {
+        
+        return helper(root);
     }
 };
