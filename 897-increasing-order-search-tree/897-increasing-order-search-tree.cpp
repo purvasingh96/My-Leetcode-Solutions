@@ -11,40 +11,28 @@
  */
 class Solution {
 public:
-    
     TreeNode* increasingBST(TreeNode* root) {
-        TreeNode* curr = root;
-        TreeNode* dummy = NULL;
-        TreeNode* prev=new TreeNode(0, NULL, root);
+        TreeNode* prev = new TreeNode(0, NULL, root);
         TreeNode* ans = prev;
-        int min_num = root->val;
+        TreeNode* next;
+        TreeNode* curr = root;
         
-        while(curr!=NULL) {
+        while(curr){
             
-            if(curr->val < min_num) {
-                min_num=curr->val;
-                dummy=curr;
-            }
-            
-            if(curr->left){
+            if(curr->left) {
                 
-                TreeNode* temp=curr->left;
-                while(temp->right!=NULL) {
-                    temp=temp->right;
-                }
+                TreeNode* temp = curr->left;
+                while(temp->right!=NULL) temp=temp->right;
+                
                 TreeNode* next = curr->left;
-                temp->right = curr;
+                temp->right=curr;
                 curr->left=NULL;
-                prev->right = next;
-                curr = prev->right;
-                
-            } else{
-                prev = prev->right;
-                curr = curr->right;
-                
+                prev->right=next;
+                curr=prev->right;
+            }else{
+                prev=prev->right;
+                curr=curr->right;
             }
-            
-            
             
         }
         
