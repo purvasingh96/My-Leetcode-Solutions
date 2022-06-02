@@ -1,27 +1,29 @@
 class Solution {
 private:
-    int kadane(vector<int>& nums){
-        int best_sum=INT_MIN;
-        int min_so_far = 0;
-        for(int i=0;i<nums.size();i++){
-            min_so_far = max(min_so_far+nums[i], nums[i]);
-            best_sum = max(best_sum, min_so_far);
+    vector<int> kadane(vector<int>& nums){
+        int best_max_sum=nums[0];
+        int best_min_sum = nums[0];
+        int min_so_far = nums[0];
+        int max_so_far=nums[0];
+        int total_sum=nums[0];
+        
+        for(int i=1;i<nums.size();i++){
+            total_sum += nums[i];
+            max_so_far = max(max_so_far+nums[i], nums[i]);
+            best_max_sum = max(best_max_sum, max_so_far);
+            
+            min_so_far = min(min_so_far+nums[i], nums[i]);
+            best_min_sum = min(best_min_sum, min_so_far);
         }
-        return best_sum;
+        return {total_sum, best_min_sum, best_max_sum};
     }
 public:
     int maxSubarraySumCircular(vector<int>& nums) {
-        int x = kadane(nums);
-        cout<<x<<" ";
-        int total_sum = 0;
-        for(int i=0;i<nums.size();i++){
-            total_sum += nums[i];
-            nums[i]*=-1;
-        }
-        for(auto x:nums) cout<<x<<" ";
-        int y = kadane(nums);
-        cout<<y<<" ";
-        if(total_sum + y == 0) return x;
-        return max(x, (y+total_sum));
+        auto f = kadane(nums);
+        int total_sum = f[0];
+        int min_sum = f[1];
+        int max_sum = f[2];
+        
+        return total_sum==min_sum?max_sum:max(max_sum, (total_sum-min_sum));
     }
 };
