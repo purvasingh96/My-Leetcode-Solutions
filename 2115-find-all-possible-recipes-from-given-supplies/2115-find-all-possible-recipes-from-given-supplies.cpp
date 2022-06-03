@@ -25,9 +25,7 @@ public:
             for(auto r:adj[supply]){
                 indegree[r]-=1;
                 if(indegree[r]==0) {
-                    if(find(recipes.begin(), recipes.end(), r)!=recipes.end()){
-                        ans.push_back(r);
-                    }
+                    ans.push_back(r);
                     q.push(r);
                 }
             }
