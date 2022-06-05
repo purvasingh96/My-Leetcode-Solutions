@@ -5,7 +5,7 @@ public:
         map<int, int> outdegree;
         int n = graph.size();
         queue<int> q;
-        vector<int> res;
+        vector<bool> isSafe(n, false);
         
         for(int i=0;i<n;i++){
             outdegree[i] += graph[i].size();
@@ -28,7 +28,7 @@ public:
             auto f = q.front();
             q.pop();
             
-            res.push_back(f);
+            isSafe[f]=true;
             
             for(auto c:adj[f]){
                 outdegree[c]-=1;
@@ -38,7 +38,13 @@ public:
             }
         }
         
-        sort(res.begin(), res.end());
-        return res;
+        // VlogV + O(V+E), O(V+E)
+        vector<int> ans;
+        for(int i=0;i<n;i++){
+            if(isSafe[i]){
+                ans.push_back(i);
+            }
+        }
+        return ans;
     }
 };
