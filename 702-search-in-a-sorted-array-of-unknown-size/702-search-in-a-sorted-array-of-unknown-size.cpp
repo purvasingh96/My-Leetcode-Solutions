@@ -10,20 +10,8 @@
 class Solution {
 public:
     int search(const ArrayReader& reader, int target) {
-        int left=0, right=10001;
+        int start=0, end=10001;
         
-        while(left<right){
-            int mid = left + (right-left)/2;
-            
-            if(reader.get(mid)!=INT_MAX){
-                left = mid+1;
-            } else{
-                right = mid;
-            }
-        }
-        
-        int end = left-1;
-        int start=0;
         // cout<<end;
         
         while(start<end){
