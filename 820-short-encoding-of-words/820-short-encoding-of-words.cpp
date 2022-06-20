@@ -52,10 +52,10 @@ public:
         
     }
     
-    void getEOW(TrieNode* node, string& res){
+    void getEOW(TrieNode* node, int& res){
         
         if(node->iseow){
-            res += node->word+"#";
+            res += (node->word.length()+1);
             return;
         }
         
@@ -85,8 +85,8 @@ public:
             trie->insert(word);
         }
         
-        string res="";
+        int res=0;
         trie->getEOW(node, res);
-        return res.length();
+        return res;
     }
 };
