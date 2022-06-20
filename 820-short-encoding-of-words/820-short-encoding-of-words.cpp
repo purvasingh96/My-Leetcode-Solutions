@@ -26,7 +26,7 @@ public:
         
         bool isSmall=false;
         
-        for(int i=0;i<s.length();i++){
+        for(int i=s.length()-1;i>=0;i--){
             
             if(node->children[s[i]-'a']==NULL){
                 node->children[s[i]-'a'] = new TrieNode();
@@ -81,7 +81,6 @@ public:
         
         
         for(auto word:words){
-            reverse(word.begin(), word.end());
             trie->insert(word);
         }
         
