@@ -25,7 +25,7 @@ public:
             }
             
             node = node->children[s[i]-'a'];
-            node->suggestions.push_back(s);            
+            if(node->suggestions.size()<3) node->suggestions.push_back(s);            
         }
         
     }
@@ -41,15 +41,15 @@ public:
             node=node->children[s[i]-'a'];
         }
         
-        vector<string> sug = node->suggestions;
-        sort(sug.begin(), sug.end());
+        //vector<string> sug = node->suggestions;
+        //sort(sug.begin(), sug.end());
         
-        if(sug.size()>3){
-            ans.insert(ans.end(), sug.begin(), sug.begin()+3);
-        } else{
-            ans = sug;
-        }
-        return ans;
+        // if(sug.size()>3){
+        //     ans.insert(ans.end(), sug.begin(), sug.begin()+3);
+        // } else{
+        //     ans = sug;
+        // }
+        return node->suggestions;
         
     }
     
@@ -64,6 +64,7 @@ public:
         Trie* trie = new Trie();
         
         vector<vector<string>> ans;
+        sort(products.begin(), products.end());
         
         for(auto product:products){
             trie->insert(product);
