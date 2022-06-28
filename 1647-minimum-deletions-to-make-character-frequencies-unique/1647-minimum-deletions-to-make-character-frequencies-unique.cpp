@@ -1,40 +1,48 @@
 class Solution {
 public:
     int minDeletions(string s) {
-        sort(s.begin(), s.end());
-        //cout<<s<<" ";
-        vector<int> freq(100001, -1);
-        int n = s.length();
+        vector<int> t(26, 0);
+        int n=0;
+        
+        for(auto c:s){
+            t[c-'a']+=1;
+            n = max(n, t[c-'a']);
+        }
+        
+        // for(int i=0;i<26;i++){
+        //     cout<<t[i]<<" ";
+        // }
+        
+        vector<int> freq(n+1, -1);
+        
         int i=0;
         int left=0, right=0;
         int count=0;
         
-        while(right<n){
+        
+        for(int i=0;i<26;i++){
             
-            while(right+1<n && s[right] == s[right+1]){
-                right+=1;
-            }
-            
-            int cur_freq = right-left+1;
-            
-            if(freq[cur_freq]==-1){
-                freq[cur_freq] = 1;
-            }
-            
-            else{
+            if(t[i]!=-1){
                 
-                while(cur_freq>0 && freq[cur_freq]!=-1){
-                    count+=1;
-                    cur_freq-=1;
+                if(freq[t[i]]==-1){
+                    freq[t[i]]=1;
+                } else{
+                    
+                    while(t[i] >0 && freq[t[i]]!=-1){
+                        
+                        count+=1;
+                        t[i]-=1;
+                        
+                    }
+                    
+                    if(t[i]>0) freq[t[i]] = 1;
+                    
                 }
                 
-                if(cur_freq!=0) freq[cur_freq]=1;
             }
             
-            right+=1;
-            left=right;
-            
         }
+        
         
         return count;
         
