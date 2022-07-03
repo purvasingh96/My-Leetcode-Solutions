@@ -12,7 +12,7 @@ private:
         return new_x>=0 && new_x<m && new_y>=0 && new_y<n;
     }
     
-    int dfs(int r, int c, vector<vector<int>>& grid, vector<vector<int>>& memo){
+    int dfs(int r, int c, int& ans, vector<vector<int>>& grid, vector<vector<int>>& memo){
         if(memo[r][c]!=-1) return memo[r][c];
         
         memo[r][c] = 0;
@@ -22,35 +22,38 @@ private:
             
             // paths starting with node grid[r][c]
             if(withinBounds(new_x, new_y, grid) && grid[new_x][new_y]>grid[r][c]){
-                memo[r][c] += (dfs(new_x, new_y, grid, memo));
+                memo[r][c] += (dfs(new_x, new_y, ans, grid, memo));
             }
         }
         
         // path of length 1
         memo[r][c] = 1+ memo[r][c]%mod;
+        ans += memo[r][c];
+        ans = ans%mod;
         
         return memo[r][c];
     }
 public:
     int countPaths(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size();
+        int ans = 0;
         
         vector<vector<int>> memo(m, vector<int>(n, -1));
         
         for(int i=0;i<m;i++){
             for(int j=0;j<n;j++){
-                if(memo[i][j]==-1) dfs(i, j, grid, memo);
+                if(memo[i][j]==-1) dfs(i, j, ans, grid, memo);
             }
         }
         
-        int ans = 0;
         
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                ans += memo[i][j];
-                ans = ans%mod;
-            }
-        }
+        
+//         for(int i=0;i<m;i++){
+//             for(int j=0;j<n;j++){
+//                 ans += memo[i][j];
+//                 ans = ans%mod;
+//             }
+//         }
         
         return ans;
     }
