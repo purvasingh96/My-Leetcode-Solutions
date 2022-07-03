@@ -4,6 +4,7 @@ private:
     int dy[4] = {1, 0, -1, 0};
     
     int mod = 1000000007;
+    
     bool withinBounds(int new_x, int new_y, vector<vector<int>>& grid){
         int m = grid.size();
         int n = grid[0].size();
@@ -19,12 +20,14 @@ private:
             int new_x = r+dx[i];
             int new_y = c+dy[i];
             
+            // paths starting with node grid[r][c]
             if(withinBounds(new_x, new_y, grid) && grid[new_x][new_y]>grid[r][c]){
                 memo[r][c] += (dfs(new_x, new_y, grid, memo));
             }
         }
+        
+        // path of length 1
         memo[r][c] = 1+ memo[r][c]%mod;
-        //if(memo[r][c]==0) memo[r][c]=1;
         
         return memo[r][c];
     }
