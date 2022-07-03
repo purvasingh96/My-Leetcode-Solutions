@@ -24,7 +24,7 @@ private:
             }
         }
         memo[r][c] = 1+ memo[r][c]%mod;
-        if(memo[r][c]==0) memo[r][c]=1;
+        //if(memo[r][c]==0) memo[r][c]=1;
         
         return memo[r][c];
     }
