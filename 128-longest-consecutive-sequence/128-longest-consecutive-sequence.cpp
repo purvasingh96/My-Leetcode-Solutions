@@ -5,15 +5,13 @@ private:
 public:
     int longestConsecutive(vector<int>& nums) {
         if(nums.size()<2) return nums.size();
-        // rank.resize(1e5);
-        // root.resize(1e5);
-        //map<int, int> m;
         
+        // O(N)
         for(auto x:nums) {
             rank[x] = 1;
             root[x] = x;
         }
-        
+        // O(N) as union find takes O(alpha(N)) 
         for(auto x:nums) {
             if(rank.find(x+1)!=rank.end()) {
                 union1(x, x+1);
