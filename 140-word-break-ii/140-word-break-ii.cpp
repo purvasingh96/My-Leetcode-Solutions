@@ -1,75 +1,73 @@
 class TrieNode{
 public:
     vector<TrieNode*> children;
-    bool eow;
+    bool iseow;
     TrieNode(){
         children.resize(26, NULL);
-        eow=false;
+        iseow=false;
     }
 };
 
+
 class Trie{
-public:
+ public:
     TrieNode* root;
     Trie(){
         root = new TrieNode();
     }
-    
     void insert(string s){
+        
         TrieNode* node = root;
+        
         for(int i=0;i<s.length();i++){
             
             if(node->children[s[i]-'a']==NULL){
+                
                 node->children[s[i]-'a'] = new TrieNode();
+                
             }
             
             node = node->children[s[i]-'a'];
             
         }
-        
-        node->eow=true;
-        
+        node->iseow=true;
     }
+    
 };
+
 
 class Solution {
 private:
-    void dfs(int i, string s, string temp, TrieNode* node, TrieNode* root, vector<string>& ans){
+    void dfs(TrieNode* node, TrieNode* root, string s, string temp, int i, vector<string>& res){
         
         if(i>=s.length()){
-            if(node->eow) ans.push_back(temp);
+            if(node->iseow){
+                res.push_back(temp);
+            }
             return;
         }
         
         if(node->children[s[i]-'a']!=NULL){
             
-            dfs(i+1, s, temp+s[i], node->children[s[i]-'a'], root, ans);
+            dfs(node->children[s[i]-'a'], root, s, temp+s[i], i+1, res);
             
-            if(node->children[s[i]-'a']->eow==true){
-                
-                dfs(i+1, s, temp+s[i]+' ', root, root, ans);
-                
+            if(node->children[s[i]-'a']->iseow){
+                dfs(root, root, s, temp+s[i]+" ", i+1, res);
             }
             
         }
         
-        
     }
-    
-    
 public:
     vector<string> wordBreak(string s, vector<string>& wordDict) {
-        vector<string> ans;
         Trie* trie = new Trie();
-        
         
         for(auto word:wordDict){
             trie->insert(word);
         }
-        
+        vector<string> res;
         string temp="";
-        dfs(0, s, temp, trie->root, trie->root, ans);
-        return ans;
-        
+        dfs(trie->root, trie->root, s, temp, 0, res);
+        return res;
     }
 };
