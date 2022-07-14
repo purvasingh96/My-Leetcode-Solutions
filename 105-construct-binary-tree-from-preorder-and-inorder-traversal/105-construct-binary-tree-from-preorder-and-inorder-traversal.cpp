@@ -11,23 +11,40 @@
  */
 class Solution {
 private:
-    TreeNode* dfs(vector<int> preorder, vector<int> inorder, int& rootIdx, int start, int end) {
-        if(start> end) return NULL;
+    int findInorderIdx(int val, int start, int end, vector<int>& inorder){
+        int ans=-1;
         
-        int pivot = start;
-        while(inorder[pivot]!=preorder[rootIdx]) pivot++;
+        for(int i=start;i<=end;i++){
+            if(inorder[i] == val) {
+                ans=i;
+                break;
+            }    
+        }
         
-        rootIdx+=1;
-        TreeNode* root = new TreeNode(inorder[pivot]);
-        root->left = dfs(preorder, inorder, rootIdx, start, pivot-1);
-        root->right = dfs(preorder, inorder, rootIdx, pivot+1, end);
+        return ans;
+    }
+    
+    TreeNode* dfs(int& idx, int start, int end, vector<int>& preorder, vector<int>& inorder){
+        if(idx>=preorder.size()) return NULL;
+        if(start>end) return NULL;
+        
+        int inorderIdx = findInorderIdx(preorder[idx++], start, end, inorder);
+        TreeNode* root = new TreeNode(inorder[inorderIdx]);
+        
+        if(start==end) return root;
+        
+        
+        
+        root->left = dfs(idx, start, inorderIdx-1, preorder, inorder);
+        root->right = dfs(idx, inorderIdx+1, end, preorder, inorder);
         
         return root;
-        
     }
+    
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        int rootIdx = 0;
-        return dfs(preorder, inorder, rootIdx, 0, inorder.size()-1);
+        
+        int idx=0;
+        return dfs(idx, 0, preorder.size()-1, preorder, inorder);
     }
 };
