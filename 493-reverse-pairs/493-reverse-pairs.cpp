@@ -1,38 +1,40 @@
 class Solution {
 private:
-    void checkCount(vector<int>& nums, int left, int mid, int right, int& count){
+    void merge_sort(int start, int end, vector<int>& nums, vector<int>& temp, int& res){
         
-        int i=left, j=mid+1;
+        if(start>=end) return;
         
-        while(i<=mid && j<=right){
-            if((long)nums[i] > (long) 2*nums[j]){
-                count += (mid-i)+1;
-                j+=1;
-            } else {
-                i+=1;
-            }
+        int mid = start + (end-start)/2;
+        
+        merge_sort(start, mid, nums, temp, res);
+        merge_sort(mid+1, end, nums, temp, res);
+        
+        int i=start, j=mid+1, p=mid+1, idx=start;
+        
+        while(i<=mid){
+            
+            while(p<=end && nums[i]> 2L*nums[p]) p++;
+            res += (p - (mid+1));
+            
+            while(j<=end && nums[i] > nums[j]) temp[idx++] = nums[j++];
+            temp[idx++] = nums[i++];
+            
         }
         
-        sort(nums.begin()+left, nums.begin()+right+1);
+        while(j<=end) temp[idx++] = nums[j++];
         
-    }
-    void mergeSort(vector<int>& nums, int left, int right, int& count){
-        
-        if(left>=right) return;
-        
-        int mid = left + (right-left)/2;
-        
-        mergeSort(nums, left, mid, count);
-        mergeSort(nums, mid+1, right, count);
-        
-        checkCount(nums, left, mid, right, count);
-        
+        for(int k=start;k<=end;k++){
+            nums[k] = temp[k];
+        }
         
     }
 public:
     int reversePairs(vector<int>& nums) {
-        int count=0;
-        mergeSort(nums, 0, nums.size()-1, count);
-        return count;
+        int ans=0, n = nums.size();
+        vector<int> temp(n);
+        
+        merge_sort(0, n-1, nums, temp, ans);
+        
+        return ans;
     }
 };
