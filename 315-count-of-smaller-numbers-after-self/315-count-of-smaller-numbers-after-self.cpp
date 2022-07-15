@@ -1,57 +1,63 @@
 class Solution {
 private:
-    void mergeSort(int start, int end, vector<pair<int, int>>& nums, vector<int>& indices, vector<pair<int, int>>& temp){
-        if(start >= end)
-            return;
+    void mergesort(int start, int end, vector<vector<int>>& nums, vector<int>& indices,
+                  vector<vector<int>>& temp){
+        
+        if(start>=end) return;
         
         int mid = start + (end - start) / 2;
         
-        mergeSort(start, mid, nums, indices, temp);
-        mergeSort(mid + 1, end, nums, indices, temp);
+        mergesort(start, mid, nums, indices, temp);
+        mergesort(mid + 1, end, nums, indices, temp);
         
-        int left = start, right = mid + 1;
-        int idx = start;
-        int nRightLessThanLeft = 0;
-        while(left <= mid and right <= end) {
-            if(nums[left] < nums[right]) {
-                indices[nums[left].second] += nRightLessThanLeft;
+        
+        int left=start, right=mid+1, nsmall=0, idx=start;
+        
+        while(left<=mid && right<=end){
+            
+            if(nums[left][0] <= nums[right][0]){
+                indices[nums[left][1]] += nsmall;
                 temp[idx++] = nums[left++];
-            } else if(nums[left] > nums[right]) {
+                
+            }  else if(nums[left][0] > nums[right][0]){
                 temp[idx++] = nums[right++];
-                nRightLessThanLeft++;
-            } else
-                left++, right++;
+                nsmall++;
+            }
+            
         }
         
-        while(left <= mid) {
-            indices[nums[left].second] += nRightLessThanLeft;
+        while(left<=mid){
+            
+            indices[nums[left][1]] += nsmall;
             temp[idx++] = nums[left++];
         }
+    
         
-        while(right <= end)
+        while(right<=end){
+            
             temp[idx++] = nums[right++];
+        }
         
-        for(int i=start; i<=end; i++)
-            nums[i] = temp[i];
+        for(int k=start;k<=end;k++){
+            nums[k] = temp[k];
+        }
+        
     }
 public:
     vector<int> countSmaller(vector<int>& nums) {
-        
-        vector<pair<int, int>> temp1;
-        vector<pair<int, int>> temp2;
+        vector<vector<int>> temp1;
+        vector<vector<int>> temp2;
         int n = nums.size();
+        vector<int> ans(n, 0);
         
-        for(int i=0;i<nums.size();i++){
+        for(int i=0;i<n;i++){
             temp1.push_back({nums[i], i});
             temp2.push_back({nums[i], i});
         }
         
-        vector<int> ans((int)nums.size(), 0);
+        mergesort(0, n-1, temp1, ans, temp2);
         
-        if(nums.size()==1) {
-            return ans;
-        }
-        mergeSort(0, n-1, temp1, ans, temp2);
         return ans;
+        
     }
 };
