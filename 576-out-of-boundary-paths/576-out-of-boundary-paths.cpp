@@ -14,7 +14,7 @@ private:
     
     long dfs(int r, int c, int movesLeft, int m, int n, vector<vector<vector<long>>>& dp){
         
-        if(withinBounds(r, c, m, n) && movesLeft==0) return 0;
+        //if(withinBounds(r, c, m, n) && movesLeft==0) return 0;
         
         if(outOfBounds(r, c, m, n) && movesLeft>=0) return 1;
         
@@ -32,8 +32,7 @@ private:
             int new_c = c + dy[i];
             
             ans += dfs(new_r, new_c, movesLeft-1, m, n, dp);
-            ans = ans%mod;
-           
+            ans = ans%mod;  
         }
         
         return dp[r][c][movesLeft] = ans;
