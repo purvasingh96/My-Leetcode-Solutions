@@ -14,10 +14,8 @@ private:
     
     long findPathsHelper(int r, int c, int movesLeft, int m, int n, vector<vector<vector<long>>>& dp){
         
-        if(outOfBounds(r, c, m, n) && movesLeft>=0) return 1;
-        
         if(movesLeft<0) return 0;
-        
+        if(outOfBounds(r, c, m, n) && movesLeft>=0) return 1;
         if(withinBounds(r, c, m, n) && dp[r][c][movesLeft]!=-1){
             
             return dp[r][c][movesLeft];            
