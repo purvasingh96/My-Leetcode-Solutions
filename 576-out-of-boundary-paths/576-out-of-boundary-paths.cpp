@@ -12,9 +12,7 @@ private:
         return (r<0 || c<0 || r>=m || c>=n);
     }
     
-    long dfs(int r, int c, int movesLeft, int m, int n, vector<vector<vector<long>>>& dp){
-        
-        //if(withinBounds(r, c, m, n) && movesLeft==0) return 0;
+    long findPathsHelper(int r, int c, int movesLeft, int m, int n, vector<vector<vector<long>>>& dp){
         
         if(outOfBounds(r, c, m, n) && movesLeft>=0) return 1;
         
@@ -31,7 +29,7 @@ private:
             int new_r = r + dx[i];
             int new_c = c + dy[i];
             
-            ans += dfs(new_r, new_c, movesLeft-1, m, n, dp);
+            ans += findPathsHelper(new_r, new_c, movesLeft-1, m, n, dp);
             ans = ans%mod;  
         }
         
@@ -43,7 +41,7 @@ public:
         long ans=0;
         vector<vector<vector<long>>> dp(m, vector<vector<long>>(n, vector<long>(maxMove+1, -1)));
         
-        return (int)dfs(startRow, startColumn, maxMove, m, n, dp);
+        return (int)findPathsHelper(startRow, startColumn, maxMove, m, n, dp);
         
     }
 };
