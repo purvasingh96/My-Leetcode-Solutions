@@ -16,7 +16,7 @@ private:
         
         if(movesLeft<0) return 0;
         if(outOfBounds(r, c, m, n) && movesLeft>=0) return 1;
-        if(withinBounds(r, c, m, n) && dp[r][c][movesLeft]!=-1){
+        if(!outOfBounds(r, c, m, n) && dp[r][c][movesLeft]!=-1){
             
             return dp[r][c][movesLeft];            
         }
