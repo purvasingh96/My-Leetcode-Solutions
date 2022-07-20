@@ -25,16 +25,17 @@ public:
     }
 
     
-    int dfs(TrieNode *root, string &s, int idx, vector<int>pos[]) {
-        int res = 0;
-        for (int i = 0; i < 26; i++) {
-            if (root->children[i]) {
-                int newIdx = upper_bound(pos[i].begin(), pos[i].end(), idx) - pos[i].begin();
-                if (newIdx == pos[i].size()) continue;
-                res += dfs(root->children[i], s, pos[i][newIdx], pos);
+    int dfs(int last_idx, TrieNode* node, string& s, vector<int> pos[]){
+        
+        int res=0;
+        for(int i=0;i<26;i++){
+            if(node->children[i]){
+                int new_idx = upper_bound(pos[i].begin(), pos[i].end(), last_idx) - pos[i].begin();
+                if(new_idx == pos[i].size()) continue;
+                res += dfs(pos[i][new_idx], node->children[i], s, pos);
             }
         }
-        return res + root->end;
+        return res + node->end;
     }
         
 };
@@ -53,6 +54,6 @@ public:
             pos[s[i]-'a'].push_back(i);
         }
         
-        return trie->dfs(trie->root, s, -1, pos);
+        return trie->dfs(-1, trie->root, s, pos);
     }
 };
