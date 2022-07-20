@@ -1,53 +1,58 @@
-struct TrieNode {
-    unordered_map<char, TrieNode*> children;
-    bool isEnd;
-    int count; // numbers of the same word in the dict
-    TrieNode() { isEnd = false; count = 0;}
+class TrieNode{
+public:
+    vector<TrieNode*> children;
+    int end;
+    TrieNode(){
+        children.resize(26, NULL);
+        end=0;
+    }
 };
 
-class Trie {
-    public:
+class Trie{
+public:
     TrieNode* root;
-    Trie() { root = new TrieNode(); }
-    void insert(string s) {
-        TrieNode* it = root;
-        for(char c : s) {
-            if(it->children.count(c) == 0)
-                it->children[c] = new TrieNode();
-            it = it->children[c];
-        }
-        it->isEnd = true;
-        it->count++; // in case we have repeated words
+    Trie(){
+        root = new TrieNode();
     }
-   
+    
+    void insert(string s) {
+        TrieNode *cur = root;
+        for (char ch : s) {
+            if (!cur->children[ch - 'a']) cur->children[ch - 'a'] = new TrieNode();
+            cur = cur->children[ch - 'a'];
+        }
+        (cur->end)++;
+    }
+
+    
+    int dfs(TrieNode *root, string &s, int idx, vector<int>pos[]) {
+        int res = 0;
+        for (int i = 0; i < 26; i++) {
+            if (root->children[i]) {
+                int newIdx = upper_bound(pos[i].begin(), pos[i].end(), idx) - pos[i].begin();
+                if (newIdx == pos[i].size()) continue;
+                res += dfs(root->children[i], s, pos[i][newIdx], pos);
+            }
+        }
+        return res + root->end;
+    }
+        
 };
 
 class Solution {
-    int ans = 0;
-    int findIndex(const string &s, int start, char c) {
-        for(int i = start; i < s.size(); i++)
-            if(s[i] == c) return i;
-        return -1;
-    }
-    
-    // DFS on the Trie
-    void dfs(const string& s, TrieNode* node, int start) {
-        for(auto p : node->children) {
-            int idx = findIndex(s, start, p.first);
-            if(idx != -1) {
-                if(p.second->isEnd) ans+= p.second->count;
-                dfs(s, p.second, idx + 1);
-            }
-                
-        }
-    }
 public:
     int numMatchingSubseq(string s, vector<string>& words) {
-        Trie trie;
-        for(string w : words)
-            trie.insert(w);
+        Trie* trie = new Trie();
+        for(auto word:words){
+            trie->insert(word);
+        }
         
-        dfs(s, trie.root, 0);
-        return ans;
+        vector<int> pos[26];
+        
+        for(int i=0;i<s.length();i++){
+            pos[s[i]-'a'].push_back(i);
+        }
+        
+        return trie->dfs(trie->root, s, -1, pos);
     }
 };
