@@ -1,32 +1,29 @@
 class Solution {
-public:
-    int findMaxForm(vector<string>& strs, int m, int n) {
-        int sz=strs.size();
-        int dp[sz+1][m+1][n+1];
-        memset(dp,0,sizeof(dp));
-        int res=0;
+private:
+    int dfs(int idx, int c0, int c1, vector<string>& strs, vector<vector<vector<int>>>& dp){
         
-        for(int i=1;i<=sz;i++){
-            
-             int cnt1=count(strs[i-1].begin(),strs[i-1].end(),'1');  //count no of 1's in each substring
-            int cnt0=strs[i-1].size()-cnt1;
-            
-            for(int j=0;j<=m;j++){
-                for(int k=0;k<=n;k++){
-                    dp[i][j][k] = dp[i-1][j][k];
-                    
-                    if(j>=cnt0 && k>=cnt1) {
-                        dp[i][j][k] = max(dp[i][j][k], 1+dp[i-1][j-cnt0][k-cnt1]);
-                    
-                    }
-                    
-                    res = max(res, dp[i][j][k]);
-                    
-                }
-            }
-            
+        if(idx == strs.size() || c0<0 || c1<0) return 0;
+        
+        if(dp[idx][c0][c1]!=-1) return dp[idx][c0][c1];
+        
+        int x0 = count(strs[idx].begin(), strs[idx].end(), '0');
+        int x1 = strs[idx].length() - x0;
+        
+        int pick=-1;
+        int not_pick = dfs(idx+1, c0, c1, strs, dp);
+        
+        if(c0-x0>=0 && c1-x1>=0){
+           pick = 1 + dfs(idx+1, c0-x0, c1-x1, strs, dp); 
         }
         
-        return res;
+        return dp[idx][c0][c1] = max(pick, not_pick);
+    }
+    
+public:
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        int k = strs.size();
+        vector<vector<vector<int>>> dp(k, vector<vector<int>>(m+1, vector<int>(n+1, -1)));
+        
+        return dfs(0, m, n, strs, dp);
     }
 };
