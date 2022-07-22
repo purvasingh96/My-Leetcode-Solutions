@@ -6,8 +6,11 @@ private:
         if(target == 0) return 1;
         if(dp[idx][target]!=-1) return dp[idx][target];
         
-        int ans = dfs(idx, target-coins[idx], coins, dp) + 
-                  dfs(idx+1, target, coins, dp);
+        int ans=0;
+        for(int i=0;i<coins.size();i++){
+            ans += dfs(i, target-coins[i], coins, dp);
+        }
+        
         
         return dp[idx][target] = ans;
     }
