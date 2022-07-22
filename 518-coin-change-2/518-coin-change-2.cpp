@@ -1,40 +1,23 @@
 class Solution {
-
-    
+private:
+    int dfs(int idx, int target, vector<int>& coins, vector<vector<int>>& dp){
+        
+        if(idx>=coins.size() || target<0) return 0;
+        if(target == 0) return 1;
+        if(dp[idx][target]!=-1) return dp[idx][target];
+        
+        int ans = dfs(idx, target-coins[idx], coins, dp) + 
+                  dfs(idx+1, target, coins, dp);
+        
+        return dp[idx][target] = ans;
+    }
 public:
     int change(int amount, vector<int>& coins) {
-        if(amount==0) return 1;
-        int m = coins.size(), n=amount+1;
-        vector<vector<int>> dp(m, vector<int>(n, 0));
+        int ans=0;
+        int m = coins.size();
+        vector<vector<int>> dp(m, vector<int>(amount+1, -1));
         
-        for(int j=0;j<n;j++){
-            if(j%coins[0]==0){
-                dp[0][j]+=1;
-            }
-        }
+        return dfs(0, amount, coins, dp);
         
-        for(int i=0;i<m;i++){
-            dp[i][0]=0;
-        }
-        
-        
-        
-        for(int i=1;i<m;i++){
-            for(int j=1;j<n;j++){
-                
-                if(j<coins[i]){
-                    dp[i][j] = dp[i-1][j];
-                } else if(j==coins[i]){
-                    dp[i][j] = 1+dp[i-1][j];
-                } else if(j>coins[i]){
-                    dp[i][j] = dp[i-1][j]+dp[i][j-coins[i]];
-                }
-                
-            }
-            
-            
-        }
-        
-        return dp[m-1][amount];
     }
 };
