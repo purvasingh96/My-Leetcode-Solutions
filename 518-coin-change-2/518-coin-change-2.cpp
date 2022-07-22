@@ -6,36 +6,18 @@ private:
         if(target == 0) return 1;
         if(dp[idx][target]!=-1) return dp[idx][target];
         
-        int ans=0;
-        for(int i=0;i<coins.size();i++){
-            ans += dfs(i, target-coins[i], coins, dp);
-        }
-        
+        int ans = dfs(idx, target-coins[idx], coins, dp) + 
+                  dfs(idx+1, target, coins, dp);
         
         return dp[idx][target] = ans;
     }
 public:
     int change(int amount, vector<int>& coins) {
+        int ans=0;
         int m = coins.size();
-        vector<vector<int>> dp(m+1, vector<int>(amount+1, 0));
+        vector<vector<int>> dp(m, vector<int>(amount+1, -1));
         
-        for(int i=0;i<=m;i++){
-            dp[i][0] = 1;
-        }
+        return dfs(0, amount, coins, dp);
         
-        for(int i=1;i<=m;i++){
-            for(int j=1;j<=amount;j++){
-                
-                if(coins[i-1] > j){
-                    dp[i][j] = dp[i-1][j];
-                } else{
-                    
-                    dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]];
-                    
-                }
-                
-            }
-        }
-        return dp[m][amount];
     }
 };
