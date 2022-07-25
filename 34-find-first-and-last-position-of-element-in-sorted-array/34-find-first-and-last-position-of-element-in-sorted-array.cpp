@@ -1,52 +1,33 @@
 class Solution {
-private:
-    int binary(vector<int>& nums, int target, bool isFirst){
-        int n = nums.size();
-        int left=0,right=n-1;
-        
-        while(left<=right){
-            int mid = left + (right-left)/2;
-            
-            if(nums[mid] == target){
-                
-                if(isFirst){
-                    
-                    if(mid==left || nums[mid-1]!=target){
-                        return mid;
-                    }
-                    
-                    right=mid-1;
-                    
-                } else {
-                    
-                    
-                    if(mid==right || nums[mid+1]!=target){
-                        return mid;
-                    }
-                    
-                    left=mid+1;
-                    
-                }
-                
-            } else if(nums[mid] < target) {
-                left = mid+1;
-            } else {
-                right=mid-1;
-            }            
-        }
-        
-        return -1;
-    }
 public:
     vector<int> searchRange(vector<int>& nums, int target) {
-        int i = binary(nums, target, true);
+        if(nums.size()==0) return {-1, -1};
+        int n = nums.size();
+        int left=0, right=n-1;
         
-        if(i==-1) return {-1, -1};
+        while(left<right){
+            int mid = left + (right-left)/2;
+            if(nums[mid] < target) left= mid+1;
+            else right=mid;
+        }
         
-        int j = binary(nums, target, false);
+        cout<<"hre";
         
-        return {i,j};
+        if(nums[left]!=target) return {-1, -1};
+        
+        int start = left,  end=n-1;
+        
+        while(start<end){
+            
+            int mid = start + (end-start)/2;
+            
+            if(nums[mid]<=target) start = mid+1;
+            else end=mid;
+        }
+        
+        cout<<"hre";
+        if(nums[start]==target) return {left, start};
+        
+        return {left, start-1};
     }
-    
-    
 };
