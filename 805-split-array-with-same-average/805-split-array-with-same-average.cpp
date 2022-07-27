@@ -36,22 +36,6 @@ public:
             sort(right[sz].begin(), right[sz].end());
         }
         
-         for(int i=0;i<=(N);i++){
-            cout<<i<<" -> ";
-            for(auto y:left[i]){
-                cout<<y<<" ";
-            }
-            cout<<"\n";
-        }
-        cout<<"\n\n";
-        for(int i=0;i<=(n-N);i++){
-            cout<<i<<" -> ";
-            for(auto y:right[i]){
-                cout<<y<<" ";
-            }
-            cout<<"\n";
-        }
-
         
         for(int sz=1;sz<=N;sz++){
             for(auto a:left[sz]){
