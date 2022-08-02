@@ -1,39 +1,42 @@
-class trie{
-  public:
-    map<int, trie*> children;
-    trie(){
-        
-    }
-};
 class Solution {
+private:
+    bool checkCollision(vector<int>& ids, vector<int>& nums, int sz, int j){
+        for(auto i:ids){
+            if(equal(nums.begin()+i, nums.begin()+i+sz+1, nums.begin()+j)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 public:
     int countDistinct(vector<int>& nums, int k, int p) {
-        trie* root = new trie();
-        int n = nums.size();
+        int n = nums.size(), res=0;
+        vector<int> cnt(n, 0);
+        vector<int> hash(n, 0);
+        int mod = 1e9+7;
         
-        int ans=0;
-        
-        for(int i=0;i<n;i++){
+        for(int sz=0;sz<n;sz++){
             
-            trie* temp = root;
-            int count=0;
+            unordered_map<int, vector<int>> s;
             
-            for(int j=i;j<n;j++){
-                if(nums[j]%p==0){
-                    count+=1;
-                }
+            for(int i=0;i+sz<n;i++){
+                cnt[i] += (nums[i+sz]%p==0);
                 
-                if(count>k) break;
-                
-                if(!temp->children[nums[j]]){
-                    temp->children[nums[j]] = new trie();
-                    ans+=1;
+                if(cnt[i] <= k){
+                    
+                    hash[i] = ((long long)hash[i]*200 + nums[i+sz]);
+                    if(!checkCollision(s[hash[i]], nums, sz, i)){
+                        s[hash[i]].push_back(i);
+                        res+=1;
+                    }
+                    
                 }
-                temp = temp->children[nums[j]];
             }
             
         }
         
-        return ans;
+        return res;
+        
     }
 };
