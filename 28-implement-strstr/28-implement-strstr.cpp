@@ -1,32 +1,31 @@
 class Solution {
 public:
     int strStr(string haystack, string needle) {
+        // rabin karp
         if(haystack.length()==0 || needle.length()==0) return -1;
         
-        int base = 31, m = needle.length(), n = haystack.length();
+        int base = 31, n = haystack.length(), m = needle.length();
         int mod = 1e9+7;
         
-        long long h=1;
-        
+        long long h = 1;
+        // abcd: h(abc) = a*31^2 + b*31^1 + c*31^0 => ()
         for(int i=0;i<m-1;i++){
-            h = ((long long)(h*base))%mod;
+            h = (h*base)%mod;
         }
         
-        long long pHash=0, sHash=0;
-        
-        // calculate for first iteration
+        long long sHash=0, pHash = 0;
+        int j=0;
+        // first iteration
         for(int i=0;i<m;i++){
-            //cout<<(251+needle[i])<<"\n";
-            pHash = (base*pHash + needle[i])%mod;
-            sHash = (base*sHash + haystack[i])%mod;
+            sHash = (sHash* base + haystack[i])%mod;
+            pHash = (pHash*base + needle[i])%mod;
         }
         
         //cout<<sHash<<" "<<pHash;
         
-        int j=0;
-        
         for(int i=0;i<=(n-m);i++){
-            if(pHash == sHash) {
+            if(sHash == pHash){
+                //cout<<"here";
                 for(j=0;j<m;j++){
                     if(haystack[i+j] != needle[j]) break;
                 }
@@ -34,15 +33,10 @@ public:
             
             if(j==m) return i;
             
-            if(i<(n-m)){
-                sHash = (sHash - h*haystack[i]);
-                sHash = sHash%mod;
-                sHash *= base;
-                sHash = sHash%mod;
-                sHash += haystack[i+m];
-                if(sHash<0) sHash+=mod;
+            if(i < (n-m)){
+                sHash = ((sHash - h*haystack[i])*base + haystack[i+m])%mod;
+                if(sHash<0) sHash += mod;
             }
-            
         }
         
         return -1;
