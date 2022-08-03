@@ -1,51 +1,51 @@
 class Solution {
-private:
-    vector<int> generateLPS(string sub){
-        int n = sub.length();
-        vector<int> lps(n,0);
-        
-        for(int i=1,j=0;i<n;){
-            if(sub[i] == sub[j]){
-                lps[i]=j+1;
-                i+=1;
-                j+=1;
-            } else{
-                if(j>0) {
-                    j = lps[j-1];
-                } else{
-                    i+=1;
-                }
-            }
-        }
-        
-        return lps;
-    }
 public:
     int strStr(string haystack, string needle) {
-        auto lps = generateLPS(needle);
-        int n = haystack.length();
+        if(haystack.length()==0 || needle.length()==0) return -1;
         
-        for(int i=0,j=0;i<n;){
-            
-            if(haystack[i] == needle[j]){
-                i+=1;
-                j+=1;
-            } else{
-                
-                if(j>0){
-                    j = lps[j-1];
-                } else{
-                    i+=1;
+        int base = 31, m = needle.length(), n = haystack.length();
+        int mod = 1e9+7;
+        
+        long long h=1;
+        
+        for(int i=0;i<m-1;i++){
+            h = ((long long)(h*base))%mod;
+        }
+        
+        long long pHash=0, sHash=0;
+        
+        // calculate for first iteration
+        for(int i=0;i<m;i++){
+            //cout<<(251+needle[i])<<"\n";
+            pHash = (base*pHash + needle[i])%mod;
+            sHash = (base*sHash + haystack[i])%mod;
+        }
+        
+        //cout<<sHash<<" "<<pHash;
+        
+        int j=0;
+        
+        for(int i=0;i<=(n-m);i++){
+            if(pHash == sHash) {
+                for(j=0;j<m;j++){
+                    if(haystack[i+j] != needle[j]) break;
                 }
-                
             }
             
-            if(j == needle.length()){
-                return i-j;
+            if(j==m) return i;
+            
+            if(i<(n-m)){
+                sHash = (sHash - h*haystack[i]);
+                sHash = sHash%mod;
+                sHash *= base;
+                sHash = sHash%mod;
+                sHash += haystack[i+m];
+                if(sHash<0) sHash+=mod;
             }
             
         }
         
         return -1;
+        
     }
 };
