@@ -1,6 +1,6 @@
 class Solution {
 private:
-    bool dfs(int i, vector<int>& nums, vector<int>& dp){
+    bool helper(int i, vector<int>& nums, vector<int>& dp){
         int n = nums.size();
         if(i==n) return true;
         
@@ -10,7 +10,7 @@ private:
         
         if(i+1<n) {
             if(nums[i] == nums[i+1]) {
-                x = dfs(i+2, nums, dp);
+                x = helper(i+2, nums, dp);
             }
         } 
         
@@ -20,7 +20,7 @@ private:
             bool cond_2 = ((nums[i+2] == nums[i+1]+1) && (nums[i+1] == nums[i]+1));
             
             if(cond_1 || cond_2){
-                y = dfs(i+3, nums, dp);
+                y = helper(i+3, nums, dp);
             }
             
         }
@@ -32,6 +32,6 @@ public:
     bool validPartition(vector<int>& nums) {
         int n = nums.size();
         vector<int> dp(n, -1);
-        return dfs(0, nums, dp);
+        return helper(0, nums, dp);
     }
 };
