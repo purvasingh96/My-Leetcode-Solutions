@@ -1,39 +1,17 @@
 class Solution {
 public:
     int lengthOfLIS(vector<int>& nums) {
-        vector<int> sub;
-        sub.push_back(nums[0]);
+        int n = nums.size();
+        vector<int> dp(n, 1);
         
-        for(int i=1;i<nums.size();i++){
-            
-            int num=nums[i];
-            
-            if(num>sub.back()){
-                sub.push_back(num);
-            } else{
-                int j = binarySearch(sub, num);
-                sub[j]=num;
-            }
-            
-        }
-        
-        return sub.size();
-    }
-    
-    int binarySearch(vector<int> sub,int num){
-        int left=0, right=sub.size()-1;
-        
-        while(left<right){
-            int mid = left + (right-left)/2;
-            
-            if(sub[mid] == num) return mid;
-            else if(sub[mid] < num){
-                left=mid+1;
-            } else{
-                right=mid;
+        for(int i=1;i<n;i++){
+            for(int j=0;j<i;j++){
+                if(nums[i]>nums[j]){
+                    dp[i] = max(dp[i], dp[j]+1);
+                }
             }
         }
         
-        return left;
+        return *max_element(dp.begin(), dp.end());
     }
 };
