@@ -13,7 +13,7 @@ class Solution {
 private:
     TreeNode* dfs(int start, int end, vector<int>& nums){
         if(start>end) return NULL;
-        int mid = start + (end-start+1)/2;
+        int mid = start + (end-start)/2;
         
         TreeNode* root = new TreeNode(nums[mid]);
         
