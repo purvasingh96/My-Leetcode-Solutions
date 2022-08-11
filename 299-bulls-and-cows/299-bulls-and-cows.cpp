@@ -1,19 +1,20 @@
 class Solution {
 public:
     string getHint(string secret, string guess) {
-        map<char, int> m;
-        map<char, int> y;
-        for(auto x:secret) m[x]+=1;
+        vector<int> m(10, 0);
+        vector<int> y(10, 0);
+        
+        for(auto x:secret) m[x-'0']+=1;
         int total = 0, count=0;
         
         for(int i=0;i<secret.length();i++){
             if(secret[i] == guess[i]) count+=1;
-            y[guess[i]] +=1;
+            y[guess[i]-'0'] +=1;
         }
         
-        for(auto x:y){
-            if(m.find(x.first)!=m.end()) {
-                total += min(m[x.first], x.second);
+        for(int i=0;i<10;i++){
+            if(m[i] != 0 && y[i]!=0) {
+                total += min(m[i], y[i]);
             }
         }
         
