@@ -1,18 +1,13 @@
 class Solution {
 public:
     bool uniqueOccurrences(vector<int>& arr) {
-        map<int, int> m;
-        map<int, int> y;
+        vector<int> m(2001);
+        for(auto x:arr) ++m[x+1000];
+        sort(m.begin(), m.end());
         
-        for(auto x:arr){
-            m[x]+=1;
+        for(int i=1;i<2001;i++){
+            if(m[i] && m[i]==m[i-1]) return false;
         }
-        
-        for(auto x:m){
-            if(y[x.second]>0) return false;
-            y[x.second]+=1;
-        }
-        
         return true;
         
     }
