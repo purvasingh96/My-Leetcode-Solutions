@@ -1,27 +1,58 @@
 class Solution {
 public:
     vector<int> findSubstring(string s, vector<string>& words) {
-        unordered_map<string, int> counts;
-        vector<int> indexes;
-        for (string word : words)
-        counts[word]++;
-        int n = s.length(), num = words.size();
-        if (n == 0 || num == 0) return indexes;
+        unordered_map<string, int> m;
+        unordered_map<string, int> w;
+        vector<int> ans;
+        
+        for(auto word:words) w[word]+=1;
+        
+        int n = s.length();
         int len = words[0].length();
-        for (int i = 0; i < n - num * len + 1; i++) {
-            unordered_map<string, int> seen;
-            int j = 0;
-            for (; j < num; j++) {
-                string word = s.substr(i + j * len, len);
-                if (counts.find(word) != counts.end()) {
-                    seen[word]++;
-                    if (seen[word] > counts[word])
-                        break;
+        int words_len = words.size();
+        int total_len = len*words_len;
+        
+        
+        for(int i=0;i<(len);i++){
+            m.clear();
+            int left=i, right=i;
+            int found=0;
+            
+            while(right<s.length()){
+                
+                string str = s.substr(right, len);
+                
+                if(w.find(str)!=w.end()) {
+                    m[str]+=1;
+                    found+=1;
+                    
+                    while(m[str] > w[str]){
+                        string cur = s.substr(left, len);
+                        m[cur]-=1;
+                        left += len;
+                        found-=1;
+                    }
+                    
+                    if(found == words_len) ans.push_back(left);
+                    right+=len;
+
+                } 
+            
+                else {
+                    m.clear();
+                    found=0;
+                    right+=len;
+                    left=right;
+
                 }
-                else break;
+                
+                
             }
-            if (j == num) indexes.push_back(i);
+            
+            
         }
-        return indexes;
+        
+        return ans;
+        
     }
 };
