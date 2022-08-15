@@ -1,7 +1,9 @@
 class Solution {
 public:
     int romanToInt(string s) {
-        map<char, int> m;
+        unordered_map<char, int> m;
+        int n = s.length(),res = 0, i=0;
+        
         m['I'] = 1;
         m['V'] = 5;
         m['X'] = 10;
@@ -9,53 +11,53 @@ public:
         m['C'] = 100;
         m['D'] = 500;
         m['M'] = 1000;
+    
         
-        int ans=0;
-        
-        for(int i=0;i<s.length();i++){
+        while(i<n){
             
             if(s[i] == 'I' || s[i] == 'X' || s[i] == 'C'){
                 
-                if(i<s.length()-1){
-                    string sub = s.substr(i,2);
-                    if(sub == "IV"){
-                        ans+=4;
-                        i+=1;
-                    } else if(sub=="IX"){
-                        ans+=9;
-                        i+=1;
-                    } else if(sub == "XL"){
-                        ans+=40;
-                        i+=1;
-                    } else if(sub == "XC"){
-                        ans+=90;
-                        i+=1;
-                    } else if(sub == "CD"){
-                        ans+=400;
-                        i+=1;
-                    } else if(sub == "CM"){
-                        ans+=900;
-                        i+=1;
-                    } else{
-                        ans+= m[s[i]];
+                if(i+1<n){
+                    
+                    string sub = s.substr(i, 2);
+                    
+                    if(sub == "IV") {
+                        res += 4;
+                        i+=2;
                     }
+                    else if(sub == "IX"){
+                        res+=9;
+                        i+=2;
+                    } else if(sub == "XL"){
+                        res+= 40;
+                        i+=2;
+                    } else if(sub == "XC"){
+                        res+=90;
+                        i+=2;
+                    } else if(sub == "CD"){
+                        res+= 400;
+                        i+=2;
+                    } else if(sub == "CM"){
+                        res += 900;
+                        i+=2;
+                    } else {
+                        res += m[s[i]];
+                        i+=1;
+                    } 
                     
-                    //cout<<s[i]<<" "<<ans<<"\n";
-                    
-                } 
-                
-                else{
-                    ans += m[s[i]];
-                    //cout<<s[i]<<" "<<ans<<"\n";
+                } else{ 
+                    res += m[s[i]];
+                    i+=1;
                 }
                 
-                
-            } else{
-                ans += m[s[i]];
-                //cout<<s[i]<<" "<<ans<<"\n";
+            } else {
+                res+= m[s[i]];
+                i+=1;
             }
             
         }
-        return ans;
-     }
+        
+        return res;
+        
+    }
 };
