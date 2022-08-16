@@ -1,57 +1,38 @@
 class Solution {
 private:
-    void dfs(int pi, string pattern, string temp, int& minres, vector<bool>& seen){
-        if(pi==pattern.length()){
-            minres = min(minres, stoi(temp));
-            return;
+    void revert(string& s, int start, int end){
+        while(start<end){
+            char t = s[start];
+            s[start]=s[end];
+            s[end]=t;
+            start+=1;
+            end-=1;
         }
-        
-        int start = temp.back()-'0';
-        
-        if(pattern[pi] == 'I'){
-            
-            for(int i=start+1;i<=9;i++){
-                if(!seen[i]){
-                    seen[i] = true;
-                    temp += (i+'0');
-                    dfs(pi+1, pattern, temp, minres, seen);
-                    temp.pop_back();
-                    seen[i]=false;
-                }
-            }
-            
-        } else {
-            
-            for(int i=start-1;i>0;i--){
-                if(!seen[i]){
-                    seen[i]=true;
-                    temp += (i+'0');
-                    dfs(pi+1, pattern, temp, minres, seen);
-                    temp.pop_back();
-                    seen[i]=false;
-                }
-            }
-            
-        }
-        
-        
     }
 public:
     string smallestNumber(string pattern) {
-        int minres=INT_MAX;
-        int ans=INT_MAX;
+        int n = pattern.length();
+        string s ="";
         
-        for(int i=1;i<=9;i++){
-            vector<bool> seen(10, false);
-            
-            string temp = "";
-            temp += (i+'0');
-            seen[i] = true;
-            dfs(0, pattern, temp, minres, seen);
-            
-            if(minres!=INT_MAX) return to_string(minres);
+        for(int i=0;i<=n;i++){
+            s+= to_string(i+1);
+        }
+        int i=0;
+        while(i<n){
+            if(pattern[i]=='D'){
+                int j=i;
+                while(j<n && pattern[j]=='D'){
+                    j+=1;
+                }
+                
+                revert(s, i, j);
+                i=j;
+            } else {
+                i+=1;
+            }
         }
         
-        return to_string(minres);
+        return s;
+        
     }
 };
