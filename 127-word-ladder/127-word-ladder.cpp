@@ -1,56 +1,46 @@
 class Solution {
 public:
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+    int ladderLength(string b, string e, vector<string>& wordList) {
+        // bfs of paths
+        queue<vector<string>> q;
+        q.push({b});
         
-        set<string> wordset(wordList.begin(), wordList.end());
+        unordered_set<string> st(wordList.begin(), wordList.end());
         
-        queue<string> q;
-        q.push(beginWord);
-        
-        int level = 1;
-        
-        while(!q.empty()) {
+        while(!q.empty()){
             
-            int size = q.size();
+            int n = q.size();
             
-            for(int i=0;i<size;i++) {
+            while(n--){
                 
-                string front = q.front();
+                auto path =q.front();
                 q.pop();
                 
-                for(int j=0;j<front.length();j++) {
-                    
-                    char temp = front[j];
-                    
-                    for(char c = 'a';c<='z';c++) {
-                        
-                        front[j] = c;
-                        
-                        string next = front;
-                        
-                        if(wordset.find(next) != wordset.end()) {
-                            
-                            if(next == endWord) return level+1;
-                            
-                            q.push(next);
-                            wordset.erase(next);
-                            
-                        }
-                        
-                    }
-                    
-                    front[j] = temp;
-                    
+                if(path.back() == e){
+                    return path.size();
                 }
                 
+                string last = path.back();
+                st.erase(last);
+                
+                for(int i=0;i<last.length();i++){
+                    string curr = last;
+                    for(int j=0;j<26;j++){
+                        curr[i] = (j+'a');
+                        
+                        if(st.find(curr)!=st.end()){
+                            path.push_back(curr);
+                            q.push(path);
+                            path.pop_back();
+                        }
+                    }
+                }
+                
+                
             }
-            
-            level += 1;
-            
             
         }
         
         return 0;
-        
     }
 };
