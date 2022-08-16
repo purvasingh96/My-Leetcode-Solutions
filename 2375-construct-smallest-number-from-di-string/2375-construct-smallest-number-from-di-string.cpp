@@ -49,9 +49,9 @@ public:
             seen[i] = true;
             dfs(0, pattern, temp, minres, seen);
             
-            ans = min(ans, minres);
+            if(minres!=INT_MAX) return to_string(minres);
         }
         
-        return to_string(ans);
+        return to_string(minres);
     }
 };
