@@ -1,35 +1,40 @@
 class Solution {
 public:
     int minSetSize(vector<int>& arr) {
-        unordered_map<int, int> freq;
-        int target = arr.size()/2;
-        priority_queue<int> pq;
+        unordered_map<int, int> m;
+        int maxcount=0;
         
-        for(auto x:arr) {
-            freq[x]+=1;
-            if(freq[x] >= target) return 1;
+        for(auto x:arr){
+            m[x]+=1;
+            if(m[x] > maxcount) maxcount = m[x];
         }
         
+        vector<int> buckets(maxcount+1, 0);
         
-        for(auto x:freq){
-            pq.push(x.second);
+        for(auto x:m){
+            buckets[x.second] += x.second;
         }
         
-        int count=0, ans=0;
+        int half = arr.size()/2;
+        int bucket = maxcount;
+        int ans=0;
         
-        while(count<target){
-            int top = pq.top();
-            pq.pop();
+        while(half>0){
             
-            if(count+top >= target){
-                return ans+1;
+            if(buckets[bucket] <= 0){
+                bucket-=1;
             } else {
-                count+=top;
+                
                 ans+=1;
+                buckets[bucket] -= bucket;
+                half -= bucket;
+                
             }
+            
+            
         }
         
-       return ans;
+        return ans;
         
     }
 };
