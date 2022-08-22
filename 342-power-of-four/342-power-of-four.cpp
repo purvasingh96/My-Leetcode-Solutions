@@ -1,12 +1,11 @@
 class Solution {
 public:
     bool isPowerOfFour(int n) {
-        if(n==0) return false;
+        vector<int> isPower;
+        for(int i=0;pow(4,i)<=n;i++){
+            isPower.push_back(pow(4, i));
+        }
         
-        while(n!=1){
-            if(n%4!=0) return false;
-            n = n/4;
-        }   
-        return true;
+        return find(isPower.begin(), isPower.end(), n)!=isPower.end();
     }
 };
