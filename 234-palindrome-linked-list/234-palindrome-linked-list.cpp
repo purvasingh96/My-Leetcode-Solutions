@@ -15,29 +15,33 @@ public:
         
         ListNode* slow=head;
         ListNode* fast = head;
+        ListNode* prev=slow;
         vector<int> ans;
         
         while(fast && fast->next){
-            ans.push_back(slow->val);
+            prev=slow;
             slow=slow->next;
             fast=fast->next->next;
         }
         
+        prev->next=NULL;
+        
+        ListNode* x=NULL;
         
         while(slow){
-            if(slow->val!=ans.back()) {
-                if(slow->next){
-                    if(slow->next->val!=ans.back()) return false;
-                    else slow=slow->next;
-                } else return false;
-            }
-            
-            
-            ans.pop_back();
-            slow=slow->next;
+            ListNode* temp = slow->next;
+            slow->next=x;
+            x=slow;
+            slow=temp;
         }
         
-        return ans.size()==0;
+        while(head && x){
+            if(head->val != x->val) return false;
+            head=head->next;
+            x=x->next;
+        }
+        
+        return true;
         
     }
 };
