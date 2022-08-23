@@ -1,40 +1,48 @@
 class Solution {
 private:
-    bool dfs(int idx, int cur_sum, int target, int k, vector<int>& nums, vector<bool>& visited){
+    bool dfs(vector<int>& arr, int index, int count, int currsum, int k, int target, int& mask, unordered_map<int, bool>& memo) {
         
-        if(k==1) return true;
+        if(count==k-1) return true;
         
-        if(idx>=nums.size()) return false;
+        if(currsum > target) return false;
         
-        if(cur_sum == target){
-            return dfs(0, 0, target, k-1, nums, visited);
+        if(memo.find(mask)!=memo.end()) return memo[mask];
+        
+        if(currsum==target){
+            return memo[mask] = dfs(arr, 0, count+1, 0, k, target, mask, memo);
         }
         
-        for(int j=idx;j<nums.size();j++){
+        bool ans;
+        for(int i=index;i<arr.size();i++){
             
-            if(visited[j] || cur_sum+nums[j] > target) continue;
-            
-            visited[j] = true;
-            
-            if(dfs(j+1, cur_sum+nums[j], target, k, nums, visited)){
-                return true;
+            // not visied
+            if(((mask >> i) & 1) == 0) {
+                mask = (mask | (1<<i));
+                
+                ans = dfs(arr, i+1, count, currsum+arr[i], k, target, mask, memo);
+                if(ans) return memo[mask] = true;
+             
+                
+                mask = (mask ^ (1<<i));
+                
             }
             
-            visited[j]=false;
-            
         }
+        return memo[mask] = false;
         
-        return false;
         
     }
 public:
     bool canPartitionKSubsets(vector<int>& nums, int k) {
-        sort(nums.begin(), nums.end(), greater<int>());
         int sum = accumulate(nums.begin(), nums.end(), 0);
         if(sum%k!=0) return false;
-        vector<bool> visited((int)nums.size(), false);
+        sort(nums.begin(), nums.end(), greater<int>());
+            
         int target = sum/k;
+        int mask = 0;
         
-        return dfs(0, 0, target, k, nums, visited);
+        unordered_map<int, bool> memo;
+        
+        return dfs(nums, 0, 0, 0, k, target, mask, memo);
     }
 };
