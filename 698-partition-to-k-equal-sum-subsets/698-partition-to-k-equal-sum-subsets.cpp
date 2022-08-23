@@ -36,7 +36,7 @@ public:
     bool canPartitionKSubsets(vector<int>& nums, int k) {
         int sum = accumulate(nums.begin(), nums.end(), 0);
         if(sum%k!=0) return false;
-        sort(nums.begin(), nums.end(), greater<int>());
+        
             
         int target = sum/k;
         int mask = 0;
