@@ -1,40 +1,46 @@
 class Solution {
 private:
-    bool dfs(int i, vector<bool>& visited, vector<int>& ms, int cur_sum, int target, int k){
+    bool dfs(vector<int>& arr, int idx, int count, int cursum, int target, int& mask, unordered_map<int, bool>& memo){
         
-        if(k==1) return true;
+        if(count==3) return true;
         
-        if(i>=ms.size()) return false;
+        if(cursum > target) return false;
         
-        if(cur_sum == target) {
-            return dfs(0, visited, ms, 0, target, k-1);
+        if(memo.find(mask)!=memo.end()) return memo[mask];
+        
+        if(cursum == target){
+            return memo[mask] = dfs(arr, 0, count+1, 0, target, mask, memo);
         }
         
-        for(int j=i;j<ms.size();j++){
+        for(int i=idx;i<arr.size();i++){
             
-            if(visited[j] || cur_sum+ms[j] > target) continue;
-            
-            visited[j] = true;
-            
-            if(dfs(j+1, visited, ms, cur_sum+ms[j], target, k)){
-                return true;
+            if(((mask >> i) & 1) == 0){
+                
+                mask = (mask | (1<<i));
+                bool ans = dfs(arr, idx+1, count, cursum+arr[i], target, mask, memo);
+                if(ans) return memo[mask] = true;
+                mask = (mask ^ (1<<i));
+                
+                
             }
             
-            visited[j] = false;
+            
         }
         
-        return false;
+        return memo[mask] = false;
+        
     }
 public:
-    bool makesquare(vector<int>& ms) {
-        sort(ms.begin(), ms.end(), greater<int>());
-        vector<bool> visited((int)ms.size(), false);
-        int sum = accumulate(ms.begin(), ms.end(), 0);
+    bool makesquare(vector<int>& matchsticks) {
+        
+        int sum = accumulate(matchsticks.begin(), matchsticks.end(), 0);
         
         if(sum%4!=0) return false;
         
-        int target = sum/4;
+        int target = sum/4, mask=0;
         
-        return dfs(0, visited, ms, 0, target, 4);
+        unordered_map<int, bool> memo;
+        
+        return dfs(matchsticks, 0, 0, 0, target, mask, memo);
     }
 };
