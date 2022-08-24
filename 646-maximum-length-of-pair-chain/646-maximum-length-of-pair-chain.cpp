@@ -1,24 +1,25 @@
 class Solution {
-public:
-    int findLongestChain(vector<vector<int>>& pairs) {
-        // knapsack types
-        int n = pairs.size();
-        sort(pairs.begin(), pairs.end());
-        vector<int> dp(n, 1);
+private:
+    int dfs(vector<vector<int>>& pairs, int idx, int prev, vector<vector<int>>& dp){
+        if(idx>=pairs.size()) return 0;
         
-        for(int i=1;i<n;i++){
-            for(int j=0;j<i;j++){
-                
-                if(pairs[j][1] < pairs[i][0]){
-                    
-                    dp[i] = max(dp[i], dp[j]+1);
-                    
-                }
-                
-                
-            }
+        if(dp[idx][prev]!=-1) return dp[idx][prev];
+        
+        int pick=0, notpick=0;
+        
+        if(pairs[idx][0] + 1001 > prev){
+            pick = 1+dfs(pairs, idx+1, pairs[idx][1]+1001, dp);
         }
         
-        return *max_element(dp.begin(), dp.end());
+        notpick = dfs(pairs, idx+1, prev, dp);
+        
+        return dp[idx][prev] = max(pick, notpick);
+    }
+public:
+    int findLongestChain(vector<vector<int>>& pairs) {
+        int n = pairs.size();
+        vector<vector<int>> dp(n, vector<int>(2002, -1));
+        sort(pairs.begin(), pairs.end());
+        return dfs(pairs, 0, 0, dp);
     }
 };
