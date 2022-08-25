@@ -1,44 +1,52 @@
 class Solution {
-public:
-    int strStr(string haystack, string needle) {
+private:
+    vector<int> generateLPS(string needle){
+        int n = needle.length();
+        vector<int> lps(n, 0);
         
-        int m = haystack.length(), n = needle.length(), base=26;
-        int mod = 1e9+7,j;
-        
-        if(m==0 || n==0) return -1;
-        
-        long long h=1;
-        
-        for(int i=0;i<n-1;i++){
-            h = (h*base);
-            h = h%mod;
-        }
-        
-        long long sHash=0, pHash=0;
-        
-        for(int i=0;i<n;i++){
-            sHash = (sHash*base + haystack[i])%mod;
-            pHash = (pHash*base + needle[i])%mod;
-        }
-        
-        for(int i=0;i<=(m-n);i++){
-            if(sHash == pHash){
-                for(j=0;j<n;j++){
-                    if(haystack[i+j] != needle[j]) break;
+        for(int i=1, j=0;i<n;){
+            
+            if(needle[i]==needle[j]){
+                lps[i]=j+1;
+                i+=1;
+                j+=1;
+            } else {
+                
+                if(j>0){
+                    j=lps[j-1];
+                } else {
+                    i+=1;
                 }
                 
-                if(j==n) return i;
             }
             
-            if(i<(m-n)){
-                
-                sHash = ((sHash - h*haystack[i])*base + haystack[i+n])%mod;
-                if(sHash<0) sHash += mod;
-                
-            }
         }
         
-        return -1;
+        return lps;
+    }
+public:
+    int strStr(string haystack, string needle) {
+        vector<int> lps = generateLPS(needle);
         
+        for(int i=0, j=0;i<haystack.length();){
+            
+            if(haystack[i] == needle[j]){
+                i+=1;
+                j+=1;
+            } else{
+                
+                if(j>0){
+                    j=lps[j-1];
+                } else {
+                    i+=1;
+                }
+                
+                
+            }
+            
+            if(j==needle.length()) return i-j;
+            
+        }
+        return -1;
     }
 };
