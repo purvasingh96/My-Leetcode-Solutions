@@ -10,7 +10,7 @@ public:
         
         for(int mask=0;mask<(1<<N);mask++) {
             int sz=0, l=0, r=0;
-            for(int i=0;i<N;i++){
+            for(int i=0;i<=N;i++){
                 if(mask & (1<<i)){
                     sz+=1;
                     l+=nums[i];
