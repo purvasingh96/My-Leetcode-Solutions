@@ -26,7 +26,7 @@ public:
         int n = word.length();
         int maxc=0;
         
-        while(word.size() < sequence.length()){
+        while(word.length() < sequence.length()){
             
             word+=word;
         }
