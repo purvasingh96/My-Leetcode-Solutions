@@ -1,73 +1,56 @@
-class NodeDetails{
-public:
-    int node;
-    int dist;
-    int mask;
-    NodeDetails(int node, int dist, int mask) {
-        this->node = node;
-        this->dist = dist;
-        this->mask = mask;
-    }
-};
-
 class Solution {
 public:
     int shortestPathLength(vector<vector<int>>& graph) {
         if(graph.size()==1) return 0;
-        
         int n = graph.size();
-        int end_mask = (1 << n) - 1;
-        int steps=0;
-            
-        vector<vector<bool>> visited(n, vector<bool>(end_mask, false));
         
-        queue<NodeDetails> q;
+        queue<vector<int>> q;
+        int endingmask = (1<<n) - 1;
         
-        for(int i=0;i<n;i++) {
-            
-            int node = i;
-            int dist = 1;
-            int mask = (1<<i);
-            
-            NodeDetails nd(node, dist, mask);
-            
-            q.push(nd);
-            
-            visited[node][mask] = true;
-            
+        vector<vector<int>> seen(n, vector<int>(endingmask, false));
+        
+        for(int i=0;i<n;i++){
+            int mask = 1<<i;
+            q.push({i, mask});
+            seen[i][mask] = true;
         }
         
-        while(!q.empty()) {
+        int level=0;
+        
+        while(!q.empty()){
             
+            int s = q.size();
             
+            for(int i=0;i<s;i++){
                 
-                auto info = q.front();
+                auto f = q.front();
                 q.pop();
                 
-                int node = info.node;
-                int dist = info.dist;
-                int mask = info.mask;
+                int node = f[0], mask = f[1];
                 
-                for(auto neighbour:graph[node]) {
-                    
-                    int next_mask = (mask | (1<<neighbour));
-                    
-                    if(next_mask == end_mask) return (dist);
-                    
-                    if(!visited[neighbour][next_mask]) {
-                        
-                        visited[neighbour][next_mask] = true;
-                        NodeDetails next_nd(neighbour, dist+1, next_mask);
-                        q.push(next_nd);
-                        
+                for(auto child:graph[node]){
+                    int newmask = mask | (1<<child);
+                    if(newmask == endingmask){
+                        return 1+level;
                     }
+                    
+                    
+                    if(!seen[child][newmask]){
+                        seen[child][newmask] = true;
+                        q.push({child, newmask});
+                    }
+                    
                 }
                 
+                
+            }
             
+            level+=1;
             
             
         }
         
         return -1;
+        
     }
 };
