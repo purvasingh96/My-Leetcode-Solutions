@@ -1,70 +1,53 @@
-class UnionFind {
-public:
-  UnionFind(vector<vector<char>>& grid) {
-    count = 0;
-    int m = grid.size();
-    int n = grid[0].size();
-      for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < n; ++j) {
-          if (grid[i][j] == '1') {
-            parent.push_back(i * n + j);
-            ++count;
-          }
-          else parent.push_back(-1);
-          rank.push_back(0);
-        }
-    }
-  }
-
-  int find(int i) { // path compression
-    if (parent[i] != i) parent[i] = find(parent[i]);
-    return parent[i];
-  }
-
-  void Union(int x, int y) { // union with rank
-    int rootx = find(x);
-    int rooty = find(y);
-    if (rootx != rooty) {
-      if (rank[rootx] > rank[rooty]) parent[rooty] = rootx;
-      else if (rank[rootx] < rank[rooty]) parent[rootx] = rooty;
-      else {
-        parent[rooty] = rootx; rank[rootx] += 1;
-      }
-      --count;
-    }
-  }
-
-  int getCount() const {
-    return count;
-  }
-
-private:
-  vector<int> parent;
-  vector<int> rank;
-  int count; // # of connected components
-};
-
 class Solution {
-public:
-  int numIslands(vector<vector<char>>& grid) {
-    int nr = grid.size();
-    if (!nr) return 0;
-    int nc = grid[0].size();
-
-    UnionFind uf (grid);
-    int num_islands = 0;
-    for (int r = 0; r < nr; ++r) {
-      for (int c = 0; c < nc; ++c) {
-        if (grid[r][c] == '1') {
-          grid[r][c] = '0';
-          if (r - 1 >= 0 && grid[r-1][c] == '1') uf.Union(r * nc + c, (r-1) * nc + c);
-          if (r + 1 < nr && grid[r+1][c] == '1') uf.Union(r * nc + c, (r+1) * nc + c);
-          if (c - 1 >= 0 && grid[r][c-1] == '1') uf.Union(r * nc + c, r * nc + c - 1);
-          if (c + 1 < nc && grid[r][c+1] == '1') uf.Union(r * nc + c, r * nc + c + 1);
-        }
-      }
+private:
+    int dx[4] = {0, 1, 0, -1};
+    int dy[4] = {1, 0, -1, 0};
+    
+    bool isValid(int r, int c, vector<vector<char>>& grid){
+        return r>=0 && c>=0 && r<grid.size() && c<grid[0].size() && grid[r][c]=='1';
     }
-
-    return uf.getCount();
-  }
+    
+    void dfs(int r, int c, vector<vector<char>>& grid, vector<vector<bool>>& visited){
+        
+        visited[r][c] = true;
+        
+        for(int i=0;i<4;i++){
+            int new_r = r+dx[i];
+            int new_c = c+dy[i];
+            
+            if(isValid(new_r, new_c, grid) && !visited[new_r][new_c]){
+                dfs(new_r, new_c, grid, visited);
+            }
+        }        
+    }
+    
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        
+        vector<vector<int>> ones;
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        
+        for(int i=0;i<grid.size();i++){
+            for(int j=0;j<grid[0].size();j++){
+                if(grid[i][j] == '1'){
+                    ones.push_back({i, j});
+                }
+            }
+        }
+        
+        int ans=0;
+        
+        for(int i=0;i<ones.size();i++){
+            int r = ones[i][0], c = ones[i][1];
+            
+            if(!visited[r][c]){
+                dfs(r, c, grid, visited);
+                ans+=1;
+            }
+            
+        }
+        
+        return ans;
+    }
 };
