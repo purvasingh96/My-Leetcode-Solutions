@@ -20,39 +20,67 @@ private:
         return min(s1.length(), s2.length());
     }
     
+    TreeNode* lcaHelper(TreeNode* root, int start, int dest) {
+        if(!root) return NULL;
+        
+        if(root->val == start || root->val == dest) return root;
+        
+        TreeNode* left = lcaHelper(root->left, start, dest);
+        TreeNode* right = lcaHelper(root->right, start, dest);
+        
+        if(left && right) return root;
+        
+        else if(left && !right) return left;
+        
+        else if(!left && right) return right;
+        
+        return NULL;
+        
+    }
     
-    void dfs(TreeNode* root, string& s, string& start, string& dest, int startVal, int destVal) {
+    void dfs(TreeNode* root, int dest, string& res, string& s, bool& found){
         if(!root) return;
-        if(root->val == startVal) start = s;
-        else if(root->val == destVal) dest = s;
         
-        if(root->left!=NULL){
-            s += "L";
-            dfs(root->left, s, start, dest, startVal, destVal);
-            s.pop_back();
-        } 
-        
-        if(root->right!=NULL){
-            s+="R";
-            dfs(root->right, s, start, dest, startVal, destVal);
-            s.pop_back();
+        if(root->val==dest) {
+            s = res;
+            found=true;
+            return;
         }
+        
+        if(!found){
+            if(root->left){
+                res+="L";
+                dfs(root->left, dest, res, s, found);
+                res.pop_back();
+            }
+            
+            if(root->right){
+                res+="R";
+                dfs(root->right, dest, res, s, found);
+                res.pop_back();
+            }
+            
+        }
+        
+        return;
     }
     
 public:
     string getDirections(TreeNode* root, int startVal, int destVal) {
         
-        string start="", dest="", s="";
+        TreeNode* lca = lcaHelper(root, startVal, destVal);
+        string left="", right="", s="";
+        bool found_start=false, found_dest=false;
+        dfs(lca, startVal, s, left, found_start);
+        s="";
+        dfs(lca, destVal, s, right, found_dest);
         
-        dfs(root, s, start, dest, startVal, destVal);
+        if(left.length()==0) return right;
         
-        int ln = start.length(), rn=dest.length();
+        int idx = lcp(left,right);
         
-        if(ln==0) return dest;
+        string st(left.length() - idx, 'U');
         
-        int idx = lcp(start, dest);
-        string st(ln-idx, 'U');
-        
-        return st+dest.substr(idx);
+        return st+right.substr(idx);
     }
 };
