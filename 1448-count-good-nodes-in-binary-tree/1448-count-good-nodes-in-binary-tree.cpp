@@ -11,23 +11,23 @@
  */
 class Solution {
 private:
-    void dfs(TreeNode* root, priority_queue<int> pq, int& good){
+    void dfs(TreeNode* root, int maxval, int& good){
         if(!root) return;
         
-        if(pq.empty() || pq.top()<=root->val) good+=1;
+        if(maxval==INT_MIN || maxval <= root->val) good+=1;
         
-        pq.push(root->val);
+        maxval = max(maxval, root->val);
         
-        dfs(root->left, pq, good);
-        dfs(root->right, pq, good);
+        dfs(root->left, maxval, good);
+        dfs(root->right, maxval, good);
         
         
     }
 public:
     int goodNodes(TreeNode* root) {
         int good=0;
-        priority_queue<int> pq;
-        dfs(root, pq, good);
+        int maxval=INT_MIN;
+        dfs(root, maxval, good);
         return good;
     }
 };
