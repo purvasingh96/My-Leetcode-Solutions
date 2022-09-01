@@ -1,37 +1,74 @@
- class Solution {
-public:
-    int countRangeSum(vector<int>& nums, int lower, int upper) {
-        int size=nums.size();
-        if(size==0)  return 0;
-        vector<long> sums(size+1, 0);
-        for(int i=0; i<size; i++)  sums[i+1]=sums[i]+nums[i];
-        return help(sums, 0, size+1, lower, upper);
-    }
-    
-    /*** [start, end)  ***/
-    int help(vector<long>& sums, int start, int end, int lower, int upper){
-        /*** only-one-element, so the count-pair=0 ***/
-        if(end-start<=1)  return 0;
-        int mid=(start+end)/2;
-        int count=help(sums, start, mid, lower, upper)
-                + help(sums, mid, end, lower, upper);
-        
-        int m=mid, n=mid, t=mid, len=0;
-        /*** cache stores the sorted-merged-2-list ***/
-        /*** so we use the "len" to record the merged length ***/
-        vector<long> cache(end-start, 0);
-        for(int i=start, s=0; i<mid; i++, s++){
-            /*** wrong code: while(m<end && sums[m++]-sums[i]<lower);  ***/
-            while(m<end && sums[m]-sums[i]<lower) m++;
-            while(n<end && sums[n]-sums[i]<=upper) n++;
-            count+=n-m;
-            /*** cache will merge-in-the-smaller-part-of-list2 ***/
-            while(t<end && sums[t]<sums[i]) cache[s++]=sums[t++];
-            cache[s]=sums[i];
-            len=s;
+class Solution {
+private:
+    int merge(int left, int right, vector<long long>& ps, int lower, int upper){
+        if(left == right){
+            return (ps[left] >= lower && ps[left]<=upper)? 1:0;
         }
         
-        for(int i=0; i<=len; i++)  sums[start+i]=cache[i];
-        return count;
+        int mid = left + (right-left)/2;
+        
+        int left_count = merge(left, mid, ps, lower, upper);
+        int right_count = merge(mid+1, right, ps, lower, upper);
+        int count=0;
+        int i=left, j=mid+1, k=mid+1;
+        
+        while(i<=mid){
+            
+            long long lower_new = lower+ps[i];
+            long long upper_new = upper+ps[i];
+            
+            while(j<=right && ps[j]<=upper_new){
+                j+=1;
+            }
+            
+            while(k<=right && ps[k] < lower_new){
+                k+=1;
+            }
+            
+            count+= (j-k);
+            i+=1;
+        }
+        
+        vector<long long> temp;
+        int i1=left, j1=mid+1;
+        
+        while(i1<=mid && j1<=right){
+            if(ps[i1] < ps[j1]) {
+                temp.push_back(ps[i1]);
+                i1+=1;
+            } else{
+                temp.push_back(ps[j1]);
+                j1+=1;
+            }
+        }
+        
+        while(i1<=mid){
+            temp.push_back(ps[i1]);
+            i1+=1;
+        }
+        
+        while(j1<=right){
+            temp.push_back(ps[j1]);
+            j1+=1;
+        }
+        
+        int q=0;
+        for(int p=left;p<=right;p++){
+            ps[p] = temp[q++];
+        }
+        
+        return left_count + right_count + count;
+    }
+    
+public:
+    int countRangeSum(vector<int>& nums, int lower, int upper) {
+        int n = nums.size();
+        vector<long long> ps(n, 0);
+        ps[0] = nums[0];
+        for(int i=1;i<n;i++){
+            ps[i] = ps[i-1]+nums[i];
+        }
+        
+        return merge(0, n-1, ps, lower, upper);
     }
 };
