@@ -1,57 +1,67 @@
+class SegmentTree{
+public:
+    vector<int> tree;
+    int n;
+    SegmentTree(int n){
+        this->n = n;
+        tree.resize(4*n);
+    }
+    
+    int left(int node) {
+        return 2*node+1;
+    }
+    
+    int right(int node){
+        return 2*node+2;
+    }
+    
+    void update(int node, int start, int end, int val){
+        if(start>end) return;
+        if(start == end) {
+            tree[node]+=1;
+            return;
+        }
+        
+        int mid = start + (end-start)/2;
+        if(val <=mid) update(left(node), start, mid, val);
+        else update(right(node), mid+1, end, val);
+        
+        tree[node] = tree[left(node)] + tree[right(node)];
+    }
+    
+    int query(int node, int s, int e, int qs, int qe){
+        if(s>e || qs>e || qe<s) return 0;
+        if(s>=qs && e<=qe) return tree[node];
+        
+        int mid = s + (e-s)/2;
+        int l = query(left(node), s, mid, qs, qe);
+        int r = query(right(node), mid+1, e, qs, qe);
+        
+        return l+r;
+        
+    }
+};
+
 class Solution {
 private:
-    void mergesort(int start, int end, vector<vector<int>>& nums, vector<int>& indices, vector<vector<int>>& temp){
-        
-        if(start>=end) return;
-        
-        int mid = start + (end - start) / 2;
-        
-        mergesort(start, mid, nums, indices, temp);
-        mergesort(mid + 1, end, nums, indices, temp);
-        
-        int left=start, right=mid+1, nsmall=0, idx=start;
-        
-        while(left<=mid && right<=end){
-            
-            if(nums[left][0] <= nums[right][0]){
-                indices[nums[left][1]] += nsmall;
-                temp[idx++] = nums[left++];
-                
-            }  else if(nums[left][0] > nums[right][0]){
-                temp[idx++] = nums[right++];
-                nsmall++;
-            }
-            
-        }
-        
-        while(left<=mid){
-            indices[nums[left][1]] += nsmall;
-            temp[idx++] = nums[left++];
-        }
-        
-        while(right<=end){
-            temp[idx++] = nums[right++];
-        }
-        
-        for(int i=start;i<=end;i++){
-            nums[i] = temp[i];
-        }
-        
+    void convert(vector<int>& nums){
+        int val = 1e4+1;
+        for(int i=0;i<nums.size();i++) nums[i] += val;
     }
 public:
     vector<int> countSmaller(vector<int>& nums) {
+        convert(nums);
+        int maxval = *max_element(nums.begin(), nums.end());
+        SegmentTree* st = new SegmentTree(maxval+1);
         int n = nums.size();
-        vector<int> indices(n, 0);
-        vector<vector<int>> temp1;
-        vector<vector<int>> temp2;
+        vector<int> ans(n, 0);
         
-        for(int i=0;i<n;i++){
-            temp1.push_back({nums[i], i});
-            temp2.push_back({nums[i], i});
+        for(int i=n-1;i>=0;i--){
+            st->update(0, 0, maxval, nums[i]);
+            int l=0, r=nums[i]-1;
+            ans[i] = st->query(0, 0, maxval, l, r);
         }
         
-        int ans=0;
-        mergesort(0, n-1, temp1, indices, temp2);
-        return indices;
+        return ans;
     }
 };
