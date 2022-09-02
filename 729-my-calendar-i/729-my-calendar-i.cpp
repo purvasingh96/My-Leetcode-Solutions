@@ -8,18 +8,17 @@ public:
     
     bool book(int start, int end) {
         auto it = m.upper_bound(start);
+        
         if(it!=m.end()){
-            
-            if(it->first<end) return false;
-            
-        } 
+            if(it->first < end) return false;
+        }
         
         if(it!=m.begin()){
             if(prev(it)->second > start) return false;
         }
-        
         m[start]=end;
         return true;
+        
     }
 };
 
