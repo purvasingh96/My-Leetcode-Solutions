@@ -1,26 +1,42 @@
 class Solution {
-private:
-    void backtrack(string& s, int n, int k, vector<int>& res){
-        if(s.length() == n) {
-            res.push_back(stoi(s));
-            return;
-        }
-        
-        int start = s.length()==0?1:0;
-        
-        for(int i=start;i<10;i++){
-            if(s.length() == 0 || abs((s.back()-'0') - i)==k){
-                s+=(i+'0');
-                backtrack(s, n, k, res);
-                s.pop_back();
-            }
-        }
-    }
+
 public:
     vector<int> numsSameConsecDiff(int n, int k) {
+        queue<int> q;
         vector<int> res;
-        string s = "";
-        backtrack(s, n, k, res);
+        
+        for(int i=1;i<10;i++){
+            q.push(i);
+        }
+        
+        
+        
+        while(--n){
+            int sz = q.size();
+            
+            while(sz--){
+                int f = q.front();
+                q.pop();
+                
+                for(int i=0;i<10;i++){
+                    int r = f%10;
+                    
+                    if(abs(r-i)==k){
+                        
+                        q.push(f*10+i);
+                    }
+                }
+                
+            }
+        }
+        
+        while(!q.empty()){
+            res.push_back(q.front());
+            q.pop();
+        }
+        
+        
+        
         return res;
     }
 };
