@@ -9,54 +9,58 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-typedef map<int, vector<priority_queue<int, vector<int>, greater<int>>>> CACHE;
-
 class Solution {
 public:
-    void dfs(TreeNode* root, CACHE& m, int row, int col) {
-        
-        if(!root) return;
-        int s = m[col].size();
-        int sz = max(row+1, s);
-        m[col].resize(sz);
-        
-        //cout<<(m[col][row].size())<<"\n";
-        m[col][row].push(root->val);
-        
-        
-        if(root->left) {
-            dfs(root->left, m, row+1, col-1);
-        }
-        
-        if(root->right) {
-            dfs(root->right, m, row+1, col+1);
-        }
-        
-    }
     vector<vector<int>> verticalTraversal(TreeNode* root) {
         
-        CACHE m;
+        // col -> <row-> pq<>>;
+        typedef priority_queue<int, vector<int>, greater<int>> pq;
+        map<int, vector<pq>> m;
+        
+        queue< pair<TreeNode*, pair<int, int>> > q;
+        q.push({root, {0,0}});
+        
+        while(!q.empty()){
+            int n = q.size();
+            while(n--){
+                auto f= q.front();
+                q.pop();
+                
+                TreeNode* node = f.first;
+                int r = f.second.first, c = f.second.second;
+                int sz = m[c].size();
+                int max_ = max(r+1, sz);
+                m[c].resize(max_);
+                m[c][r].push(node->val);
+                
+                if(node->left) q.push({node->left, {r+1, c-1}});
+                if(node->right) q.push({node->right, {r+1, c+1}});
+                
+            }
+        }
+        
         vector<vector<int>> res;
         
-        dfs(root, m, 0, 0);
-        
-        for(auto x:m) {
+        for(auto it=m.begin();it!=m.end();it++){
+            auto info = it->second;
+            
             vector<int> temp;
-            for(auto y:x.second) {
-                
-                if(!y.empty()) {
-                    while(!y.empty()) {
-                        int top = y.top();
-                        temp.push_back(top);
-                        y.pop();
+            
+            for(int i=0;i<info.size();i++){
+                auto pq = info[i];
+                if(pq.size()!=0){
+                    while(!pq.empty()){
+                        temp.push_back(pq.top());
+                        pq.pop();
                     }
                     
                 }
             }
+            
             res.push_back(temp);
+            
         }
         
         return res;
-        
     }
 };
