@@ -11,33 +11,23 @@
  */
 class Solution {
 private:
-    TreeNode* ans;
-    pair<TreeNode*, int> dfs(TreeNode* root){
-        if(!root) return {NULL, 0};
+   TreeNode* dfs(TreeNode* root){
+        if(!root) return NULL;
         
-        if(!root->left && !root->right){
-            if(root->val == 0) {
-                return {NULL, 0};
-            }
-            return {root, 1};
+        
+        root->left = dfs(root->left);
+        root->right = dfs(root->right);
+        
+        if(root->val == 0 && root->left==NULL && root->right==NULL){
+            return NULL;
         }
         
-        auto left = dfs(root->left);
-        root->left = left.first;
-        auto right = dfs(root->right);
-        root->right = right.first;
-        
-        if((root->val || left.second || right.second) == 0){
-            return {NULL, 0};
-        }
-        
-        return {root, 1};
+        return root;
         
     }
 public:
     TreeNode* pruneTree(TreeNode* root) {
         
-        auto res = dfs(root);
-        return res.first;
+        return dfs(root);
     }
 };
