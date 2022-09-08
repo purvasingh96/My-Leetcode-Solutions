@@ -12,39 +12,30 @@
 class Solution {
 public:
     vector<int> inorderTraversal(TreeNode* root) {
-        TreeNode* cur_node = root;
-        vector<int> inorder;
         
-        while(cur_node) {
+        vector<int> res;
+        if(!root) return res;
+        stack<TreeNode*> st;
+        st.push(root);
+        
+        
+        unordered_map<TreeNode*, bool> seen;
+        
+        while(!st.empty()) {
             
-            if(cur_node->left) {
-                
-                TreeNode* pred = cur_node->left;
-                
-                while(pred->right!=NULL && pred->right!=cur_node){
-                    pred=pred->right;
-                }
-                
-                if(pred->right==NULL) {
-                    pred->right=cur_node;
-                    cur_node=cur_node->left;
-                } else{
-                    pred->right=NULL;
-                    inorder.push_back(cur_node->val);
-                    cur_node=cur_node->right;
-                }
-                
-                
-            } else {
-                
-                inorder.push_back(cur_node->val);
-                cur_node=cur_node->right;
-                
+            while(st.top()->left && seen.find(st.top()->left)==seen.end()){
+                st.push(st.top()->left);
             }
             
+            auto top = st.top();
+            st.pop();
+            res.push_back(top->val);
+            seen[top] = true;
+            
+            if(top->right) st.push(top->right);
+            
         }
-        
-        return inorder;
-        
+            
+        return res;
     }
 };
