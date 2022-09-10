@@ -1,35 +1,30 @@
 class Solution {
 private:
-    int memo[1001][101][2] = {};
-    int dp(int i, int k, int holding, vector<int> prices){
-        if(i==prices.size() || k==0) return 0;
+    int dp[1001][101][2] = {};
+    // state: 0: buy 1: sell
+    int dfs(int idx, int k, int state, vector<int>& prices){
+        if(idx==prices.size() || k==0) return 0;
         
-        if(memo[i][k][holding]==0){
-            
-            int doNothing = dp(i+1, k, holding, prices);
-            int doSomething;
-            
-            if(holding){
-                // sell stock
-                doSomething = prices[i] + dp(i+1, k-1, 0, prices);
-            } else{
-                // buy stock
-                doSomething = -prices[i] + dp(i+1, k, 1, prices);
-            }
-            
-            memo[i][k][holding] = max(doNothing, doSomething);
-            
+        if(dp[idx][k][state]!=0) return dp[idx][k][state];
+        
+        int pick, dontpick;
+        
+        dontpick = dfs(idx+1, k, state, prices);
+        
+        
+        if(state == 0){
+            // buy
+            pick = -prices[idx] + dfs(idx+1, k, 1, prices);
+        } else {
+            // sell
+            pick = prices[idx] + dfs(idx+1, k-1, 0, prices);
         }
         
-        return memo[i][k][holding];
+        return dp[idx][k][state] = max(pick, dontpick);
         
     }
 public:
     int maxProfit(int k, vector<int>& prices) {
-        int n = prices.size();
-        
-        return dp(0, k, 0, prices);
-        
-        
+        return dfs(0, k, 0, prices);
     }
 };
