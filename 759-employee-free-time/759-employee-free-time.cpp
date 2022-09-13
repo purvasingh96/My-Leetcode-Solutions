@@ -17,56 +17,35 @@ public:
 class Solution {
 public:
     vector<Interval> employeeFreeTime(vector<vector<Interval>> schedule) {
-        vector<Interval> res;
-        
-        for(auto e:schedule){
-            for(auto x:e){
-                res.push_back(x);
+        // linesweep
+        vector<Interval> ans;
+        map<int, int> dp;
+        for(auto x:schedule){
+            for(auto y:x){
+                dp[y.start]+=1;
+                dp[y.end]-=1;
             }
         }
         
+        int res=0;
+        int start=-1;
         
-        sort(res.begin(), res.end(), [](const Interval& a, const Interval& b){
-            return a.start < b.start;
-        });
-        
-        vector<Interval> not_free;
-        vector<Interval> free;
-        
-        for(auto e:res) {
+        for(auto x:dp){
+            res+=x.second;
+            if(res==0 && start==-1){
+                start = x.first;
+            } 
             
-            if(not_free.size() == 0 || not_free.back().end <= e.start) {
-                not_free.push_back(e);
-            } else {
-                int new_start = min(not_free.back().start, e.start);
-                int new_end = max(not_free.back().end, e.end);
-                
-                Interval temp;
-                temp.start = new_start;
-                temp.end = new_end;
-                
-                not_free.pop_back();
-                not_free.push_back(temp);
-                                    
+            else if(start!=-1 && res!=0){
+                Interval t;
+                t.start = start;
+                t.end = x.first;
+                ans.push_back(t);
+                start=-1;
             }
-            
         }
         
-        
-        for(int i=1;i<not_free.size();i++){
-            
-            auto x = not_free[i-1], y=not_free[i];
-            
-            if(y.start > x.end){
-                Interval temp;
-                temp.start = x.end;
-                temp.end = y.start;
-                free.push_back(temp);
-            }
-            
-        }
-        
-        return free;
+        return ans;
         
     }
 };
