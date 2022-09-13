@@ -16,36 +16,45 @@ public:
 
 class Solution {
 public:
-    vector<Interval> employeeFreeTime(vector<vector<Interval>> schedule) {
-        // linesweep
-        vector<Interval> ans;
-        map<int, int> dp;
-        for(auto x:schedule){
-            for(auto y:x){
-                dp[y.start]+=1;
-                dp[y.end]-=1;
-            }
+    vector<Interval> employeeFreeTime(vector<vector<Interval>> a) {
+        auto cmp = [&](const auto& x, const auto& y){
+          return a[x[0]][x[1]].start > a[y[0]][y[1]].start;  
+        };
+        priority_queue<vector<int>, vector<vector<int>>, decltype(cmp)> q(cmp);
+        
+        for(int i=0;i<a.size();i++){
+            if(a[i].size()>0) q.push({i, 0});
         }
         
-        int res=0;
-        int start=-1;
         
-        for(auto x:dp){
-            res+=x.second;
-            if(res==0 && start==-1){
-                start = x.first;
-            } 
+        int cur_end = a[q.top()[0]][q.top()[1]].start;
+        vector<Interval> res;
+        
+        while(!q.empty()){
             
-            else if(start!=-1 && res!=0){
+            auto f = q.top();
+            q.pop();
+            
+            int i=f[0], j=f[1];
+            
+            auto x = a[i][j];
+            
+            if(j+1 < a[i].size()) q.push({i, j+1});
+            
+            if(cur_end < x.start){
                 Interval t;
-                t.start = start;
-                t.end = x.first;
-                ans.push_back(t);
-                start=-1;
+                t.start= cur_end;
+                t.end=x.start;
+                res.push_back(t);
             }
+            
+            cur_end = max(cur_end, x.end);
+            
+            
         }
         
-        return ans;
+        return res;
+        
         
     }
 };
