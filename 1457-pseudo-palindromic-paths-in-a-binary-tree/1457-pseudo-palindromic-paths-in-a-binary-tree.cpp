@@ -12,7 +12,7 @@
 class Solution {
 private:
 
-    void dfs(TreeNode* root, vector<int> m, int curlen, int odds, int& count) {
+    void dfs(TreeNode* root, vector<int> m, int odds, int& count) {
         if(!root) return;
         
         m[root->val] +=1;
@@ -29,16 +29,16 @@ private:
             
         }
         
-        dfs(root->left, m, curlen, odds, count);
-        dfs(root->right, m, curlen, odds, count);
+        dfs(root->left, m, odds, count);
+        dfs(root->right, m, odds, count);
         
     }
     
 public:
     int pseudoPalindromicPaths (TreeNode* root) {
-        int count=0, odds=0, curlen=0;
+        int count=0, odds=0;
         vector<int> m(10, 0);
-        dfs(root, m, curlen, odds, count);
+        dfs(root, m, odds, count);
         return count;
     }
 };
