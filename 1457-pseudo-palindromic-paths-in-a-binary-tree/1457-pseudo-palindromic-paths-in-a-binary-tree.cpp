@@ -16,7 +16,6 @@ private:
         if(!root) return;
         
         m[root->val] +=1;
-        curlen+=1;
         
         if(m[root->val]%2==0){
             odds-=1;
@@ -26,11 +25,7 @@ private:
         
         if(!root->left && !root->right) {
             
-            if(curlen%2==0){
-                if(odds==0) count+=1;
-            } else{
-                if(odds==1) count+=1;
-            }
+            if(odds<=1) count+=1;
             
         }
         
