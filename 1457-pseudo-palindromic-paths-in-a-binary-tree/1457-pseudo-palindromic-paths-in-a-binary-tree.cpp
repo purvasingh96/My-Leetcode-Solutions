@@ -11,61 +11,41 @@
  */
 class Solution {
 private:
-    int getNodes(vector<int> m){
-        int sz=0;
-        for(int i=1;i<=9;i++){
-            if(m[i]>0) sz+=1;
-        }
-        return sz;
-    }
-    
-    void dfs(TreeNode* root, vector<int> m, int& count) {
+
+    void dfs(TreeNode* root, vector<int> m, int curlen, int odds, int evens, int& count) {
         if(!root) return;
         
         m[root->val] +=1;
+        curlen+=1;
         
-        if(!root->left && !root->right) {
-            bool isPseudoPalindromic=true;
-            int sz = accumulate(m.begin(), m.end(), 0);
-            if(sz%2==0){
-                for(int i=1;i<=9;i++){
-                    if(m[i]!=0 && m[i]%2!=0){
-                        // found odd
-                        isPseudoPalindromic = false;
-                        break;
-                    }
-                }
-                
-            } 
-            
-            else {
-                
-                int countOdd=0;
-                for(int i=1;i<=9;i++){
-                    if(m[i]!=0 && m[i]%2!=0){
-                        countOdd+=1;
-                        if(countOdd>1) {
-                            isPseudoPalindromic = false;
-                            break;
-                        }
-                    }
-                }   
-            }
-            
-            if(isPseudoPalindromic) count+=1;
-            return;
+        if(m[root->val]%2==0){
+            odds-=1;
+            evens+=1;
+        } else {
+            odds+=1;
+            evens-=1;
         }
         
-            dfs(root->left, m, count);
-            dfs(root->right, m, count);
+        if(!root->left && !root->right) {
+            
+            if(curlen%2==0){
+                if(odds==0) count+=1;
+            } else{
+                if(odds==1) count+=1;
+            }
+            
+        }
+        
+        dfs(root->left, m, curlen, odds, evens, count);
+        dfs(root->right, m, curlen, odds, evens, count);
         
     }
     
 public:
     int pseudoPalindromicPaths (TreeNode* root) {
-        int count=0;
+        int count=0, odds=0, evens=0, curlen=0;
         vector<int> m(10, 0);
-        dfs(root, m, count);
+        dfs(root, m, curlen, odds, evens, count);
         return count;
     }
 };
