@@ -27,7 +27,7 @@ public:
                 //cout<<"here";
                 ans.push_back(int(res[i]));
                 int idx = it - res.begin();
-                res[idx] = res[idx-1]+0.000001;
+                res[idx] = res[idx-1]+0.0001;
                 if(ans.size()==n/2) return ans;
                 
             }
