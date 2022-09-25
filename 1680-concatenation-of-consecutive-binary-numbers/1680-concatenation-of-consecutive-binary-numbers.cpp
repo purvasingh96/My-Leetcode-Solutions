@@ -1,24 +1,17 @@
 class Solution {
-private:
-    int returnLen(int n){
-        int len=0;
-        
-        while(n/2!=0){
-            n=n/2;
-            len+=1;
-        }
-        
-        return len+1;
-    }
-    
-    
+ 
 public:
     int concatenatedBinary(int n) {
-        int res=0, mod=1e9+7;
-        long long prev=1;
+        int mod=1e9+7, curlen=0;
+        long long prev=0;
         
-        for(int i=2;i<=n;i++){
-            prev = prev*pow(2,returnLen(i));
+        
+        for(int i=1;i<=n;i++){
+            
+            if((i & (i-1)) == 0) curlen+=1;
+            
+            prev = (prev << curlen)%mod;
+            
             prev%=mod;
             prev += i;
         }
