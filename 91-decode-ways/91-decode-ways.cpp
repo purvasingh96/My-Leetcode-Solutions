@@ -1,23 +1,36 @@
 class Solution {
-public:
-    int numDecodings(string s) {
-        vector<int> dp(s.length()+1);
-        dp[0]=1;
-        dp[1] = (s[0] == '0'?0:1);
+private:
+    int dfs(int i, string& s, vector<int>& dp){
+        // successfuly found 1 way to decode
+        if(i>=s.length()) return 1;
         
-        for(int i=2;i<=s.length();i++){
-            
-            if(s[i-1]!='0'){
-                dp[i] = dp[i-1];
-            }
-            
-            string two = s.substr(i-2, 2);
-            if(stoi(two)>=10 && stoi(two)<=26){
-                dp[i] += dp[i-2];
-            }
-            
+        // memoization
+        if(dp[i]!=-1) return dp[i];
+        
+        int l=0, r=0;
+        
+        string c1(1, s[i]);
+        int a = stoi(c1);
+        
+        if(a>=1 && a<=26) l = dfs(i+1, s, dp);
+        else l=0;
+        
+        if(i+1<s.length() && s[i]!='0') {
+            string c2 = s.substr(i, 2);
+            int b = stoi(c2);
+            if(b>=1 && b<=26) r=dfs(i+2, s, dp);
+            else r=0;
         }
         
-        return dp[s.length()];
+        
+        
+        return dp[i] = l+r;
+        
+    }
+public:
+    int numDecodings(string s) {
+        int n = s.length();
+        vector<int> dp(n, -1);
+        return dfs(0, s, dp);
     }
 };
