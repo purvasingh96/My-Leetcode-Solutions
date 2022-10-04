@@ -11,32 +11,14 @@
  */
 class Solution {
 public:
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        stack<pair<TreeNode*, int>> st;
-        st.push({root, targetSum});
+    bool hasPathSum(TreeNode* root, int target) {
+        if(!root) return false;
+        if(target == root->val && !root->left && !root->right) return true;
         
-        while(!st.empty()) {
-            
-            auto f = st.top();
-            st.pop();
-            TreeNode* node = f.first;
-            int remain = f.second;
-            
-            if(node!=NULL) {
-                remain -= node->val;
-                if(!node->left && !node->right && remain == 0) {
-                    return true;
-                }
-            
-                st.push({node->left, remain});
-                st.push({node->right, remain});
-                
-            }
-            
-            
-        }
+        bool left = hasPathSum(root->left, target-root->val);
+        bool right= hasPathSum(root->right, target-root->val);
         
-        return false;
+        return left || right;
         
     }
 };
