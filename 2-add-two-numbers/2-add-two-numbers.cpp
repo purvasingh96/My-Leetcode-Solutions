@@ -11,53 +11,48 @@
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        int carry = 0;
+        ListNode* ans= new ListNode(0);
+        ListNode* res=ans;
+        int carry=0;
         
-        if(!l1) return l2;
-        if(!l2) return l1;
-        ListNode* res =new ListNode(0);
-        ListNode* ans = res;
-        
-        while(l1 && l2) {
-            
-            int sum = carry + l1->val + l2->val;
-            res->next = new ListNode(sum%10);
+        while(l1 && l2){
+            int sum = l1->val + l2->val + carry;
+            int value = sum%10;
             carry = sum/10;
-            
+            ListNode* temp = new ListNode(value);
+            ans->next=temp;
+            ans=ans->next;
             l1=l1->next;
             l2=l2->next;
-            res=res->next;
+        }
+        
+        while(l1){
+            int sum = l1->val + carry;
+            int value = sum%10;
+            carry = sum/10;
+            ListNode* temp = new ListNode(value);
+            ans->next=temp;
+            ans=ans->next;
+            l1=l1->next;
+        }
+        
+        while(l2){
+            int sum = l2->val + carry;
+            int value = sum%10;
+            carry = sum/10;
+            ListNode* temp = new ListNode(value);
+            ans->next=temp;
+            ans=ans->next;
+            l2=l2->next;
+        }
+        
+        if(carry!=0){
+            ListNode* temp = new ListNode(carry);
+            ans->next = temp;
             
         }
         
-        if(l1 || l2) {
-            ListNode* dummy = NULL;
-            
-            if(l1) {
-                dummy = l1;
-            } else {
-                dummy = l2;
-            }
-            
-            while(dummy) {
-                
-                int sum = carry + dummy->val;
-                res->next = new ListNode(sum%10);
-                carry = sum/10;
-
-                dummy=dummy->next;
-                res=res->next;
-                
-            }
-            
-            
-        } 
-        
-        if(carry) {
-            res->next = new ListNode(carry);
-        }
-        
-        return ans->next;
+        return res->next;
         
     }
 };
