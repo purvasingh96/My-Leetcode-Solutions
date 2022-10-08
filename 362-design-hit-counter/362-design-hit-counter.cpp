@@ -1,19 +1,32 @@
 class HitCounter {
 private:
-    queue<int> q;
+    vector<int> time;
+    vector<int> hits;
 public:
     HitCounter() {
-        
+        time.resize(300, 0);
+        hits.resize(300, 0);
     }
     
     void hit(int timestamp) {
-        q.push(timestamp);
+        int idx=timestamp%300;
+        if(time[idx]!=timestamp){
+            time[idx] = timestamp;
+            hits[idx] = 1;
+        } else{
+            hits[idx]+=1;
+        }
     }
     
     int getHits(int timestamp) {
-        if(timestamp-300 <= 0) return q.size();
-        while(!q.empty() && q.front() <= (timestamp - 300)) q.pop();
-        return q.size();
+        int c=0;
+        for(int i=0;i<300;i++){
+            if(timestamp - time[i] < 300) {
+                c+=hits[i];
+            }
+        }
+        
+        return c;
     }
 };
 
