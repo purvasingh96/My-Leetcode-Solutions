@@ -1,23 +1,24 @@
 class Solution {
 public:
     vector<int> findBuildings(vector<int>& heights) {
-        // monotonic decreasing queue
-        vector<int> q;
-        int maxheight = -1;
-        
-        
-        for(int i=heights.size()-1;i>=0;i--) {
+        //decreasing monotonic stack
+        stack<int> st;
+        for(int i=0;i<heights.size();i++){
             
-            if(maxheight < heights[i]) {
-                q.push_back(i);
-                maxheight = heights[i];
+            while(!st.empty() && heights[st.top()] <= heights[i]){
+                st.pop();
             }
             
-            
+            st.push(i);
         }
         
-        reverse(q.begin(), q.end());
+        vector<int> res;
+        while(!st.empty()) {
+            res.push_back(st.top());
+            st.pop();
+        }
         
-        return q;
+        reverse(res.begin(), res.end());
+        return res;
     }
 };
