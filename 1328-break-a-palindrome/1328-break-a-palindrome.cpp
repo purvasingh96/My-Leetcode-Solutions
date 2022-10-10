@@ -20,19 +20,17 @@ public:
         }
         
         int i=0;
-        for(i;i<s.length();i++){
+        for(i;i<s.length()/2;i++){
             if(s[i]!='a'){
                 string temp = s;
                 temp[i] = 'a';
-                if(checkPal(temp)) {
-                    continue;
-                } else return temp;
+                return temp;
             }
         }
         
-        if(i==s.length()) {
+        
             s[s.length()-1] = 'b';
-        }
+        
         
         return s;
     }
