@@ -26,7 +26,7 @@ public:
             
             
             
-        if(sc.size()==2){
+        else if(sc.size()==2){
             //cout<<sc[0]<<" "<<sc[1];
             char char0 = s[sc[0]];
             char char1 = s[sc[1]];
