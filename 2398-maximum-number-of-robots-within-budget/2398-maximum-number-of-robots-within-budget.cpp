@@ -1,38 +1,31 @@
 class Solution {
 public:
-    int maximumRobots(vector<int>& ct, vector<int>& rc, long long b) {
-        int left=0, right=0;
-        long long tc=0, sum_rc=0;
-        int maxK = 0, n = ct.size();
+    int maximumRobots(vector<int>& times, vector<int>& costs, long long budget) {
+        deque<int> q;
+        long long sum=0, j=0;
+        int maxans = INT_MIN;
         
-        // back of multiset will be our answer
-        multiset<int> max_ct;
-        
-        while(right<n){
+        for(int i=0;i<times.size();i++){
+            sum += costs[i];
             
-            max_ct.insert(ct[right]);
-            sum_rc += rc[right];
-            int k = max_ct.size();
-            
-            if(max_ct.size()!=0) tc = *prev(max_ct.end()) + k*sum_rc;
-            
-            if(tc > b){
-                
-                while(left<=right && tc > b && max_ct.size()!=0){
-                    max_ct.erase(max_ct.find(ct[left]));
-                    sum_rc-=rc[left];
-                    k=max_ct.size();
-                    if(max_ct.size()!=0) tc = *prev(max_ct.end()) + k*sum_rc;
-                    left+=1;
-                }
-                
+            while(!q.empty() && q.back() < times[i]){
+                q.pop_back();
             }
             
-            maxK = max(maxK, k);
-            right+=1;
+            q.push_back(times[i]);
             
+            while(!q.empty() && (j<=i) && ((i-j+1)*sum + q.front()) > budget){
+                sum -= costs[j];
+                if(q.front() == times[j]){
+                    q.pop_front();
+                }
+                j+=1;
+            }
+            
+            int len = (i-j+1);
+            maxans = max(maxans, len);
         }
         
-        return maxK;
+        return maxans;
     }
 };
