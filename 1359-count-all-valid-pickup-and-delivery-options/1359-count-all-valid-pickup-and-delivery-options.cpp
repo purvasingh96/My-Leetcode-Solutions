@@ -1,27 +1,25 @@
+
 class Solution {
+private:
+    int sumTill(int n){
+        return (n*(n+1))/2;
+    }
 public:
     int countOrders(int n) {
+        int prev=1;
+        int mod= 1e9+7;
         if(n==1) return 1;
+        long prev_res = 1;
         
-        
-        int ans = 1;
-        
-        for(int i=1;i<=n;i++) {
-            
-            int x = 2*i-1;
-            int sum=0;
-            
-            for(int j=1;j<=x;j++) {
-                sum+=j;
-            }
-            
-            long y = ans%(1000000007);
-            
-            ans = ((sum%1000000007)*y)%(1000000007);
+        for(int i=2;i<=n;i++){
+            prev+=2;
+            long sum = sumTill(prev);
+            prev_res = sum*prev_res;
+            prev_res %= mod;
             
         }
         
+        return prev_res;
         
-        return ans;
     }
 };
