@@ -48,10 +48,6 @@ private:
             ps[i] %= mod;
         }
         
-        // cout<<"\nps:\n";
-        // for(auto x:ps) cout<<x<<" ";
-        // cout<<"\n";
-        
         for(int i=1;i<=n;i++){
             pps[i] = pps[i-1] + ps[i];
             pps[i] %= mod;
@@ -67,14 +63,6 @@ public:
         vector<int> nse = nextSmallerOrEqual(s);
         vector<long> pps = preps(s);
         
-//         cout<<"pse: \n";
-//         for(auto x:pse) cout<<x<<" ";
-        
-//         cout<<"\nnse\n";
-//         for(auto x:nse) cout<<x<<" ";
-        
-//         cout<<"\nppse\n";
-//         for(auto x:pps) cout<<x<<" ";
         
         
         int n = s.size();
