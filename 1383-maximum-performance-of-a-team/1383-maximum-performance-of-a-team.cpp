@@ -1,43 +1,50 @@
+# define pp pair<int,int>
+
 class MyCompare{
 public:
-    bool operator()(const vector<int>& a, const vector<int>& b){
-        return a[1] > b[1];
-    }    
+    bool operator()(const pp& a, const pp& b){
+        return a.second >= b.second;
+    }
 };
-
 
 class Solution {
 public:
     int maxPerformance(int n, vector<int>& s, vector<int>& e, int k) {
-        vector<vector<int>> res;
+        // speed, efficiency
         int mod = 1e9+7;
-        
+        vector<pp> res;
         for(int i=0;i<n;i++){
             res.push_back({e[i], s[i]});
         }
         
-        // decreasing order of efficiency
-        sort(res.begin(), res.end(), [](const vector<int>& a, const vector<int>& b){
-            return a[0] > b[0];
+        sort(res.begin(), res.end(), [](const pp& a, const pp& b){
+            return a.first > b.first;
         });
         
-        priority_queue<int, vector<int>, greater<int>> pq;
+        priority_queue<int, vector<int>, greater<int>> is;
+        
+        long sum=0;
+        int mineff=INT_MAX;
+        long maxPerf = INT_MIN;
         
         
-        long long ans=INT_MIN, total_speed=0;
-        
-        for(auto x:res){
-            if(pq.size() == k) {
-                total_speed -= pq.top();
-                pq.pop();
+        for(int i=0;i<n;i++){
+            
+            is.push(res[i].second);
+            sum += res[i].second;
+            
+            if(is.size() > k){
+                int top = is.top();
+                is.pop();
+                sum -= top;
             }
-            pq.push(x[1]);
-            total_speed += x[1];
-            ans = max(ans, (total_speed * x[0]));
+            
+            long currPerf = res[i].first * sum;
+            maxPerf = max(maxPerf, currPerf);
             
         }
         
-        return ans%mod;
+        return maxPerf%mod;
         
     }
 };
