@@ -8,8 +8,7 @@ private:
             if(nums[mid].first.first >= target) r=mid;
             else l=mid+1;
         }
-        //cout<<l<<"\n";
-        //cout<<nums[l].first.first<<" "<<target<<"\n";
+        
         if(nums[l].first.first < target) return -1;
         return l;
     }
@@ -31,21 +30,16 @@ public:
             return ka.first < kb.first;
         });
         
-        // for(auto x:nums){
-        //     cout<<x.first.first<<" "<<x.first.second<<" "<<x.second<<"\n";
-        // }
-        
         
         vector<int> dp(n, 0);
         dp[n-1] = nums[n-1].second;
         
         for(int i=n-2;i>=0;i--){
-            //cout<<"start: "<<nums[i].first.first<<" end: "<<nums[i].first.second<<"\n";
+            
             int endTime = nums[i].first.second;
             int profit = nums[i].second;
                 
             int idx = binary_search(i+1, nums, endTime);
-           //cout<<"i: "<<i<<" idx: "<<idx<<"\n";
             
             if(idx!=-1){
                 dp[i] = profit + dp[idx];
@@ -55,7 +49,6 @@ public:
             }
         }
         
-        //for(auto x:dp) cout<<x<<" ";
         
         return dp[0];
         
