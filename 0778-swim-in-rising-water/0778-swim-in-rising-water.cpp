@@ -22,7 +22,7 @@ public:
             
             ans = max(ans, f.first);
             int x = f.second.first, y = f.second.second;
-            visited[x][y] = true;
+            
             
             if(x==n-1 && y==n-1) return ans;
             
