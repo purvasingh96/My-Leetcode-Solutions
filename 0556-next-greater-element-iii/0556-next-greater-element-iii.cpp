@@ -1,45 +1,42 @@
 class Solution {
+private:
+    int binary(vector<pair<int, int>>& res, int target){
+        
+        int l = 0, r=res.size()-1;
+        int ans=-1;
+        while(l<=r){
+            int mid = l + (r-l)/2;
+            if(res[mid].first > target) {
+                ans=res[mid].second;
+                r=mid-1;
+            } else l=mid+1;
+        }
+        
+        return ans;
+    }
 public:
     int nextGreaterElement(int n) {
         string s = to_string(n);
-        if(s.length()==1) return -1;
-        int i=s.length()-2;
+        vector<pair<int, int>> res;
         
-        while(i >= 0){
-            bool found=false;
-            while(i>=0 && s[i]-'0'>=s[i+1]-'0'){
-                i-=1;
-            }
-
-            if(i<0) return -1;
-
-            int j=s.length()-1;
-            while(j>i && s[j]-'0' <= s[i]-'0'){
-                j-=1;
-            }
+        for(int i=s.length()-1;i>=0;i--){
             
-            cout<<"i: "<<i<<" j: "<<j<<"\n";
-            
-            if(j!=i){
-                swap(s[i], s[j]);
+            if(res.empty() || res.back().first <= s[i]-'0')  res.push_back({s[i]-'0', i});
+            else {
+                int idx = binary(res, s[i]-'0');
+                cout<<idx<<"\n";
+                if(idx==-1) return -1;
+                char t = s[i];
+                s[i] = s[idx];
+                s[idx]=t;
                 sort(s.begin()+i+1, s.end());
-                found=true;
                 break;
             }
-            
-            //cout<<"found: "<<found<<"\n";
-            if(found) break;
         }
         
-        if(i<0){
-            swap(s[0], s[s.length()-1]);
-            sort(s.begin()+1, s.end());
-        }
-        
-        cout<<s;
-        //return 0;
-        if(stoll(s) > INT_MAX) return -1;
-        return stoi(s);
+        long long ans = stoll(s);
+        if(ans > INT_MAX || ans == n) return -1;
+        return (int)ans;
         
     }
 };
