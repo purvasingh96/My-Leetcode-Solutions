@@ -14,6 +14,7 @@ public:
         priority_queue<pp, vector<pp>, greater<pp>> pq;
         vector<vector<bool>> visited(n, vector<bool>(n, false));
         pq.push({grid[0][0], {0, 0}});
+        visited[0][0] = true;
         
         while(!pq.empty()){
             
