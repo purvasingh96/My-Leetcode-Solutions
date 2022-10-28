@@ -1,84 +1,59 @@
 class TrieNode{
 public:
-    vector<TrieNode*> children;
-    vector<string> suggestions;
-    
+    vector<string> startsWith;
+    vector<TrieNode*> children; 
     TrieNode(){
         children.resize(26, NULL);
     }
 };
 
-class Trie{
-    TrieNode* root;
-public:
-    Trie(){
-        root = new TrieNode();
-    }
-    
-    void insert(string s){
-        TrieNode* node = root;
-        
-        for(int i=0;i<s.length();i++){
-            
-            if(node->children[s[i]-'a']==NULL){
-                node->children[s[i]-'a']=new TrieNode();
-            }
-            
-            node = node->children[s[i]-'a'];
-            if(node->suggestions.size()<3) node->suggestions.push_back(s);            
-        }
-        
-    }
-    
-    vector<string> dfs(string s){
-        vector<string> ans;
-        TrieNode* node = root;
-        
-        for(int i=0;i<s.length();i++){
-            if(node->children[s[i]-'a']==NULL){
-                return ans;
-            }
-            node=node->children[s[i]-'a'];
-        }
-        
-        //vector<string> sug = node->suggestions;
-        //sort(sug.begin(), sug.end());
-        
-        // if(sug.size()>3){
-        //     ans.insert(ans.end(), sug.begin(), sug.begin()+3);
-        // } else{
-        //     ans = sug;
-        // }
-        return node->suggestions;
-        
-    }
-    
-    
-};
-
-
 
 class Solution {
+private:
+    TrieNode* root;
+    
+    
+    void insert(string& s){
+        TrieNode* node = root;
+        
+        for(int i=0;i<s.length();i++){
+            if(node->children[s[i] - 'a'] == NULL){
+                node->children[s[i]-'a'] = new TrieNode();
+            }
+            node = node->children[s[i]-'a'];
+            if(node->startsWith.size() < 3) node->startsWith.push_back(s);
+        }
+    }
+    
+    
 public:
     vector<vector<string>> suggestedProducts(vector<string>& products, string s) {
-        Trie* trie = new Trie();
-        
-        vector<vector<string>> ans;
         sort(products.begin(), products.end());
+        root = new TrieNode();
         
-        for(auto product:products){
-            trie->insert(product);
+        int n = products.size();
+        
+        int sz = s.length();
+        vector<vector<string>> res(sz, vector<string>());
+        
+        
+        for(int i=0;i<products.size();i++){
+            insert(products[i]);
         }
         
-        for(int i=1;i<=s.length();i++){
-            string t = s.substr(0, i);
-                
-                vector<string> res = trie->dfs(t);
-                ans.push_back(res);
+        TrieNode* node = root;
+        
+        for(int i=0;i<s.length();i++){
+            if(node->children[s[i]-'a'] == NULL) {
+                break;
+            }
             
+            node= node->children[s[i]-'a'];
             
+            res[i] = node->startsWith;
         }
         
-        return ans;
+        return res;
+        
     }
 };
