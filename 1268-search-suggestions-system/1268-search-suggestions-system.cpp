@@ -1,56 +1,20 @@
-class TrieNode{
-public:
-    vector<string> startsWith;
-    vector<TrieNode*> children; 
-    TrieNode(){
-        children.resize(26, NULL);
-    }
-};
-
-
 class Solution {
-private:
-    TrieNode* root;
-    
-    
-    void insert(string& s){
-        TrieNode* node = root;
-        
-        for(int i=0;i<s.length();i++){
-            if(node->children[s[i] - 'a'] == NULL){
-                node->children[s[i]-'a'] = new TrieNode();
-            }
-            node = node->children[s[i]-'a'];
-            if(node->startsWith.size() < 3) node->startsWith.push_back(s);
-        }
-    }
-    
-    
 public:
     vector<vector<string>> suggestedProducts(vector<string>& products, string s) {
         sort(products.begin(), products.end());
-        root = new TrieNode();
+        string prefix="";
+        int l=0;
+        int n = products.size(), m = s.length();
         
-        int n = products.size();
-        
-        int sz = s.length();
-        vector<vector<string>> res(sz, vector<string>());
-        
-        
-        for(int i=0;i<products.size();i++){
-            insert(products[i]);
-        }
-        
-        TrieNode* node = root;
+        vector<vector<string>> res(m, vector<string>());
         
         for(int i=0;i<s.length();i++){
-            if(node->children[s[i]-'a'] == NULL) {
-                break;
-            }
             
-            node= node->children[s[i]-'a'];
+            auto start = lower_bound(products.begin(), products.end(), s.substr(0, i+1));
+            auto end = lower_bound(start, min(start+3, products.end()), s.substr(0, i)+(char)(s[i]+1) );
             
-            res[i] = node->startsWith;
+            res[i] = vector<string>(start, end);
+            
         }
         
         return res;
