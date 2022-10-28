@@ -1,25 +1,23 @@
 class Solution {
 public:
     bool carPooling(vector<vector<int>>& trips, int capacity) {
-        /*
-        TC: O(max(N, 1001))
-        SC: O(1001) => O(1)
-        */
-        vector<int> total_passengers(1001, 0);
+        int n = trips.size();
+        vector<int> ls(1100, 0);
         
-        for(auto x:trips) {
-            total_passengers[x[1]] += x[0];
-            total_passengers[x[2]] -= x[0];
+        for(int i=0;i<trips.size();i++){
+            int start = trips[i][1], end=trips[i][2], val = trips[i][0];
+            ls[start] += val;
+            ls[end] -= val;
         }
         
-        int cap=0;
+        int prev=0;
         
-        for(auto x:total_passengers) {
-            cap += x;
-            
-            if(cap > capacity) return false;
+        for(int i=0;i<ls.size();i++){
+            ls[i] += prev;
+            prev = ls[i];
+            if(ls[i] >capacity) return false;
         }
-        
         return true;
+        
     }
 };
