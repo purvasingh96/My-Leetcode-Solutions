@@ -1,33 +1,38 @@
 class Solution {
 private:
-    bool feasible(int threshold, vector<int>& weights, int days){
-        int total=0;
-        int d=1;
-        for(auto w:weights){
-            total += w;
-            if(total > threshold){
-                total = w;
-                d+=1;
-                if(d>days) return false;
+    bool canShip(vector<int>& weights, int mid, int days){
+        int total=0, d=0;
+        
+        for(int i=0;i<weights.size();i++){
+            
+            if(total+weights[i] > mid){
+                d += 1;
+                total=weights[i];
+            } else {
+                total += weights[i];
             }
-        }
-        return true;
+        } 
+        
+        //cout<<"mid: "<<mid<<" total days: "<<d<<"\n";
+        
+        return d+1 <= days;
     }
-    
 public:
     int shipWithinDays(vector<int>& weights, int days) {
-        int left = *max_element(weights.begin(), weights.end());
         int right = accumulate(weights.begin(), weights.end(), 0);
+        int max_e = *max_element(weights.begin(), weights.end());
+        int left = max(max_e, right/days);
+        int ans=0;
         
-        while(left<right){
+        while(left<=right){
             int mid = left + (right-left)/2;
-            if(feasible(mid, weights, days)){
-                right=mid;
-            } else{
-                left=mid+1;
-            }
+            
+            if(canShip(weights, mid, days)){
+                ans=mid;
+                right=mid-1;
+            } else left = mid+1;
         }
         
-        return left;
+        return ans;
     }
 };
