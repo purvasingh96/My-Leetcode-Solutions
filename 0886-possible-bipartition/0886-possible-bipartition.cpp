@@ -3,7 +3,6 @@ class Solution {
 public:
     bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
         // bipartition!!!!
-        if(dislikes.size()==0) return true;
         vector<int> color(n+1, 0);
         vector<vector<int>> adj(n+1);
         vector<bool> explored(n+1, false);
@@ -13,8 +12,6 @@ public:
             adj[x].push_back(y);
             adj[y].push_back(x);
         }
-        
-        color[dislikes[0][0]] = 5;
         
         queue<int> q;
         
