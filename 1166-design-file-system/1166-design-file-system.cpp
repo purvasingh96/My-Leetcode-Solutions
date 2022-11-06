@@ -29,13 +29,13 @@ public:
         root = new TrieNode();
     }
     
-    bool searchPath(TrieNode* node, int start, int end, vector<string>& res){
-        for(int i=start;i<=end;i++){
-            if(node->memo.find(res[i])==node->memo.end()) return false;
-            node = node->memo[res[i]];
-        }
-        return true;
-    }
+    // bool searchPath(TrieNode* node, int start, int end, vector<string>& res){
+    //     for(int i=start;i<=end;i++){
+    //         if(node->memo.find(res[i])==node->memo.end()) return false;
+    //         node = node->memo[res[i]];
+    //     }
+    //     return true;
+    // }
     
     bool insert(TrieNode* node, string word, int val){
         if(node->memo.find(word) == node->memo.end()){
