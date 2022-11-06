@@ -1,62 +1,44 @@
 class Solution {
-public:
-    int calculate(string s) {
-        stack<string> st;
-        string temp = "";
-        string t = "("+s+")";
-        s = t;
+private:
+    int parseNum(string& s, int& i){
+        int temp=0;
         
+        for(;i<s.length() && isdigit(s[i]);i++){
+            temp = temp*10 + (s[i]-'0');
+        }
+        return temp;
+    }
+    
+    int parseExp(string s, int& i){
         
-        for(int i=0;i<s.length();i++){
+        vector<int> nums;
+        char op = '+';
+        
+        for(;i<s.length() && op!=')';i++){
             
-            if(isdigit(s[i])){
-                temp += s[i];
-            }
+            int temp = 0;
+            if(s[i] == ' ') continue;
+            int n = s[i] == '(' ? parseExp(s, ++i) : parseNum(s, i);
             
-            if(!isdigit(s[i]) && s[i]!=' '){
-                // + or - or ()
-                if(temp!="") {
-                    if(st.top() == "-") {
-                        st.pop();
-                        int val = stoi(temp);
-                        st.push(to_string(-val));
-                    } else {
-                        st.push(temp);
-                    }
-                    temp = "";
-                }
-                
-                
-                if(s[i] == '(') {
-                    st.push("(");
-                }
-                
-                else if(s[i] == ')') {
-                    int res=0;
-                    while(st.top()!="("){
-                        res += stoi(st.top());
-                        st.pop();
-                    }
-                    st.pop();
-                    
-                    if(!st.empty() && st.top() == "-"){
-                        st.pop();
-                        
-                        st.push(to_string(-res));
-                    } else {
-                        st.push(to_string(res));
-                    }
-                    
-                } 
-                
-                else if(s[i] == '-') st.push("-");
-                
-               
-                
-            }
+            if(op == '+') nums.push_back(n);
+            else if(op == '-') nums.push_back(-n);
+            
+            op = s[i];
             
         }
         
-        return stoi(st.top());
+        int res=0;
+        while(nums.size()!=0) {
+            res += nums.back();
+            nums.pop_back();
+        }
+        
+        return res;
+    }
+    
+public:
+    int calculate(string s) {
+        int i=0;
+        return parseExp(s, i);
     }
 };
