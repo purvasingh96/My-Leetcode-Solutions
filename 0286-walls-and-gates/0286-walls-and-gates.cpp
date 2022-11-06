@@ -4,7 +4,7 @@ private:
     int dy[4] = {1, 0, -1, 0};
     
     bool isValid(int x, int y, vector<vector<int>>& rooms){
-        return x>=0 && y>=0 && x<rooms.size() && y<rooms[0].size() && rooms[x][y]==INT_MAX && rooms[x][y]!=0 && rooms[x][y]!=-1;
+        return x>=0 && y>=0 && x<rooms.size() && y<rooms[0].size() && rooms[x][y]==INT_MAX;
     }
     
     void bfs(vector<vector<int>>& rooms, queue<pair<int, int>>& q) {
