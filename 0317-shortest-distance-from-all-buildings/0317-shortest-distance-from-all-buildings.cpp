@@ -2,78 +2,67 @@ class Solution {
 private:
     int dx[4] = {0, 1, 0, -1};
     int dy[4] = {1, 0, -1, 0};
+
+    bool isValid(int x, int y, vector<vector<int>>& grid){
+            return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
+    }
 public:
     int shortestDistance(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size();
-        int building=0;
-        vector<vector<vector<int>>> dist(m, vector<vector<int>>(n, vector<int>()));
-        
-        queue<pair<int, int>> q;
-        
-        int reachTime = 0;
+        vector<vector<int>> dist(m, vector<int>(n, 0));
+        int mindist = INT_MAX;
+        int emptyLandValue = 0;
         
         for(int i=0;i<m;i++){
             for(int j=0;j<n;j++){
                 
                 if(grid[i][j] == 1){
-                    building+=1;
-                    int distance=0;
+                    
+                    mindist = INT_MAX;
+                    queue<pair<int, int>> q;
                     q.push({i, j});
+                    int level=0;
                     
                     while(!q.empty()){
-                        int sz = q.size();
-                        distance+=1;
+                        
+                        int sz=q.size();
+                        level+=1;
+                        
                         while(sz--){
                             
                             auto f = q.front();
                             q.pop();
-                            
                             int x = f.first, y = f.second;
                             
-                            for(int i=0;i<4;i++){
-                                int new_x = x + dx[i];
-                                int new_y = y + dy[i];
+                            for(int k=0;k<4;k++){
                                 
-                                if(new_x >=0 && new_y >=0 && new_x<m && new_y<n && grid[new_x][new_y]==reachTime){
-                                    grid[new_x][new_y]-=1;
-                                    dist[new_x][new_y].push_back(distance);
+                                int new_x = x + dx[k];
+                                int new_y = y + dy[k];
+                                
+                                
+                                if(isValid(new_x, new_y, grid) 
+                                   && grid[new_x][new_y] == emptyLandValue){
+                                    
+                                    grid[new_x][new_y] -=1;
+                                    dist[new_x][new_y] += level;
                                     q.push({new_x, new_y});
+                                    
+                                    mindist = min(mindist, dist[new_x][new_y]);
+                                    
                                 }
+                                
                             }
+                            
                         }
-                        
-                        
-                        
+                         
                     }
-                 reachTime-=1;   
+                    
+                    emptyLandValue -= 1; 
                 }
-                
-                
                 
             }
         }
         
-        int res = INT_MAX;
-        
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                
-                
-                
-                if(dist[i][j].size() == building){
-                    
-                    int total = accumulate(dist[i][j].begin(), dist[i][j].end(), 0);
-                    res = min(res, total);
-                    
-                }
-                
-                
-                
-            }
-        }
-        
-        return res==INT_MAX?-1:res;
-        
-        
+        return mindist == INT_MAX ? -1: mindist;
     }
 };
