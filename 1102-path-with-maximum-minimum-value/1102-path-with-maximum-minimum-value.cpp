@@ -1,53 +1,52 @@
-# define pp pair<int, pair<int, int>> 
+# define pp pair<int, pair<int, int>>
 
 class Solution {
 private:
-    int dx[4] = {0,1, 0, -1};
+    int dx[4] = {0, 1, 0, -1};
     int dy[4] = {1, 0, -1, 0};
-    
+
     bool isValid(int x, int y, vector<vector<int>>& grid){
-        return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
+            return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
     }
 public:
     int maximumMinimumPath(vector<vector<int>>& grid) {
-        int m = grid.size(), n = grid[0].size(), minVal = INT_MAX;
-        priority_queue<pp> pq;
-        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        priority_queue<pp> q;        
+        q.push({grid[0][0], {0, 0}});
+        int m = grid.size(), n = grid[0].size();
+        vector<vector<bool>> seen(m, vector<bool>(n, false));
+        seen[0][0] = true;
         
-        pq.push({grid[0][0], {0, 0}});
-        visited[0][0] = true;
         
+        int ans = INT_MAX;
         
-        while(!pq.empty()){
+        while(!q.empty()){
             
-            auto f = pq.top();
-            pq.pop();
-            
-            int val = f.first, x = f.second.first, y = f.second.second;
-            
-            minVal = min(minVal, val);
-            
-            if(x == m-1 && y == n-1) return minVal;
+            int sz = q.size();
             
             
-            for(int i=0;i<4;i++){
                 
-                int new_x = x + dx[i];
-                int new_y = y + dy[i];
+                auto f = q.top();
+                q.pop();
                 
+                int x = f.second.first, y = f.second.second;
                 
-                if(isValid(new_x, new_y, grid) && !visited[new_x][new_y]){
-                    pq.push({grid[new_x][new_y], {new_x, new_y}});
-                    visited[new_x][new_y] = true;
+                ans = min(ans, f.first);
+                
+                if(x == m-1 && y == n-1) return ans;
+                
+                for(int k=0;k<4;k++){
+                    int new_x = x + dx[k], new_y = y + dy[k]; 
+                    if(isValid(new_x, new_y, grid) && !seen[new_x][new_y]){
+                        q.push({grid[new_x][new_y], {new_x, new_y}});
+                        seen[new_x][new_y] = true;
+                    }
+                    
                 }
                 
-            }
-            
-            
+             
             
         }
         
-        return minVal;
-        
+        return ans;
     }
 };
