@@ -1,16 +1,14 @@
-
 class Solution {
 public:
     bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
-        // bipartition!!!!
         vector<int> color(n+1, 0);
-        vector<vector<int>> adj(n+1);
+        vector<vector<int>> graph(n+1);
         vector<bool> explored(n+1, false);
         
         for(int i=0;i<dislikes.size();i++){
-            int x = dislikes[i][0], y=dislikes[i][1];
-            adj[x].push_back(y);
-            adj[y].push_back(x);
+            int u = dislikes[i][0], v=dislikes[i][1];
+            graph[u].push_back(v);
+            graph[v].push_back(u);
         }
         
         queue<int> q;
@@ -21,12 +19,14 @@ public:
                 q.push(i);
                 
                 while(!q.empty()){
-                    int u = q.front();
+                    
+                    auto u = q.front();
                     q.pop();
+                    
                     if(explored[u]) continue;
                     explored[u] = true;
                     
-                    for(auto v:adj[u]){
+                    for(auto v:graph[u]){
                         if(color[u] == color[v]){
                             return false;
                         }
@@ -34,14 +34,10 @@ public:
                         q.push(v);
                     }
                     
-                    
                 }
                 
             }
         }
-        
-        
         return true;
-        
     }
 };
