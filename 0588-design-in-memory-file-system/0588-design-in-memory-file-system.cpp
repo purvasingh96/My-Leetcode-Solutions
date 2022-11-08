@@ -1,9 +1,10 @@
-class TrieNode {
+class TrieNode{
 public:
+    map<string, TrieNode*> m;
     bool is_fp;
     string content;
-    unordered_map<string, TrieNode*> children;
-    TrieNode() {
+    
+    TrieNode(){
         is_fp=false;
         content = "";
     }
@@ -17,63 +18,57 @@ public:
     }
     
     vector<string> split(string path){
-        vector<string> res;
         path = path.substr(1);
-        
         stringstream ss(path);
-        string s;
+        string t;
+        vector<string> res;
         
-        while(getline(ss, s, '/')){
-            res.push_back(s);
+        while(getline(ss, t, '/')){
+            res.push_back(t);    
         }
         
         return res;
     }
     
     vector<string> ls(string path) {
-        TrieNode* node = root;
         vector<string> res = split(path);
-        
+        TrieNode* node= root;
         for(int i=0;i<res.size();i++){
-            node = node->children[res[i]];
+            node = node->m[res[i]];
         }
         
         if(node->is_fp) return {res.back()};
         
         vector<string> ans;
-        for(auto x:node->children){
-            ans.push_back(x.first);
+        for(auto it:node->m){
+            ans.push_back(it.first);
         }
         
-        sort(ans.begin(),ans.end());
+        sort(ans.begin(), ans.end());
         return ans;
-        
     }
     
     void mkdir(string path) {
         TrieNode* node = root;
         vector<string> res = split(path);
-        
         for(int i=0;i<res.size();i++){
-            if(node->children.find(res[i]) == node->children.end()){
-                node->children[res[i]] =  new TrieNode();
+            if(node->m.find(res[i]) == node->m.end()) {
+                node->m[res[i]] = new TrieNode();
             }
-            node = node->children[res[i]];
+            node = node->m[res[i]];
         }
+        
     }
     
     void addContentToFile(string filePath, string content) {
         TrieNode* node = root;
         vector<string> res = split(filePath);
-        
         for(int i=0;i<res.size();i++){
-            if(node->children.find(res[i]) == node->children.end()){
-                node->children[res[i]] =  new TrieNode();
+            if(node->m.find(res[i]) == node->m.end()){
+                node->m[res[i]] = new TrieNode();
             }
-            node = node->children[res[i]];
+            node = node->m[res[i]];
         }
-        
-        
         node->is_fp = true;
         node->content += content;
     }
@@ -82,7 +77,7 @@ public:
         TrieNode* node = root;
         vector<string> res = split(filePath);
         for(int i=0;i<res.size();i++){
-            node = node->children[res[i]];
+            node = node->m[res[i]];
         }
         
         return node->content;
