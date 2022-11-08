@@ -1,25 +1,25 @@
 class Solution {
 private:
-    int parseNum(string s, int i){
-        int num=0;
-        
-        for(;i<s.length() && isdigit(s[i]);i++){
-            num = num*10 + (s[i]-'0');
+    int parseNum(string s, int& i){
+        int temp=0;
+        for(;i<s.length() && isdigit(s[i]);i++) {
+            temp = temp*10 + (s[i]-'0');
         }
-        return num;
+        
+        return temp;
     }
     
     int parseExp(string s, int& i){
         vector<int> nums;
         char op = '+';
         
-        for(;i<s.size() && op!=')';i++){
-            if(s[i] == ' ')  continue;
+        for(;i<s.length() && op!=')';i++){
+            if(s[i] == ' ') continue;
             int n = s[i] == '(' ? parseExp(s, ++i) : parseNum(s, i);
             
             if(op == '+') nums.push_back(n);
             else if(op == '-') nums.push_back(-n);
-            else if(op == '*') nums.back() *= n;
+            else if(op == '*') nums.back()*=n;
             else if(op == '/') nums.back() /= n;
             
             op = s[i];
