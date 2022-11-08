@@ -5,35 +5,30 @@ public:
         q.push({s1, 0});
         unordered_set<string> seen;
         
+        
         while(!q.empty()){
-            
             auto f = q.front();
             q.pop();
             
-            string curr = f.first;
+            string cur = f.first;
             int steps = f.second;
             
-            
-            if(curr == s2) return steps;
+            if(f.first == s2) return f.second;
             
             int i=0;
-            while(i<s1.length() && curr[i] == s2[i]) i++;
+            while(i<cur.length() && cur[i] == s2[i]) i+=1;
             
-            for(int j=i+1;j<s1.length();j++){
-                if(curr[j] == s2[i]){
-                    swap(curr[j], curr[i]);
-                    if(seen.find(curr)==seen.end()) {
-                        q.push({curr, steps+1});
-                        seen.insert(curr);
+            for(int j=i+1;j<cur.length();j++){
+                if(cur[j] == s2[i]){
+                    swap(cur[j], cur[i]);
+                    if(seen.find(cur) == seen.end()) {
+                        q.push({cur, steps+1});
+                        seen.insert(cur);
                     }
-                    swap(curr[j], curr[i]);
+                    swap(cur[j], cur[i]);
                 }
             }
-            
-            
         }
-        
         return 0;
-        
     }
 };
