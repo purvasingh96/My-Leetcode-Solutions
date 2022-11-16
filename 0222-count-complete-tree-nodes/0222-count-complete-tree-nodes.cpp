@@ -13,42 +13,22 @@ class Solution {
 public:
     int countNodes(TreeNode* root) {
         if(!root) return 0;
+        TreeNode* left = root;
+        TreeNode* right = root;
+        int ht=0;
         
-       queue<TreeNode*> q;
-        int count=0, level=0;
-        
-        q.push(root);
-        
-        bool isLastLevel=false;
-        
-        while(!q.empty()) {
-            int sz = q.size();
-            
-            while(sz--){
-                auto f = q.front();
-                q.pop();
-                
-                auto left = f->left, right = f->right;
-                
-                if(!right || (!left && !right)) isLastLevel = true; 
-                
-                if(left) q.push(left);
-                if(right) q.push(right);
-                
-                
-            }
-            
-            count+= pow(2, level);
-            
-             if(isLastLevel) {
-                count+=q.size();
-                break;
-            } 
-             
-            level+=1;
+        while(right!=NULL){
+            right = right->right;
+            left = left->left;
+            ht+=1;
         }
         
-       return count;
+        if(left==NULL){
+            // complete binary tree
+            return pow(2, ht) - 1;
+        }
+        
+        return 1 + countNodes(root->left) + countNodes(root->right);
         
     }
 };
