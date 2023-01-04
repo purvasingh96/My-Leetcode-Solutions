@@ -1,13 +1,5 @@
 class Solution {
-// 13: 1 + x(10, 11)
-private:
-    int minCounts(int x){
-        if(x==1) return INT_MIN;
-        else if(x%3 == 0) return x/3;
-        else if(x%2 == 0) return x/2;
-        
-        return  1 + min(minCounts(x - 2), minCounts(x-3));
-    }
+
 public:
     int minimumRounds(vector<int>& tasks) {
         int ans=0;
