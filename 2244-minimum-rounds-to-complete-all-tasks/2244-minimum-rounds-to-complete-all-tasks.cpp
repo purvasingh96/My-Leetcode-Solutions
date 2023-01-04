@@ -4,11 +4,13 @@ public:
     int minimumRounds(vector<int>& tasks) {
         int ans=0;
         unordered_map<int, int> m;
+        int maxsize=INT_MIN;
         for(auto x:tasks){
             m[x]+=1;
+            maxsize = max(maxsize, m[x]);
         }
         
-        vector<int> res(1e5+1, 0);
+        vector<int> res(maxsize+5, 0);
         res[0]=INT_MIN;
         res[1]=INT_MIN;
         res[2]=1;
