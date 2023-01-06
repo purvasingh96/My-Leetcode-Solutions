@@ -1,66 +1,77 @@
-class Node{
+class CustomNode{
 public:
-    int key;
-    int val;
-    Node* prev;
-    Node* next;
-    Node(int key, int val){
-        this->key = key;
+    CustomNode* next;
+    CustomNode* prev;
+    int val, key;
+    CustomNode(int key, int val) {
         this->val = val;
-        this->prev =NULL;
+        this->key = key;
         this->next = NULL;
+        this->prev = NULL;
     }
 };
 
-
 class LRUCache {
 private:
-    unordered_map<int, Node*> m;
-    int capacity;
-    Node* head;
-    Node* tail;
+    int n, cap;
+    CustomNode* head;
+    CustomNode* tail;
+    map<int, CustomNode*> m;
 public:
     LRUCache(int capacity) {
-        this->capacity = capacity;
-        head = new Node(0, 0);
-        tail = new Node(0, 0);
-        head->next = tail;
-        tail->prev=head;
+        this->cap = 0;
+        this->n = capacity;    
+        this->head = new CustomNode(0, 0);
+        this->tail = new CustomNode(0, 0);
+        this->tail->next = head;
+        this->head->prev = tail;
     }
     
-    
-    void remove(Node* t){
-        m.erase(t->key);
-        t->next->prev = t->prev;
-        t->prev->next = t->next;
+    void remove(CustomNode* node){
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        m.erase(node->key);
     }
     
-    void insertFront(Node* node){
-        node->next = head->next;
-        head->next->prev = node;
-        head->next = node;
-        node->prev = head;
+    void addFront(CustomNode* node){
+        CustomNode* temp = head->prev;
+        temp->next = node;
+        node->prev = temp;
+        node->next = head;
+        head->prev = node;
         m[node->key] = node;
-        
     }
     
-    
+
     int get(int key) {
+        // for(auto x:m){
+        //     cout<<x.first<<"\n";
+        // }
+        //cout<<"\n====\n";
         if(m.find(key) == m.end()) return -1;
-        Node* node = m[key];
-        remove(node);
-        insertFront(node);
-        return node->val;
+        CustomNode* k = m[key];
+        
+        remove(k);
+        addFront(k);
+        return m[key]->val;
     }
     
     void put(int key, int value) {
-        Node* node = new Node(key, value);
-        if(m.find(key) != m.end()) {
-            remove(m[key]);
-        } else if(m.size() == capacity){
-            remove(tail->prev);
+        if(m.find(key)!=m.end()){
+            CustomNode* temp = m[key];
+            remove(temp);
+            temp->val = value;
+            addFront(temp);
+        } else{
+           if(m.size() == n){
+                remove(tail->next);
+            }
+
+            CustomNode* node = new CustomNode(key, value);
+            addFront(node); 
         }
-        insertFront(node);
+        
+        
     }
 };
 
