@@ -12,7 +12,24 @@ private:
     }
     
     vector<vector<int>> insertIntervals(vector<vector<int>>& res, vector<vector<int>>& intervals, vector<int>& currInterval, int i){
+        if(intervals.size() == 0){
+            res.push_back(currInterval);
+            return res;
+        }
+        
         int n = intervals.size();
+        
+        for(int j=0;j<i;j++){
+                res.push_back(intervals[j]);
+        }
+        
+        if(res.size() >0 && canMergeInterval(res.back(), currInterval)){
+                vector<int> temp = res.back();
+                res.pop_back();
+                currInterval = getNewInterval(temp, currInterval);
+                //res.push_back(currInterval);
+        }
+        
         while(i<n && canMergeInterval(intervals[i], currInterval)){
                 currInterval = getNewInterval(intervals[i], currInterval);
                 i+=1;
@@ -38,39 +55,39 @@ public:
             //res.push_back(target);
             int i=0;
             vector<int> currInterval = target;
-            return insertIntervals(res, intervals, currInterval, i);
+            return insertIntervals(res, intervals, target, idx);
             
         } else if(idx == n) {
-            for(int j=0;j<n;j++){
-                res.push_back(intervals[j]);
-            }
+//             for(int j=0;j<n;j++){
+//                 res.push_back(intervals[j]);
+//             }
             
-            if(canMergeInterval(res.back(), target)){
-                res.pop_back();
-                res.push_back(getNewInterval(intervals.back(), target));
-            } else{
-                res.push_back(target);
-            }
+            // if(canMergeInterval(res.back(), target)){
+            //     res.pop_back();
+            //     res.push_back(getNewInterval(intervals.back(), target));
+            // } else {
+            //     res.push_back(target);
+            // }
             
-            return res;
+            return insertIntervals(res, intervals, target, idx);
             
         } else {
             
             // idx between 0 to n-1
-            for(int j=0;j<idx;j++){
-                    res.push_back(intervals[j]);
-                }
-            vector<int> currInterval = target;
+//             for(int j=0;j<idx;j++){
+//                     res.push_back(intervals[j]);
+//                 }
+//             vector<int> currInterval = target;
             
-            if(canMergeInterval(res.back(), target)){
-                vector<int> temp = res.back();;
-                res.pop_back();
-                currInterval = getNewInterval(temp, target);
-            } 
+//             if(canMergeInterval(res.back(), target)){
+//                 vector<int> temp = res.back();;
+//                 res.pop_back();
+//                 currInterval = getNewInterval(temp, target);
+//             } 
             
-            int i=idx;
+//             int i=idx;
             
-            return insertIntervals(res, intervals, currInterval, i);
+            return insertIntervals(res, intervals, target, idx);
             
         }
         
