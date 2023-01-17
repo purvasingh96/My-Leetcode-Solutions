@@ -27,7 +27,6 @@ private:
                 vector<int> temp = res.back();
                 res.pop_back();
                 currInterval = getNewInterval(temp, currInterval);
-                //res.push_back(currInterval);
         }
         
         while(i<n && canMergeInterval(intervals[i], currInterval)){
@@ -49,48 +48,8 @@ public:
         int n = intervals.size();
         
         vector<vector<int>> res;
-        cout<<idx;
         
-        if(idx==0){
-            //res.push_back(target);
-            int i=0;
-            vector<int> currInterval = target;
-            return insertIntervals(res, intervals, target, idx);
-            
-        } else if(idx == n) {
-//             for(int j=0;j<n;j++){
-//                 res.push_back(intervals[j]);
-//             }
-            
-            // if(canMergeInterval(res.back(), target)){
-            //     res.pop_back();
-            //     res.push_back(getNewInterval(intervals.back(), target));
-            // } else {
-            //     res.push_back(target);
-            // }
-            
-            return insertIntervals(res, intervals, target, idx);
-            
-        } else {
-            
-            // idx between 0 to n-1
-//             for(int j=0;j<idx;j++){
-//                     res.push_back(intervals[j]);
-//                 }
-//             vector<int> currInterval = target;
-            
-//             if(canMergeInterval(res.back(), target)){
-//                 vector<int> temp = res.back();;
-//                 res.pop_back();
-//                 currInterval = getNewInterval(temp, target);
-//             } 
-            
-//             int i=idx;
-            
-            return insertIntervals(res, intervals, target, idx);
-            
-        }
-        
+        return insertIntervals(res, intervals, target, idx);
         
     }
 };
