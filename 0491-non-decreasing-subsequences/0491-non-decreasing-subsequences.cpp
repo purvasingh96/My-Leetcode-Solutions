@@ -22,8 +22,7 @@ public:
         vector<int> temp;
         backtrack(0, nums, temp, res);
         
-        vector<vector<int>> ans;
-        for(auto x:res) ans.push_back(x);
-        return ans;
+        
+        return vector(res.begin(), res.end());
     }
 };
