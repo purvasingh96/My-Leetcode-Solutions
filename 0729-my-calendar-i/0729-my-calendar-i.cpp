@@ -38,11 +38,7 @@ public:
             return true;
         }
         int it = bs(start, res);
-        // cout<<"id: "<<it<<"\n";
-        // for(auto x:res){
-        //     cout<<"("<<x[0]<<", "<<x[1]<<") ";
-        // }
-        // cout<<"\n";
+        
         
         if(it==-1){
             if(start >= res.back()[1]){
