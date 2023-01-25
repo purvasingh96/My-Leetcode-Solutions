@@ -1,47 +1,70 @@
 class Solution {
-private:
-    
-    void dfs(vector<int>& edges, vector<int>& res, int node){
-        int i=node, count=0;
-        int n = edges.size();
-        
-        vector<bool> visited(n, false);
-        while(i!=-1 && !visited[i]){
-            res[i] = count;
-            visited[i]=true;
-            i=edges[i];
-            count+=1;
-        }
-    }
 public:
     int closestMeetingNode(vector<int>& edges, int node1, int node2) {
+        /*
+            1. do bfs from both nodes/
+            2. create 2 visited arrays and 1 map(max(dist1, dist2) -> priority_queue<nodes>).
+            3. if(visited1[node] && visited2[node]) 
+        */
+        
         int n = edges.size();
+        vector<int> visited1(n, -1);
+        vector<int> visited2(n, -1);
         
-        vector<int> res1(n, -1);
-        vector<int> res2(n, -1);
+        // node, q_number, dist
+        queue<vector<int>> q;
         
-        dfs(edges, res1, node1);
-        if(node1==node2) res2=res1;
-        else dfs(edges, res2, node2);
+        unordered_map<int, vector<int>> adj;
+        map<int, priority_queue<int, vector<int>, greater<int>>> m;
         
-        int i=0;
-        int minval=INT_MAX;
-        int minidx=-1;
-        while(i<n){
-            if(res1[i]!=-1 && res2[i]!=-1){
-                
-                int val = max(res1[i], res2[i]);
-                if(val < minval){
-                    minval = val;
-                    minidx=i;
-                }
-                
-                
-            }
-            
-            i+=1;
+        for(int i=0;i<n;i++){
+            if(edges[i]!=-1) adj[i].push_back(edges[i]);
         }
         
-        return minidx;
+        q.push({node1, 1, 0});
+        q.push({node2, 2, 0});
+        
+        while(!q.empty()){
+            
+            int sz = q.size();
+            
+            while(sz--){
+                auto f = q.front();
+                q.pop();
+                int node = f[0], qv = f[1], dist = f[2];
+                
+                if(qv == 1){
+                    visited1[node] = dist;
+                    if(visited2[node]!=-1){
+                        m[max(visited1[node], visited2[node])].push(node);
+                    }
+                    
+                    for(auto next:adj[node]){
+                        if(visited1[next]==-1){
+                            q.push({next, 1, dist+1});
+                        }
+                    }
+                    
+                    
+                } else if(qv == 2){
+                    visited2[node] = dist;
+                    if(visited1[node]!=-1){
+                        m[max(visited1[node], visited2[node])].push(node);
+                    }
+                    
+                    for(auto next:adj[node]){
+                        if(visited2[next]==-1){
+                            q.push({next, 2, dist+1});
+                        }
+                    }
+                }
+            }
+            
+            
+        }
+        return m.size()==0 ? -1 : m.begin()->second.top();
+        
+        
+        
     }
 };
