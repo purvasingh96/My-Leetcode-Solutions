@@ -1,28 +1,34 @@
+class MyCompare{
+public:
+    bool operator()(const vector<int>& a, const vector<int>& b){
+        return a[1] < b[1];
+    }
+};
+
+
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        deque<int> q;
-        int start=0;
-        vector<int> res;
+        // store idx in pq
+        // till pq.top is within (i to j) range: keep max as pq.top()
+        // pop pq.top
         
-        for(int i=0;i<nums.size();i++){
-            
-            if(q.empty() || nums[q.back()] >= nums[i]){
-                q.push_back(i);
-            } else{
-                
-                while(!q.empty() && nums[q.back()] < nums[i]){
-                    q.pop_back();
+        priority_queue<vector<int>, vector<vector<int>>, MyCompare> pq;
+        for(int i=0;i<k;i++){
+            pq.push({i, nums[i]});
+        }
+        
+        vector<int> res;
+        res.push_back(pq.top()[1]);
+        int start = 1;
+        for(int end=k;end<nums.size();end++){
+            pq.push({end, nums[end]});
+                while(!pq.empty() && (pq.top()[0] <start)){
+                    pq.pop();
                 }
-                q.push_back(i);
-                
-            }
             
-            if(i-start+1 == k){
-                res.push_back(nums[q.front()]);
-                start+=1;
-                while(!q.empty() && start > q.front()) q.pop_front();
-            }
+            res.push_back(pq.top()[1]);
+            start+=1;
         }
         
         return res;
