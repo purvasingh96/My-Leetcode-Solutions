@@ -1,48 +1,54 @@
 class Solution {
 private:
-    int binary_search(int left, int right, vector<int> cur, vector<vector<int>>& e){
-        int ans=-1;
-        while(left<=right){
-            int mid = left + (right-left)/2;
+    int binary_search(int idx, vector<vector<int>>& events){
+        int res = events[idx][1], n = events.size();
+        int s = idx+1, e=n-1;
+        int ans=n;
         
-            if(e[mid][0] > cur[1]){
-                ans = mid;
-                right=mid-1;
+        while(s<=e){
+            int mid = s + (e-s)/2;
+            if(events[mid][0] > res){
+                ans=mid;
+                e=mid-1;
             } else{
-                left=mid+1;
+                s=mid+1;
             }
         }
         
         return ans;
+        
     }
     
-    int recur(int idx,vector<vector<int>>&events, int k, vector<vector<int>>& dp)
-    {
-        if(idx>=events.size() or k==0)
-            return 0;
+    
+    int dfs(int idx, int k, vector<vector<int>>& dp, vector<vector<int>>& events){
+        
+        if(idx >= events.size() || k<=0) return 0;
         
         if(dp[idx][k]!=-1) return dp[idx][k];
         
-        int i = binary_search(idx+1, events.size()-1, events[idx], events);
+        int skip=-1, dontSkip=-1;
+        int next = binary_search(idx, events);
+        //cout<<"idx: "<<idx<<" next: "<<next<<"\n";
         
-        int op1=recur(idx+1,events,k, dp);
-        int op2=events[idx][2]+recur(i,events,k-1, dp);
+        skip = dfs(idx+1, k, dp, events);
         
-        return dp[idx][k] = max(op1,op2);
+        dontSkip = events[idx][2] + dfs(next, k-1, dp, events);
+        
+        return dp[idx][k] = max(skip, dontSkip);
     }
+    
 public:
     int maxValue(vector<vector<int>>& events, int k) {
+        int n = events.size();
         sort(events.begin(), events.end(), [](const vector<int>& a, const vector<int>& b){
-            if(a[0] !=b[0]){
-                return a[0] < b[0];
-            }
-            return a[1]<b[1];
+            if(a[0] == b[0]) return a[2] > b[2];
+            return a[0] < b[0];
         });
         
-        int n = events.size();
+        vector<vector<int>> dp(n, vector<int>(k+1, -1));
         
-        vector<vector<int>> dp(n+1, vector<int>(k+1, -1));
-        return recur(0, events, k, dp);
+        return dfs(0, k, dp, events);
+        
         
     }
 };
