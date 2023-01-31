@@ -1,56 +1,50 @@
 class Solution {
 private:
-    int binary_search(int start, vector<pair<pair<int, int>, int>>& nums, int target){
-        int l=start, r=nums.size()-1;
+    int binary_search(int idx, vector<vector<int>>& nums){
+        int n = nums.size();
+        int left = 0, right=n-1;
+        int target = nums[idx][1], ans=n;
         
-        while(l<r){
-            int mid = l + (r-l)/2;
-            if(nums[mid].first.first >= target) r=mid;
-            else l=mid+1;
-        }
-        
-        if(nums[l].first.first < target) return -1;
-        return l;
-    }
-public:
-    int jobScheduling(vector<int>& s, vector<int>& e, vector<int>& p) {
-        vector<pair<pair<int, int>, int>> nums;
-        int n = p.size();
-        
-        for(int i=0;i<n;i++){
-            nums.push_back({{s[i], e[i]}, p[i]});
-        }
-        
-        
-        sort(nums.begin(), nums.end(), [](const pair<pair<int, int>, int>& a, const pair<pair<int, int>, int>&b ){
-            pair<int,int> ka = a.first;
-            pair<int,int> kb = b.first;
+        while(left<=right){
+            int mid = left + (right-left)/2;
             
-            if(ka.first == kb.first) return ka.second < kb.second;
-            return ka.first < kb.first;
-        });
-        
-        
-        vector<int> dp(n, 0);
-        dp[n-1] = nums[n-1].second;
-        
-        for(int i=n-2;i>=0;i--){
-            
-            int endTime = nums[i].first.second;
-            int profit = nums[i].second;
-                
-            int idx = binary_search(i+1, nums, endTime);
-            
-            if(idx!=-1){
-                dp[i] = profit + dp[idx];
-                dp[i] = max(dp[i], dp[i+1]);
+            if(nums[mid][0] >= target){
+                ans=mid;
+                right=mid-1;
             } else {
-                dp[i] = max(profit, dp[i+1]);
+                left = mid+1;
             }
         }
         
+        return ans;
+    }
+    
+    int dfs(int idx, vector<vector<int>>& nums, vector<int>& dp){
+        if(idx >= nums.size()) return 0;
+        if(dp[idx]!=-1) return dp[idx];
         
-        return dp[0];
+        int next = binary_search(idx, nums);
         
+        int skip = dfs(idx+1, nums, dp);
+        int dontSkip = nums[idx][2] + dfs(next, nums, dp);
+        
+        return dp[idx] = max(skip, dontSkip);
+        
+    }
+public:
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
+        int n = startTime.size();
+        vector<vector<int>> nums;
+        for(int i=0;i<n;i++){
+            nums.push_back({startTime[i], endTime[i], profit[i]});
+        }
+        
+        sort(nums.begin(), nums.end(), [](const vector<int>& a, const vector<int>& b){
+            if(a[0] == b[0]) return a[2] > b[2];
+            return a[0] < b[0];
+        });
+        
+        vector<int> dp(n, -1);
+        return dfs(0, nums, dp);
     }
 };
