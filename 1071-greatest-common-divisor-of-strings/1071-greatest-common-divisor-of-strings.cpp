@@ -15,10 +15,7 @@ public:
             swap(m, n);
         }
         
-        for(int i=0;i<n;i++){
-            if(long_string[i]!=short_string[i]) return "";
-        }
-        
+       
         int len = __gcd(m, n);
         
         
