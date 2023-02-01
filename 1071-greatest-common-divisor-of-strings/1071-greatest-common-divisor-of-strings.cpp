@@ -9,21 +9,14 @@ private:
     
 public:
     string gcdOfStrings(string long_string, string short_string) {
+        if(long_string+short_string!=short_string+long_string) return "";
         int m = long_string.length(), n = short_string.length();
-        if(m < n){
-            swap(long_string, short_string);
-            swap(m, n);
-        }
         
-       
         int len = __gcd(m, n);
         
         
         string temp = short_string.substr(0, len);
-        int concat1 = m/len, concat2 = n/len;
         
-        
-        if(generateString(concat1, temp) == long_string && generateString(concat2, temp)  == short_string) return temp;
-        return "";
+        return temp;
     }
 };
