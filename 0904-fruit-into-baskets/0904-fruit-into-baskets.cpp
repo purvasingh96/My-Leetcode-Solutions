@@ -4,7 +4,7 @@ public:
     int totalFruit(vector<int>& fruits) {
         
         int left=0, right=0, n = fruits.size();
-        map<int, int> m;
+        unordered_map<int, int> m;
         int c=0, ans=0;
         
         while(right<n){
