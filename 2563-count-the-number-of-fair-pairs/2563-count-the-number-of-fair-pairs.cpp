@@ -17,30 +17,8 @@ public:
             auto start = lower_bound(nums.begin()+i+1, nums.end(), l1)-nums.begin();
             auto end = upper_bound(nums.begin()+i+1, nums.end(), l2)-nums.begin();
             
-            // int start = min(s, e);
-            // int end = max(s, e);
+            ans += (end-start); 
             
-            if(start == nums.size()) continue;
-            
-            if(end!=nums.size() && nums[end]>l2) {
-                while(end>start && nums[end]>l2) end--;
-            }
-            
-            while(start<end && key > nums[start]){
-                start+=1;
-            }
-            
-            //cout<<"i: "<<i<<" start: "<<start<<" end: "<<end<<" ";
-            if(start == end){
-                int val = key + nums[start];
-                if(key <= nums[start] && (val>=lower && val <= upper)){
-                    //cout<<"adding one\n";
-                    ans+=1;
-                }
-            } else{
-                //cout<<"here\n";
-               end==nums.size() ? ans += (end-start): ans+=(end-start+1); 
-            }
             
             
             
