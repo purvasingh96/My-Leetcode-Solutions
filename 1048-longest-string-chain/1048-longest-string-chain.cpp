@@ -1,48 +1,28 @@
 class Solution {
-public:
-    int ans=1;
-    unordered_map<string, bool> M;
-    
-    void bfs(string &src)
-    {
-        M[src] = true;
+private:
+    int dfs(string s, unordered_set<string>& cache, unordered_map<string, int>& memo){
+        if(memo.find(s)!=memo.end()) return memo[s];
         
-        queue<pair<string, int>>Q;
-        Q.push({src, 1});
-        
-        while(Q.size())
-        {
-            auto [s, d] = Q.front();
-            Q.pop();
-            
-            ans = max(ans, d);
-            
-            for(int i=0; i<s.size(); i++)
-            {
-                string t = s.substr(0, i) + s.substr(i+1);
-                
-                if(M.find(t) != M.end() and M[t] == false)
-                {
-                    M[t] = true;
-                    Q.push({t, d+1});
-                }
+        int maxLen=1;
+        for(int i=0;i<s.length();i++){
+            string newStr = s.substr(0, i) + s.substr(i+1);
+            if(cache.find(newStr)!=cache.end()) {
+                int len = (1 + dfs(newStr, cache, memo));
+                maxLen = max(maxLen, len);
             }
         }
+        
+        return memo[s] = maxLen;
     }
-    
+public:
     int longestStrChain(vector<string>& words) {
-       
-        for(auto w:words)
-            M[w] = false;
+        unordered_set<string> cache;
+        for(auto word:words) cache.insert(word);
+        unordered_map<string, int> memo;
         
-        sort(words.begin(), words.end(), [](auto a, auto b){
-            return a.size() > b.size();
-        });
-        
-        for(auto &w:words)
-        {
-            if(M[w] == false)
-                bfs(w);
+        int ans=INT_MIN;
+        for(auto word:words){
+            ans = max(ans, dfs(word, cache, memo));
         }
         
         return ans;
