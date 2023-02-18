@@ -1,33 +1,34 @@
 class Solution {
 private:
-    bool notCommon(vector<int>& a, vector<int>& b){
-        for(int i=0;i<26;i++){
-            if(a[i]>0 && b[i]>0 ) return false;
+    int bitNumber(char ch){
+    return (int)ch - (int)'a';
+  }
+    int computeBitmask(string s){
+        int bitmask=0;
+        for(auto c:s){
+            bitmask |= 1 << bitNumber(c);
         }
-        return true;
+        return bitmask;
     }
+    
 public:
     int maxProduct(vector<string>& words) {
         
-        unordered_map<string, vector<int>> m;
+        unordered_map<string, int> m;
         for(auto word:words){
-            vector<int> temp(26, 0);
-            for(auto c:word){
-                temp[c-'a']+=1;
-            }
-            m[word] = temp;
+           m[word] = computeBitmask(word);
+            cout<<"word: "<<word<<" bitmask: "<<computeBitmask(word)<<"\n";
         }
         
         //for(auto x:words) cout<<x<<" ";
         
         int n = words.size();
         int maxlen = 0;
-        for(int i=n-1;i>=0;i--){
-            for(int j=i-1;j>=0;j--){
-                
-                if(notCommon(m[words[i]],m[words[j]])){
-                    int len = words[i].length()*words[j].length();
-                    maxlen = max(maxlen,  len);
+        for(auto x:m){
+            for(auto y:m){
+                if((x.second&y.second)==0) {
+                    int len = x.first.length()*y.first.length();
+                    maxlen = max(maxlen, len);
                 }
             }
         }
