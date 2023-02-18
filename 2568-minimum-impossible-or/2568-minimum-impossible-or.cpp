@@ -1,12 +1,5 @@
 class Solution {
-private:
-    bool isPowerOfTwo(int num){
-        int res = (num)&(num-1);
-        return res==0;
-    }
-    
 
-    
 public:
     int minImpossibleOR(vector<int>& nums) {
         
