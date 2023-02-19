@@ -1,57 +1,62 @@
-#define v vector<int>
-
 class Solution {
 private:
-    int dx[4] = {0, 0, -1, 1};
-    int dy[4] = {1, -1, 0, 0};
+    int dx[4] = {0, 1, 0, -1};
+    int dy[4] = {1, 0, -1, 0};
+
+    bool isValid(int x, int y, vector<vector<int>>& grid){
+            return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
+    }
 public:
     int shortestPath(vector<vector<int>>& grid, int k) {
-        // obst, 
-        queue<v> pq;
         int m = grid.size(), n = grid[0].size();
-        vector<vector<int>> visited(m, vector<int>(n, -1));
-        // x, y, dist, obst
-        pq.push({0, 0, 0, k});
         
-        while(!pq.empty()){
-            auto f = pq.front();
-            pq.pop();
+        vector<vector<int>> visited(m, vector<int>(n, -1));
+        // i, j, steps, k
+        queue<vector<int>> q;
+        
+        q.push({0, 0, 0, 0});
+        
+        visited[0][0] = 0;
+        
+        while(!q.empty()){
             
-            int x = f[0];
-            int y = f[1];
-            int dist=f[2];
-            int obst_remaining=f[3];
+                auto f = q.front();
+                q.pop();
+                int x = f[0], y = f[1], steps=f[2], obstacles =f[3];
+                
+                if(x==m-1 && y==n-1) return steps;
             
-           
-            
-            if(x==m-1 && y==n-1){
-                return dist;
-            }
-            
-            if(grid[x][y] == 1){
-                if(obst_remaining>0){
-                    obst_remaining-=1;
-                } else{
-                    continue;
-                }
-                    
-            }
-            
-            if(visited[x][y]!=-1 && visited[x][y]>=obst_remaining){
-                continue;
-            }
-            
-            visited[x][y]=obst_remaining;
             
             for(int i=0;i<4;i++){
-                int new_x = x+dx[i];
-                int new_y = y+dy[i];
                 
-                if(new_x>=0 && new_y>=0 && new_x<m && new_y<n){
-                    pq.push({new_x, new_y, dist+1, obst_remaining});
+                int new_x = x + dx[i];
+                int new_y = y + dy[i];
+                
+                if(isValid(new_x, new_y, grid)){
+                    
+                    if(grid[new_x][new_y]==1) {
+                        if(obstacles==k) continue;
+                        else {
+                            
+                            if(visited[new_x][new_y]==-1 || (visited[new_x][new_y]!=-1 && visited[new_x][new_y] > obstacles+1)){
+                                visited[new_x][new_y]=obstacles+1;
+                                q.push({new_x, new_y, steps+1, obstacles+1});
+                            }
+                            
+                            
+                        }
+                    } else{
+                        if(visited[new_x][new_y]==-1 || (visited[new_x][new_y]!=-1 && visited[new_x][new_y] > obstacles)){
+                            visited[new_x][new_y]=obstacles;
+                            q.push({new_x, new_y, steps+1, obstacles});
+                        }
+                    }
+                    
                 }
                 
+                
             }
+                
             
         }
         
