@@ -1,38 +1,37 @@
 class Solution {
 private:
-    bool canShip(vector<int>& weights, int mid, int days){
-        int total=0, d=0;
+    bool possible(int target, vector<int>& weights, int days){
+        int d=1;
+        int sum=0;
         
         for(int i=0;i<weights.size();i++){
-            
-            if(total+weights[i] > mid){
-                d += 1;
-                total=weights[i];
-            } else {
-                total += weights[i];
-            }
-        } 
-        
-        //cout<<"mid: "<<mid<<" total days: "<<d<<"\n";
-        
-        return d+1 <= days;
+            sum += weights[i];
+            if(sum > target){
+                d+=1;
+                if(d > days) return false;
+                sum = weights[i];
+            } 
+        }
+        return true;
     }
 public:
     int shipWithinDays(vector<int>& weights, int days) {
+        // min: max weight max: sum of all weights
+        int left = *max_element(weights.begin(), weights.end());
         int right = accumulate(weights.begin(), weights.end(), 0);
-        int max_e = *max_element(weights.begin(), weights.end());
-        int left = max_e;
-        int ans=0;
         
-        while(left<=right){
+        int ans=-1;
+        while(left<right){
             int mid = left + (right-left)/2;
-            
-            if(canShip(weights, mid, days)){
+            if(possible(mid, weights, days)){
                 ans=mid;
-                right=mid-1;
-            } else left = mid+1;
+                right=mid;
+            } else {
+                left = mid+1;
+            }
         }
         
-        return ans;
+        return left;
+        
     }
 };
