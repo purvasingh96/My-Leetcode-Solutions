@@ -1,5 +1,32 @@
 class Solution {
 private:
+    vector<vector<int>> hashMap(vector<int>& nums){
+        int n = nums.size();
+        unordered_map<int,int> seen;
+        vector<vector<int>> res;
+        for(int i=0;i<n;i++){
+            if(i==0 || nums[i]!=nums[i-1]){
+            for(int j=i+1;j<n;j++){
+                
+                int complement = -nums[i]-nums[j];
+                
+                if(seen.find(complement)!=seen.end()){
+                    res.push_back({nums[i], complement, nums[j]});
+                    while(j+1<n && nums[j] == nums[j+1]){
+                        j+=1;
+                      }
+                    seen[nums[j]]+=1;
+                }
+                
+            }
+        }
+        }
+        
+        return res;
+        
+    }
+    
+    
     
     vector<vector<int>> twoPointers(vector<int>& nums){
         sort(nums.begin(), nums.end());
@@ -32,6 +59,7 @@ private:
         
         return res;
     }
+    
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
         return twoPointers(nums);
