@@ -1,20 +1,24 @@
 class Solution {
+
 public:
     int minSubArrayLen(int target, vector<int>& nums) {
-        // O(N)
-        int left =0, right=0;
-        int n = nums.size();
-        int sum=0, ans=INT_MAX;
+        // O(N) // every step 
+        map<int, int> m;
+        int prefixSum =0, n = nums.size(), ans=INT_MAX;
         
-        while(right<n){
-            sum += nums[right];
+        for(int right=0;right<n;right++){
+            prefixSum += nums[right];
             
-            while(left<right && sum-nums[left]>=target){
-                sum -= nums[left++];
+            if(prefixSum >= target){
+                auto it = m.upper_bound(prefixSum-target);
+                if(it!=m.begin()){
+                    ans = min(ans, (right - prev(it)->second));
+                } else {
+                    ans = min(ans, right+1);
+                }
             }
             
-            if(sum>=target) ans = min(ans, (right-left+1));
-            right+=1;
+            m[prefixSum] = right;
         }
         
         return ans==INT_MAX?0:ans;
