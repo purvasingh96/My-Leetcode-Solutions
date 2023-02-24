@@ -1,28 +1,40 @@
 class Solution {
 public:
     int largestRectangleArea(vector<int>& heights) {
-        stack<int> st;
-        st.push(-1);
-        int max_area=0, n = heights.size();
+        // O(N) but 2 pass solution
+        int n = heights.size();
         
-        for(int i=0;i<n;i++){
-            
-            while(st.top()!=-1 && heights[st.top()] >= heights[i]){
-                int ht = heights[st.top()];
-                st.pop();
-                int w = i - st.top() - 1;
-                max_area = max(max_area, ht*w);
-            }
+        vector<int> left(n, -1);
+        vector<int> right(n, n);
+        stack<int> st;
+        st.push(0);
+        for(int i=1;i<n;i++){
+             while(!st.empty() && heights[st.top()]>=heights[i])   {
+                 st.pop();
+             }
+            left[i] = st.empty()?-1:st.top();
             st.push(i);
         }
         
-        while(st.top()!=-1){
-            int ht = heights[st.top()];
-            st.pop();
-            
-            int w = n - st.top()-1;
-            max_area = max(max_area, ht*w);
+        stack<int> st2;
+        st2.push(n-1);
+        for(int i=n-2;i>=0;i--){
+            while(!st2.empty() && heights[st2.top()]>=heights[i]){
+                st2.pop();                
+            }
+            right[i] = st2.empty()?n:st2.top();
+            st2.push(i);
         }
-        return max_area;
+        
+        // for(auto x:left) cout<<x<<" ";
+        // cout<<"\n";
+        // for(auto x:right) cout<<x<<" ";
+        
+        int maxarea=INT_MIN;
+        for(int i=0;i<n;i++){
+            maxarea = max(maxarea, heights[i]*(right[i]-left[i]-1));
+        }
+        
+        return maxarea;
     }
 };
