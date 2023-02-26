@@ -10,8 +10,42 @@
  * };
  */
 class Solution {
-public:
-    vector<int> inorderTraversal(TreeNode* root) {
+private:
+    TreeNode* predecessor(TreeNode* root){
+        TreeNode* pred = root->left;
+        while(pred->right && pred->right!=root){
+            pred=pred->right;
+        }
+        return pred;
+    }
+    
+    // O(N), O(1)
+    vector<int> morris(TreeNode* root){
+       TreeNode* curr = root;
+        vector<int> res;
+        
+        while(curr){
+            if(!curr->left){
+                res.push_back(curr->val);
+                curr = curr->right;
+            } else{
+                TreeNode* pred = predecessor(curr);
+                if(pred->right==NULL){
+                    pred->right=curr;
+                    curr=curr->left;
+                } else{
+                    pred->right=NULL;
+                    res.push_back(curr->val);
+                    curr=curr->right;
+                }   
+            }
+        }
+        
+        return res;
+    }
+    
+    // O(N), O(N)
+    vector<int> iterative(TreeNode* root) {
         vector<int> res;
         stack<TreeNode*> st;
         
@@ -36,4 +70,11 @@ public:
         
         return res;
     }
+    
+public:
+    vector<int> inorderTraversal(TreeNode* root){
+        return morris(root);
+    }
+     
+    
 };
