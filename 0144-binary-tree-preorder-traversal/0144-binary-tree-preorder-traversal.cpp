@@ -43,8 +43,29 @@ private:
         }
         return res;
     }
+    
+    vector<int> iterative(TreeNode* root){
+        TreeNode* curr = root;
+        stack<TreeNode*> st;
+        vector<int> res;
+        st.push(root);
+        
+        while(!st.empty()){
+            TreeNode* curr = st.top();st.pop();
+            
+            if(curr){
+                res.push_back(curr->val);    
+                st.push(curr->right);
+                st.push(curr->left);
+            }
+        }
+        
+        return res;
+        
+    }
+    
 public:
     vector<int> preorderTraversal(TreeNode* root) {
-        return morris(root);
+        return iterative(root);
     }
 };
