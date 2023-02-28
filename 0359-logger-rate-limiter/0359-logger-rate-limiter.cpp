@@ -7,10 +7,6 @@ public:
     }
     
     bool shouldPrintMessage(int timestamp, string message) {
-        // for(auto x:m){
-        //     cout<<x.first<<" "<<x.second<<"\n";
-        // }
-        // cout<<"====\n";
         if(m.find(message)==m.end()){
             m[message] = (timestamp+10);
             return true;
