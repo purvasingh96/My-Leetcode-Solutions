@@ -21,7 +21,7 @@ private:
         
         int s2= root->val + max(l, r);
         
-        global = max({root->val, global, s1, s2});
+        global = max({global, s1, s2});
         
         return s2;
     }
