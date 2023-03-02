@@ -1,66 +1,21 @@
-class UnionFind{
-public:
-    vector<int> root;
-    vector<int> rank;
-    int comp;
-    
-    UnionFind(int n): root(n), rank(n) {
-        for(int i=0;i<n;i++){
-            root[i] = i;
-            rank[i] = 1;
-        }
-        comp=n;
-    }
-    
-    int find(int x){
-        if(root[x] == x) return x;
-        return root[x] = find(root[x]);
-    }
-    
-    void merge(int x, int y){
-        int rx = find(x);
-        int ry = find(y);
-        
-        if(rx!=ry){
-            
-            if(rank[rx] > rank[ry]){
-                rank[rx] += rank[ry];
-                root[ry] = rx;
-            } else{
-                rank[ry] += rank[rx];
-                root[rx] = ry;
-            }
-            
-            comp-=1;
-        }
-        
-    }
-    
-    int components(){
-        return comp;
-    }
-    
-};
 class Solution {
 public:
-    int removeStones(vector<vector<int>>& stones) {
+    int dfs(vector<vector<int>>&stones,int index,vector<bool>&visited,int&n){
+        visited[index]=true;
+        int result=0;
+        for(int i=0;i<n;i++)
+            if(!visited[i]&&(stones[i][0]==stones[index][0]||stones[i][1]==stones[index][1]))
+                result +=(dfs(stones,i,visited,n) + 1);
+        return result;
+    }
+    int removeStones(vector<vector<int>>&stones) {
         int n = stones.size();
-        UnionFind uf(n);
-        
+        vector<bool>visited(n,0);
+        int result=0;
         for(int i=0;i<n;i++){
-            for(int j=i+1;j<n;j++){
-                
-                int ax = stones[i][0], ay = stones[i][1];
-                int bx = stones[j][0], by = stones[j][1];
-                
-                if(ax==bx || ay==by){
-                    uf.merge(i, j);
-                }
-                
-            }
+            if(visited[i]){continue;}
+            result+=dfs(stones,i,visited,n);
         }
-        
-        return n - uf.components();
-        
+        return result;
     }
 };
