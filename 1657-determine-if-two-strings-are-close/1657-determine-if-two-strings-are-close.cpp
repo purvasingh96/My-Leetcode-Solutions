@@ -4,17 +4,13 @@ public:
         int m = word1.length(), n = word2.length();
         if(m!=n) return false;
         
-        
-        sort(word1.begin(), word1.end());
-        sort(word2.begin(), word2.end());
-        
-        if(word1 == word2) return true;
-        
         vector<int> m1(26,0);
         vector<int> m2(26,0);
         
         for(auto c:word1) m1[c-'a']+=1;
         for(auto c:word2) m2[c-'a']+=1;
+        
+        if(m1 == m2) return true;
         
         // to check for extra chars
         for(int i=0;i<26;i++){
