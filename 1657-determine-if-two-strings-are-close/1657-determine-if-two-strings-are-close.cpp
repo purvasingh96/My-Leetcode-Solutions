@@ -18,7 +18,6 @@ public:
             if(m1[i]!=0 && m2[i]==0) return false;
         }
         
-        // anagrams formed by operation 1
         sort(m1.begin(), m1.end());
         sort(m2.begin(), m2.end());
         
