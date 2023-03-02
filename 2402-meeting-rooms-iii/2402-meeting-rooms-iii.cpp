@@ -1,36 +1,35 @@
-class MyCmp{
- public:
-    bool operator()(const pair<long, long>& a, const pair<long, long>& b){
-        if(a.first == b.first) return a.second > b.second;
-        return a.first > b.first;
-    }
-};
-
 class Solution {
 public:
     int mostBooked(int n, vector<vector<int>>& meetings) {
         sort(meetings.begin(), meetings.end());
-        priority_queue<pair<long, long>, vector<pair<long, long>>, MyCmp> pq;
-        vector<long> freq(n, 0);
-        
-        for(int i=0;i<n;i++) {
-            pq.push({0,i});
-        }
+        vector<long long> count(n, 0);
+        vector<long long> ends(n, 0);
         
         for(int i=0;i<meetings.size();i++){
-            while(pq.top().first < meetings[i][0]){
-                pq.push({meetings[i][0], pq.top().second});
-                pq.pop();
-            }
+            int start = meetings[i][0], end=meetings[i][1];
+            bool found=false;
             
-            auto temp = pq.top();
-            pq.pop();
-            freq[temp.second]+=1;
-            temp.first += (meetings[i][1] - meetings[i][0]);
-            pq.push(temp);
+            for(int i=0;i<n;i++){
+                if(ends[i] <= start){
+                    count[i]+=1;
+                    ends[i] = end;
+                    found=true;
+                    break;
+                }
+            } 
+            
+            if(!found){
+                int idx = min_element(ends.begin(), ends.end()) - ends.begin();
+                count[idx]+=1;
+                ends[idx] += (end-start);
+            }
+            // for(auto x:count) cout<<x<<" ";
+            // cout<<"\n";
         }
         
-        return max_element(freq.begin(), freq.end()) - freq.begin();
+        
+        
+        return max_element(count.begin(), count.end()) - count.begin();
         
     }
 };
