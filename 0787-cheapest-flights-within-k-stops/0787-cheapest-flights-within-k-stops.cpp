@@ -1,46 +1,30 @@
-class MyCompare{
- public:
-    bool operator()(const vector<int>& a, const vector<int>& b){
-         if(a[0] == b[0]) return a[2] > b[2];
-            return a[0] > b[0];
-    }
-};
-
-
 class Solution {
 public:
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        // price, stop, #stops
-        priority_queue<vector<int>, vector<vector<int>>, MyCompare> pq;
-        // node -> {next, price}
-        unordered_map<int, vector<vector<int>>> adj;
-        
-        vector<int> st(n, INT_MAX);
-        
-        st[src]=0;
-        
-        for(auto f:flights){
-            adj[f[0]].push_back({f[1], f[2]});
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+        vector<int> dp(n, INT_MAX);
+        vector<vector<pair<int, int>>> adj(n);
+        for(auto e:flights){
+            adj[e[0]].push_back({e[1], e[2]});
         }
-        
+        // dist, node, stops
         pq.push({0, src, 0});
         
         while(!pq.empty()){
-            auto f = pq.top();
-            pq.pop();
-            int price = f[0], node = f[1], stops=f[2];
-            //cout<<"price: "<<price<<" node: "<<node<<" stops: "<<stops<<"\n";
-            if(stops > st[node] || stops > k+1) continue;
-            st[node] =stops;
+            auto f = pq.top(); pq.pop();
+            int dist = f[0], node=f[1], stops=f[2];
             
-            if(node == dst) return price;
+            if(dp[node] < stops || stops > k+1) continue;
+            dp[node]=stops;
+            if(node == dst) return dist;
             
-            for(auto next:adj[node]){    
-                pq.push({price+next[1], next[0], stops+1});
+            for(auto neigh:adj[node]){
+                int v = neigh.first, price=neigh.second;
+                pq.push({dist+price, v, stops+1});
             }
+            
         }
         
         return -1;
-        
     }
 };
