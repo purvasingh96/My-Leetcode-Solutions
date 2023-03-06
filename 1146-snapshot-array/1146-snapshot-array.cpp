@@ -1,47 +1,29 @@
 class SnapshotArray {
-private:
-    vector<vector<pair<int, int>>> m;
-    int snapshot;
-    
-    int binary_search(vector<pair<int, int>>& res, int idx){
-        int left =0, right=res.size()-1;
-        
-        while(left<right){
-            int mid = left + (right-left)/2;
-            if(res[mid].first >= idx){
-                right=mid;
-            } else {
-                left=mid+1;
-            }
-        }
-        
-        return left;
-        
-    }
-    
-    
 public:
+    // idx, snapid, val
+    vector<vector<pair<int, int>>> m;
+    int snapId;
+   
     SnapshotArray(int length) {
         m.resize(length);
-        snapshot=0;
+        snapId=0;
     }
     
     void set(int index, int val) {
-        // m[index] => {snapId, val}
-        if(m[index].size()==0 || m[index].back().first <snapshot){
-            m[index].push_back({snapshot, val});
-        } else {
-            m[index].back().second=val;
-        }
+        if(!m[index].empty() && m[index].back().first==snapId){
+            m[index].pop_back();
+        } 
+            m[index].push_back({snapId, val});
+        
     }
     
     int snap() {
-        return snapshot++;
+        snapId+=1;
+        return snapId-1;
     }
     
     int get(int index, int snap_id) {
-        // O(logn)
-        auto it = upper_bound(m[index].begin(), m[index].end(), make_pair(snap_id, INT_MAX));
+        auto it = upper_bound(m[index].begin(), m[index].end(), pair<int, int>(snap_id, INT_MAX));
         if(it==m[index].begin()) return 0;
         return prev(it)->second;
     }
