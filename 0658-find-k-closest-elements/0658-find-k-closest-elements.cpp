@@ -18,13 +18,11 @@ public:
                 right+=1;
                 continue;
             }
-            cout<<"right: "<<right<<"\n";
             if(right==arr.size() || abs(x-arr[left]) <= abs(x-arr[right])){
                 left-=1;
             } else right+=1;
         }
         
-        cout<<"working";
         
         vector<int> res;
         for(int i=left+1;i<right;i++){
