@@ -14,7 +14,6 @@ private:
             int replace = dfs(i+1, j+1, word1, word2, dp);
             ans = 1+ min({insert,_delete, replace});
         }
-        cout<<"i: "<<i<<"j: "<<j<<"ans: "<<ans<<"\n";
         return dp[i][j] = ans;
     }
     
