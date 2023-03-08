@@ -5,7 +5,7 @@ public:
         int m = word1.length(), n = word2.length();
         
         vector<int> dp(n+1, 0);
-        int prev=0;
+        
         for(int i=1;i<=m;i++){
             vector<int> temp(n+1, 0);
             for(int j=1;j<=n;j++){
