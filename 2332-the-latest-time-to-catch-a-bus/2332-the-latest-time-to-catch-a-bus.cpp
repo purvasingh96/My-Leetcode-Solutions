@@ -1,38 +1,34 @@
 class Solution {
 public:
-    int latestTimeCatchTheBus(vector<int>& b, vector<int>& p, int capacity) {
+    int latestTimeCatchTheBus(vector<int>& b, vector<int>& p, int c) {
         
         sort(b.begin(), b.end());
         sort(p.begin(), p.end());
-        
-        
-        int idx=0, i=0;
-        int ans = min(p[0]-1, b.back());
-        
-        
-        for(i=0;i<b.size() && idx<p.size();i++){
-            int cap = capacity;
-            
-            while(cap && idx<p.size() && p[idx] <= b[i]){
-                if(idx!=0 && p[idx]-p[idx-1]>1){
-                    ans = p[idx]-1;
+        int k=0, currCap=0, j;
+        for(int i=0;i<b.size();i++){
+            int idx = upper_bound(p.begin()+k, p.end(), b[i]) - p.begin();
+                j=k;
+                currCap = 0;
+                while(j<idx && (j-k+1)<=c){
+                    currCap = (j-k+1);
+                    j+=1;
                 }
-                cap-=1;
-                idx+=1;
-            }
-            
-            if(cap!=0){
-                if(idx>0 && p[idx-1]!=b[i]){
-                    ans = b[i];
-                }
-            }
-            
+            k=j;
             
         }
         
-        if(i!=b.size()){
-            ans = b.back();
+        int ans;
+        if(currCap< c||j==0) ans = b.back();
+        else ans = p[j-1];
+        
+        int idx = lower_bound(p.begin(), p.end(), ans) - p.begin();
+        while(idx!=p.size() && p[idx]==ans){
+            ans-=1;
+            idx = lower_bound(p.begin(), p.end(), ans) - p.begin();
         }
+        
         return ans;
+        
+        
     }
 };
