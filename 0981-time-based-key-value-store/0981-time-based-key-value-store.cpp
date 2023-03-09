@@ -6,29 +6,17 @@ public:
     TimeMap() {
         
     }
-    
-    int binary(vector<p>& res, int target){
-        //upper bound
-        int l=0, r=res.size()-1;
-        int ans=-1;
-        while(l<r){
-            int mid = l + (r-l)/2;
-            if(res[mid].first > target){
-                r=mid;
-            } else l=mid+1;
-        }
-        
-        if(l<res.size() && res[l].first<=target) l+=1;
-        return l;
-    }
+
     
     void set(string key, string value, int timestamp) {
         m[key].push_back({timestamp, value});
     }
     
     string get(string key, int timestamp) {
-        int idx = binary(m[key], timestamp);
-        //cout<<"idx: "<<idx<<"\n";
+        int idx = upper_bound(m[key].begin(), m[key].end(), p(timestamp, ""), [](const p& a, const p& b){
+            return a.first < b.first;
+        }) - m[key].begin();
+        
         if(idx==0) return "";
         else{
             idx-=1;
