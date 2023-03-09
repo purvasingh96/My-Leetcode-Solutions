@@ -23,7 +23,9 @@ public:
     }
     
     int get(int index, int snap_id) {
-        auto it = upper_bound(m[index].begin(), m[index].end(), pair<int, int>(snap_id, INT_MAX));
+        auto it = upper_bound(m[index].begin(), m[index].end(), pair<int, int>(snap_id, 0), [](const pair<int, int>& a, const pair<int, int>& b){
+            return a.first < b.first;
+        });
         if(it==m[index].begin()) return 0;
         return prev(it)->second;
     }
