@@ -1,45 +1,53 @@
 class TrieNode{
- public:
-    vector<TrieNode*> dict;
-    bool end;
+public:
+    vector<TrieNode*> children;
+    bool isWord;
     TrieNode(){
-        dict.resize(26, NULL);
-        end=false;
+        children.resize(26, NULL);
+        isWord=false;
     }
 };
 
 class Trie {
-public:
+private:
     TrieNode* root;
+public:
     Trie() {
         root = new TrieNode();
     }
     
-    void insert(string s) {
+    void insert(string word) {
         TrieNode* node = root;
-        for(int i=0;i<s.length();i++){
-            if(node->dict[s[i]-'a']==NULL){
-                node->dict[s[i]-'a'] = new TrieNode();
+        for(auto c:word){
+            int idx = c-'a';
+            if(node->children[idx]==NULL){
+                node->children[idx] = new TrieNode();
             }
-            node = node->dict[s[i]-'a'];
+            node = node->children[idx];
         }
-        node->end=true;
+        node->isWord=true;
     }
     
     bool search(string word) {
         TrieNode* node = root;
-        for(int i=0;i<word.length();i++){
-            if(node->dict[word[i]-'a'] == NULL) return false;
-            node = node->dict[word[i]-'a'];
+        for(auto c:word){
+            int idx = c-'a';
+            if(node->children[idx]==NULL){
+                return false;
+            }
+            node =node->children[idx];
         }
-        return node->end;
+        return node->isWord==true;
     }
     
     bool startsWith(string prefix) {
-        TrieNode* node= root;
-        for(int i=0;i<prefix.length();i++){
-            if(node->dict[prefix[i]-'a']==NULL) return false;
-            node = node->dict[prefix[i]-'a'];
+        TrieNode* node = root;
+        for(auto c:prefix){
+            int idx = c-'a';
+            if(node->children[idx]==NULL){
+                return false;
+            }
+            node =node->children[idx];
         }
         return true;
     }
