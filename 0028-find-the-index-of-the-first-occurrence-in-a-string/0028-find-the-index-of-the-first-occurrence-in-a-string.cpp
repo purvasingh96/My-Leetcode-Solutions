@@ -1,31 +1,39 @@
 class Solution {
+private:
+    vector<int> generateLPS(string& s){
+        int n = s.length();
+        vector<int> lps(n, 0);
+        int i=1, j=0;
+        while(i<n){
+            if(s[i] == s[j]){
+                lps[i]=j+1;
+                j+=1;
+                i+=1;
+            } else{
+                if(j==0) i+=1;
+                else j = lps[j-1];
+            }
+        }
+        
+        return lps;
+    }
 public:
     int strStr(string haystack, string needle) {
+        vector<int> s = generateLPS(needle);
+        int n = needle.length();
         
-        // needle 
-        
-        long long base = 26, mod=1e9+7;
-        long long h=1;
-        long long hhash=0, nhash=0;
-        int m=haystack.length(), n = needle.length();
-        
-        for(int i=0;i<(n-1);i++){
-            h = h*base;
-            h=h%mod;
-        }
-        
-        for(int i=0;i<n;i++){
-            hhash = (hhash*base + haystack[i])%mod;
-            nhash = (nhash*base + needle[i])%mod;
-        }
-        
-        for(int i=0;i<=(m-n);i++){
-            if(hhash == nhash) return i;
-            
-            if(i < (m-n)){
-                hhash= ((hhash - haystack[i]*h)*base) + haystack[i+n];
-                hhash %=mod;
-                if(hhash < 0) hhash += mod;
+        int i=0, j=0;
+        while(i<haystack.length()){
+            if(haystack[i] == needle[j]){
+                j+=1;
+                i+=1;
+                if(j==n) return (i-n);
+            } else{
+                if(j==0) {
+                    i+=1;
+                } else{
+                    j = s[j-1];
+                }
             }
         }
         
