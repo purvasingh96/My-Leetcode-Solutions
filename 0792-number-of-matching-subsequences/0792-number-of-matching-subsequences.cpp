@@ -1,35 +1,36 @@
 class Node{
-public:
-    string word;
-    int index;
-    Node(string word, int index){
-        this->word=word;
-        this->index=index;
+ public:
+    string s;
+    int i;
+    Node(string s, int i){
+        this->s=s;
+        this->i=i;
     }
 };
-
 class Solution {
 public:
     int numMatchingSubseq(string s, vector<string>& words) {
-       vector<vector<Node*>> bucket(26);
-        int ans=0;
-        for(auto w:words){
-            Node* temp = new Node(w, 0);
-            bucket[w[0]-'a'].push_back(temp);
+        vector<vector<Node*>> res(26);
+        for(auto word:words){
+            Node* node = new Node(word, 0);
+            res[word[0]-'a'].push_back(node);
         }
-        
-        for(auto c:s){
-            auto currBucket = bucket[c-'a'];
-            bucket[c-'a'].clear();
+        int ans=0;
+        for(int i=0;i<s.length();i++){
+            char c = s[i];
+            vector<Node*> curr = res[c-'a'];
+            res[c-'a'].clear();
             
-            for(auto node:currBucket){
-                node->index += 1;
-                if(node->index==node->word.length()){
-                    ans+=1;
-                } else{
-                    bucket[node->word[node->index]-'a'].push_back(node);
-                }
-            }  
+            for(auto node:curr){
+                
+                    node->i += 1;
+                    int idx = node->s[node->i];
+                    if(node->i == (node->s).length()) {
+                        ans+=1;
+                    } else {
+                        res[node->s[node->i] - 'a'].push_back(node);
+                    }   
+            }
         }
         
         return ans;
