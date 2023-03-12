@@ -19,12 +19,14 @@ private:
     }
     
     TreeNode* build(int& idx, int left, int right, vector<int>& preorder, vector<int>& inorder){
+        if(idx>=inorder.size()) return NULL;
         if(left > right) return NULL;
         
         TreeNode* node = new TreeNode(preorder[idx]);
         
         int mid = inorderIdx(inorder, preorder[idx], left, right);
         idx+=1;
+        if(left == right) return node;
         node->left = build(idx, left, mid-1, preorder, inorder);
         node->right = build(idx, mid+1, right, preorder, inorder);
         return node;
