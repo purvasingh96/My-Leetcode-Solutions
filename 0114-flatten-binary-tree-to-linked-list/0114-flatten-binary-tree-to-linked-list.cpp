@@ -11,32 +11,26 @@
  */
 class Solution {
 private:
-    TreeNode* predecessor(TreeNode* root){
-        TreeNode* pred = root->left;
-        while(pred && pred->right){
-            pred=pred->right;
+    TreeNode* pred(TreeNode* root){
+        TreeNode* curr = root->left;
+        while(curr->right){
+            curr = curr->right;
         }
-        return pred;
+        return curr;
     }
 public:
-    
     void flatten(TreeNode* root) {
-        
         TreeNode* curr = root;
         
         while(curr){
             TreeNode* tempRight = curr->right;
-                if(!curr->left) {
-                    curr=curr->right;
-                    continue;
-                }
-                TreeNode* pred = predecessor(curr);
-                pred->right = tempRight;
-                curr->right = curr->left;
-                curr->left=NULL;
-                curr=curr->right;
-            
-            
+               if(curr->left){
+                    TreeNode* pre = pred(curr);
+                    pre->right=tempRight;
+                   curr->right = curr->left;
+                   curr->left = NULL;
+                } 
+            curr = curr->right;
         }
         
         
