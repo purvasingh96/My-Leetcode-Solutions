@@ -11,23 +11,18 @@
  */
 class Solution {
 private:
-    TreeNode* build(int& idx, int left, int right, vector<int>& preorder, vector<int>& postorder){
-        if(left>right) return NULL;
-        
-        
+    TreeNode* dfs(int& idx, int left, int right, vector<int>& preorder, vector<int>& postorder){
+        if(left > right) return NULL;
         TreeNode* root = new TreeNode(preorder[idx++]);
-        if(left==right) return root;
-       
-        int i = find(postorder.begin(), postorder.end(), preorder[idx]) - postorder.begin();
-        
-        root->left = build(idx, left, i, preorder, postorder);
-        root->right = build(idx, i+1, right-1, preorder, postorder);
+        if(left == right) return root;
+        int mid = find(postorder.begin(), postorder.end(), preorder[idx]) - postorder.begin();
+        root->left = dfs(idx, left, mid, preorder, postorder);
+        root->right = dfs(idx, mid+1, right-1, preorder, postorder);
         return root;
     }
 public:
     TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
-        int n = preorder.size();
-        int i=0;
-        return build(i, 0, n-1, preorder, postorder);
+        int idx=0, n = preorder.size();
+        return dfs(idx, 0, n-1, preorder, postorder);
     }
 };
