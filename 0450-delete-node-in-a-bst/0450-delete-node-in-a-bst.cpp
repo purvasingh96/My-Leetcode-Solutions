@@ -12,41 +12,33 @@
 class Solution {
 private:
     TreeNode* predecessor(TreeNode* root){
-        TreeNode* pred = root->left;
-        while(pred && pred->right){
-            pred=pred->right;
+        TreeNode* curr = root->left;
+        while(curr->right){
+            curr = curr->right;
         }
-        return pred;
+        return curr;
     }
-   
-    
-    TreeNode* deleteVal(TreeNode* root, int key){
-        if(root){
-           if(root->val > key){
-            root->left= deleteVal(root->left, key);
-        } else if(root->val < key){
-            root->right= deleteVal(root->right, key);
-        } else{
-            if(!root->left && !root->right) return NULL;
-            else if(!root->right || !root->left) {
-                return root->right?root->right:root->left;
-            } else{
-                auto pred = predecessor(root);
-                root->val=pred->val;
-                root->left = deleteVal(root->left, root->val);
-            }
-        } 
-        }
-        
-        return root;
-    }
-    
 public:
     TreeNode* deleteNode(TreeNode* root, int key) {
-        TreeNode* curr = root;
-        return deleteVal(root, key);
-        
-        
-        
+        if(!root) return NULL;
+        if(root->val > key){
+            root->left = deleteNode(root->left, key);
+        } else if(root->val < key){
+            root->right = deleteNode(root->right, key);
+        } else{
+            // equal;
+            if(!root->left && !root->right) return NULL;
+            else if(!root->left || !root->right){
+                if(root->left) return root->left;
+                return root->right; 
+            } else{
+                TreeNode* pred = predecessor(root);
+                auto temp = root->val;
+                root->val=pred->val;
+                pred->val = temp;
+                root->left = deleteNode(root->left, temp);
+            }
+        }
+        return root;
     }
 };
