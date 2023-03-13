@@ -11,35 +11,22 @@
  */
 class Solution {
 private:
-    unordered_map<TreeNode*, int> robbed;
-    unordered_map<TreeNode*, int> notRobbed;
-   
+    map<pair<TreeNode*, int>, int> dp;
     int dfs(TreeNode* root, int parentRobbed){
         if(!root) return 0;
         
+        if(dp.find({root, parentRobbed}) != dp.end()) return dp[{root, parentRobbed}];
         
         int rob=-1, notRob=-1;
-        
-        if(parentRobbed){
-            if(robbed.find(root)!=robbed.end()) return robbed[root];
-            
-            notRob = dfs(root->left, 0) + dfs(root->right, 0);
-            robbed[root]=notRob;
-            return notRob;
-        } else{
-            if(notRobbed.find(root)!=notRobbed.end()) return notRobbed[root];
-            
-            rob = root->val + dfs(root->left, 1) + dfs(root->right, 1);
-            notRob = dfs(root->left, 0) + dfs(root->right, 0);
-            int res = max(rob, notRob);
-            notRobbed[root]=res;
-            return res;    
+        if(!parentRobbed){
+           rob = root->val + dfs(root->left, 1) + dfs(root->right, 1); 
         }
+        notRob = dfs(root->left, 0) + dfs(root->right, 0);
+        return dp[{root, parentRobbed}] = max(rob, notRob);
         
     }
 public:
     int rob(TreeNode* root) {
         return dfs(root, 0);
-        
     }
 };
