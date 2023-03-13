@@ -9,58 +9,44 @@ private:
 public:
     int shortestPath(vector<vector<int>>& grid, int k) {
         int m = grid.size(), n = grid[0].size();
+        vector<vector<int>> visited(m, vector<int>(n, INT_MAX));
         
-        vector<vector<int>> visited(m, vector<int>(n, -1));
-        // i, j, steps, k
         queue<vector<int>> q;
-        
-        q.push({0, 0, 0, 0});
-        
+        //x y steps obstacles
+        q.push({0,0,0,0});
         visited[0][0] = 0;
         
         while(!q.empty()){
-            
-                auto f = q.front();
-                q.pop();
-                int x = f[0], y = f[1], steps=f[2], obstacles =f[3];
-                
-                if(x==m-1 && y==n-1) return steps;
+            auto f = q.front();
+            q.pop();
+            int x = f[0], y = f[1], steps=f[2], obs=f[3];
+            if(x==m-1 && y==n-1) return steps;
             
             
             for(int i=0;i<4;i++){
-                
                 int new_x = x + dx[i];
-                int new_y = y + dy[i];
+                int new_y = y +dy[i];
                 
                 if(isValid(new_x, new_y, grid)){
                     
-                    if(grid[new_x][new_y]==1) {
-                        if(obstacles==k) continue;
+                    if(grid[new_x][new_y]==1){
+                        if(obs == k) continue;
                         else {
-                            
-                            if(visited[new_x][new_y]==-1 || (visited[new_x][new_y]!=-1 && visited[new_x][new_y] > obstacles+1)){
-                                visited[new_x][new_y]=obstacles+1;
-                                q.push({new_x, new_y, steps+1, obstacles+1});
+                            if(visited[new_x][new_y]==INT_MAX ||(visited[new_x][new_y]!=INT_MAX && visited[new_x][new_y] > obs+1)){
+                                visited[new_x][new_y] = obs+1;
+                                q.push({new_x, new_y, steps+1, obs+1});
                             }
-                            
-                            
                         }
-                    } else{
-                        if(visited[new_x][new_y]==-1 || (visited[new_x][new_y]!=-1 && visited[new_x][new_y] > obstacles)){
-                            visited[new_x][new_y]=obstacles;
-                            q.push({new_x, new_y, steps+1, obstacles});
+                    } else {
+                        if(visited[new_x][new_y]==INT_MAX || (visited[new_x][new_y]!=INT_MAX && visited[new_x][new_y] > obs)){
+                                visited[new_x][new_y] = obs;
+                                q.push({new_x, new_y, steps+1, obs});
                         }
                     }
                     
                 }
-                
-                
             }
-                
-            
         }
-        
         return -1;
-        
     }
 };
