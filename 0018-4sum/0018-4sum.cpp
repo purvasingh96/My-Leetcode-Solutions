@@ -1,52 +1,39 @@
 class Solution {
 private:
-    void dfs(vector<int>& nums, int left, int right, int k, vector<int>& path, long long target, vector<vector<int>>& ans){
-        
+    void dfs(int k, long long target, int l, int r, vector<int>& nums, vector<int>& temp, vector<vector<int>>& res){
         if(k==2){
-            
-            while(left<right){
-                int sum = nums[left] + nums[right];
+            while(l<r){
+                int sum = nums[l] + nums[r];
                 if(sum == target){
-                    path.push_back(nums[left]);
-                    path.push_back(nums[right]);
-                    ans.push_back(path);
-                    path.pop_back();
-                    path.pop_back();
-                    left+=1;
-                    right-=1;
-                    while(left<right && nums[left]==nums[left-1]){
-                        left+=1;
-                    }
-                    
-                }
-                else if(sum > target){
-                    right-=1;
-                } else{
-                    left+=1;
-                }
+                    temp.push_back(nums[l]);
+                    temp.push_back(nums[r]);
+                    res.push_back(temp);
+                    temp.pop_back();
+                    temp.pop_back();
+                    while(l+1<r && nums[l] == nums[l+1]) l+=1;
+                    l+=1;
+                    r-=1;
+                } else if(sum > target) r-=1;
+                else l+=1;
             }
-            
         }
         
-        while(left<right){
-            path.push_back(nums[left]);
-            dfs(nums,left+1, right, k-1, path, target-nums[left], ans);
-            path.pop_back();
-            while(left<right && nums[left]==nums[left+1]){
-                left+=1;
-            }
-            left+=1;
+        while(l<r){
+            temp.push_back(nums[l]);
+            dfs(k-1, target-nums[l], l+1, r, nums, temp, res);
+            temp.pop_back();
+            while(l+1<r && nums[l] == nums[l+1]) l+=1;
+            l+=1;
         }
-        
         
     }
 public:
     vector<vector<int>> fourSum(vector<int>& nums, int target) {
         sort(nums.begin(), nums.end());
-        vector<int> path;
-        vector<vector<int>> ans;
-        int n = nums.size();
-        dfs(nums, 0, n-1, 4, path, target, ans);
-        return ans;
+        vector<int> temp;
+        vector<vector<int>> res;
+        int n =nums.size();
+        dfs(4, target, 0, n-1, nums, temp, res);
+        return res;
     }
 };
