@@ -1,66 +1,66 @@
 class TrieNode{
- public:
+public:
     vector<TrieNode*> children;
     bool isWord;
     string word;
     TrieNode(){
-        isWord = false;
         children.resize(26, NULL);
+        isWord=false;
         word="";
     }
 };
+
 class Solution {
 private:
-    void addWord(TrieNode* root, string s){
-        
-        TrieNode* curr = root;
-        for(int i=0;i<s.length();i++){
-            if(curr->children[s[i]-'a']==NULL){
-                curr->children[s[i]-'a'] = new TrieNode();
+    void insert(TrieNode* root, string word){
+        TrieNode* node = root;
+        for(int i=0;i<word.length();i++){
+            int idx = word[i] - 'a';
+            if(node->children[idx]==NULL){
+                node->children[idx] = new TrieNode();
             }
-            curr = curr->children[s[i]-'a'];
+            node = node->children[idx];
         }
-        curr->isWord=true;
-        curr->word = s;
+        node->isWord=true;
+        node->word = word;
     }
     
-    void getWords(TrieNode* root, vector<string>& res, int& k){
+    void getWords(TrieNode* root, int& k, vector<string>& ans){
         if(k==0) return;
         if(root->isWord) {
-            k--;
-            res.push_back(root->word);
+            k-=1;
+            ans.push_back(root->word);
         }
         
         for(int i=0;i<26;i++){
             if(root->children[i]!=NULL){
-                getWords(root->children[i], res,k);
+                getWords(root->children[i], k, ans);
             }
         }
     }
     
 public:
     vector<string> topKFrequent(vector<string>& words, int k) {
-        vector<TrieNode*> res(500);
-        for(int i=0;i<res.size();i++){
+        int n = words.size();
+        vector<TrieNode*> res(n);
+        for(int i=0;i<n;i++){
             res[i] = new TrieNode();
         }
         unordered_map<string, int> m;
-        int maxCount=0;
-        for(auto x:words){
+        for(auto x:words) {
             m[x]+=1;
-            maxCount = max(maxCount, m[x]);
         }
         
-        for(auto x:m){
-            addWord(res[x.second], x.first);
+        for(auto it:m){
+            insert(res[it.second], it.first);
         }
-        
         vector<string> ans;
-        for(int i=maxCount;i>=0;i--){
-            getWords(res[i], ans, k);
+        for(int i = n-1;i>=0;i--){
+            getWords(res[i], k, ans);
+            if(k==0) break;
         }
-        
         return ans;
+        
         
     }
 };
