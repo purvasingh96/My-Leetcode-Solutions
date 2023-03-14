@@ -2,21 +2,22 @@ class Solution {
 public:
     vector<int> productExceptSelf(vector<int>& nums) {
         int n = nums.size();
-        vector<int> prod(n, 1);
-        int left=0, prev=1;
-        for(int i=1;i<n;i++){
-            prod[i] = prev*nums[left++];
-            prev = prod[i];
+        vector<int> res(n, 1);
+        int i=1, prefix=1;
+        while(i<n){
+            prefix *= nums[i-1];
+            res[i]=prefix;
+            i+=1;
         }
         
-        int right=n-1, fwd=1;
-        for(int i=n-2;i>=0;i--){
-            prod[i]= prod[i] * (fwd*nums[right]);
-            fwd = fwd*nums[right];
-            right-=1;
+        int j=n-2;
+        prefix=1;
+        while(j>=0){
+            prefix *= nums[j+1];
+            res[j] *= prefix;
+            j--;
         }
         
-        //for(auto x:prod) cout<<x<<" ";
-        return prod;
+        return res;
     }
 };
