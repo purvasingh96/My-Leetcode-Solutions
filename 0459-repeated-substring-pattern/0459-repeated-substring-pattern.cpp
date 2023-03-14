@@ -2,20 +2,15 @@ class Solution {
 private:
     vector<int> generateLPS(string& s){
         int i=1, j=0, n = s.length();
-        cout<<"n: "<<n<<"\n";
         vector<int> lps(n, 0);
-        for(;i<s.length();i++){
+        while(i<n){
             if(s[i] == s[j]){
                 lps[i]=j+1;
+                i+=1;
                 j+=1;
             } else{
-                while(j!=0 && s[i]!=s[j]){
-                    j =lps[j-1];
-                }
-                if(s[i]==s[j]){
-                    lps[i]=j+1;
-                    j+=1;
-                }
+                if(j>0) j = lps[j-1];
+                else i+=1;
             }
         }
         return lps;
