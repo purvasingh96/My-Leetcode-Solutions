@@ -28,6 +28,7 @@ private:
         TreeNode* root = new TreeNode(val);
         int mid = inorderIdx(inorder, val, left, right);
         postOrderIdx--;
+        if(left == right) return root;
         root->right = build(mid+1, right, inorder, postorder);
         root->left = build(left, mid-1, inorder, postorder);
         
