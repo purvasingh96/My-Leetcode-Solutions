@@ -17,6 +17,7 @@ private:
                 //explore more and get other substrings
                 backtrack(i+1,s,curr+str+" ",set,res);
             }
+             
         }
     }
 public:
