@@ -11,33 +11,22 @@
  */
 class Solution {
 private:
-    int postOrderIdx;
-    int inorderIdx(vector<int>& inorder, int val, int start, int end){
-        for(int i=0;i<inorder.size();i++){
-            if(inorder[i] == val) return i;
-        }
-        return -1;
-    }
-    
-    TreeNode* build(int left, int right, vector<int>& inorder, vector<int>& postorder){
-        //cout<<"left: "<<left<<" right: "<<right<<"\n";
-        if(left > right) return NULL;
+    TreeNode* dfs(int& idx, int left, int right, vector<int>& inorder, vector<int>& preorder){
+        if(left>right) return NULL;
+        if(idx<0) return NULL;
         
-        
-        int val = postorder[postOrderIdx];
-        TreeNode* root = new TreeNode(val);
-        int mid = inorderIdx(inorder, val, left, right);
-        postOrderIdx--;
-        if(left == right) return root;
-        root->right = build(mid+1, right, inorder, postorder);
-        root->left = build(left, mid-1, inorder, postorder);
+        int mid = find(inorder.begin(), inorder.end(), preorder[idx--]) - inorder.begin();
+        TreeNode* root = new TreeNode(inorder[mid]);
+        root->right = dfs(idx, mid+1, right, inorder, preorder);
+        root->left = dfs(idx, left, mid-1, inorder, preorder);
         
         return root;
+        
     }
 public:
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        int n = postorder.size()-1;
-        postOrderIdx = n;
-        return build(0, n, inorder, postorder);
+        int n = inorder.size();
+        int idx = n-1;
+        return dfs(idx, 0, n-1, inorder, postorder);
     }
 };
