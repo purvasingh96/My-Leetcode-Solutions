@@ -6,10 +6,10 @@ bool isValid(int x, int y, vector<vector<int>>& grid){
         return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
 }
     
-void backtrack(int x, int y, int& total, vector<vector<int>>& grid, vector<vector<bool>>& visited, int& ans, int target, int ex, int ey){
+void backtrack(int x, int y, int& total, vector<vector<int>>& grid, vector<vector<bool>>& visited, int& ans, int nonObstacleSquares, int ex, int ey){
     
     if(x==ex && y==ey){
-        if(total == target){
+        if(total == nonObstacleSquares){
             ans+=1;
         }
         return;
@@ -22,7 +22,7 @@ void backtrack(int x, int y, int& total, vector<vector<int>>& grid, vector<vecto
         
         if(isValid(new_x, new_y, grid) && !visited[new_x][new_y] && grid[new_x][new_y]!=-1){
             total+=1;
-            backtrack(new_x, new_y, total, grid, visited, ans, target, ex, ey);
+            backtrack(new_x, new_y, total, grid, visited, ans, nonObstacleSquares, ex, ey);
             total-=1;
         }
     }
