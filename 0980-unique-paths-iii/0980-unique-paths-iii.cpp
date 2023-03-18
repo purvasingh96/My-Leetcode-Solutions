@@ -1,54 +1,64 @@
 class Solution {
-private:
-    int dx[4] = {0, 1, 0, -1};
-    int dy[4] = {1, 0, -1, 0};
+int dx[4] = {0, 1, 0, -1};
+int dy[4] = {1, 0, -1, 0};
 
-    bool isValid(int x, int y, vector<vector<int>>& grid){
-            return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
+bool isValid(int x, int y, vector<vector<int>>& grid){
+        return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
+}
+    
+void backtrack(int x, int y, int& total, vector<vector<int>>& grid, vector<vector<bool>>& visited, int& ans, int target, int ex, int ey){
+    
+    if(x==ex && y==ey){
+        if(total == target){
+            ans+=1;
+        }
+        return;
     }
     
-    void dfs(int i, int j, vector<vector<int>>& grid, int& count, int obstacleFreeCubes){
+    visited[x][y]=true;
+    for(int i=0;i<4;i++){
+        int new_x = x + dx[i];
+        int new_y = y + dy[i];
         
-        if(obstacleFreeCubes == 1 && grid[i][j] == 2) {
-            count+=1;
-            return;
+        if(isValid(new_x, new_y, grid) && !visited[new_x][new_y] && grid[new_x][new_y]!=-1){
+            total+=1;
+            backtrack(new_x, new_y, total, grid, visited, ans, target, ex, ey);
+            total-=1;
         }
-        
-        int temp = grid[i][j];
-        grid[i][j] = -1;
-        
-        for(int k=0;k<4;k++){
-            int new_x = i + dx[k];
-            int new_y = j + dy[k];
-            
-            if(isValid(new_x, new_y, grid) && grid[new_x][new_y]!=-1){
-                
-                dfs(new_x, new_y, grid, count, obstacleFreeCubes-1);
-            }
-        }
-        
-        grid[i][j] = temp;
     }
+    visited[x][y]=false;
+}    
+    
     
 public:
     int uniquePathsIII(vector<vector<int>>& grid) {
-        // calculate 
-        int count=0, si, sj;
-        int obstacleFreeCubes=0;
+        int nonObstacleSquares = 0;
+        int sx, sy, ex, ey;
+        int m = grid.size(), n = grid[0].size();
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
         
         for(int i=0;i<grid.size();i++){
             for(int j=0;j<grid[0].size();j++){
-                if(grid[i][j] >=0) obstacleFreeCubes+=1;
-                 if(grid[i][j] == 1) {
-                    si=i;
-                    sj=j;
+                if(grid[i][j]==1){
+                    nonObstacleSquares+=1;
+                    sx=i;
+                    sy=j;
+                } else if(grid[i][j]==2){
+                    nonObstacleSquares+=1;
+                    ex=i;
+                    ey=j;
+                } else if(grid[i][j] == 0){
+                    nonObstacleSquares+=1;
                 }
             }
         }
         
-        cout<<"working";
+        int ans=0, total=1;
         
-        dfs(si, sj, grid, count, obstacleFreeCubes);
-        return count;
+        backtrack(sx, sy, total, grid, visited, ans, nonObstacleSquares, ex, ey);
+        
+        
+        return ans;
+        
     }
 };
