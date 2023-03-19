@@ -29,9 +29,8 @@ public:
     }
     
     bool searchUtil(Trie* node, int idx, string& word){
-        if(node==NULL) return false;
         if(idx== word.length() && node->isWord) return true;
-        // we found prefix
+        
         if(idx == word.length()) return false;
         
         bool ans=false;
