@@ -11,9 +11,9 @@ public:
         }
         vector<long long> res;
         
-        for(auto q:queries){
-            q = (long long)q;
-            long long idx = prev(upper_bound(nums.begin(), nums.end(), q)) - nums.begin();
+        for(long long q:queries){
+    
+            int idx = prev(upper_bound(nums.begin(), nums.end(), q)) - nums.begin();
             
             long long left=0, right=0;
             
