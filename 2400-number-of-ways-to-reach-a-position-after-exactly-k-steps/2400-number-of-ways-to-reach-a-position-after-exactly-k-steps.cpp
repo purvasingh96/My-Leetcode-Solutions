@@ -1,29 +1,26 @@
 class Solution {
 private:
-    long long dfs(int cur_pos, int endpos, int k, vector<vector<int>>& dp){
-        int mod = 1e9+7;
+    int mod=1e9+7;
+    long long dfs(int start, int end, int k, vector<vector<long long>>& dp){
+        if(start==end){
+            if(k==0) return 1;
+        }
         
-        if((cur_pos==endpos && k==0)) return 1;
-        if(k<=0) return 0;
+        if(k==0) return 0;
+        if(dp[start+1000][k]!=-1) return dp[start+1000][k];
+        long long left=0, right=0;
         
+        right = dfs(start+1, end, k-1, dp);
         
-        if(dp[cur_pos+1000][k]!=-1) return dp[cur_pos+1000][k];
+        if(k-1 >= (end-start+1)){
+            left = dfs(start-1, end, k-1, dp);
+        }
         
-        // left
-        long long left=0;
-        
-        long long right = 0;
-        
-        if(k >= cur_pos-endpos) right = dfs(cur_pos+1, endpos, k-1, dp);
-        
-        if(k>= endpos-cur_pos) left = dfs(cur_pos-1, endpos, k-1, dp);
-        
-        return dp[cur_pos+1000][k] = (left+right)%mod;
+        return dp[start+1000][k] = (left+right)%mod;
     }
 public:
-    int numberOfWays(int startPos, int endPos, int k) {
-        vector<vector<int>> dp(3100, vector<int>(1001, -1));
-        int mod=1e9+7;
-        return (int)dfs(startPos, endPos, k, dp)%mod;
+    int numberOfWays(int start, int end, int k) {
+        vector<vector<long long>> dp(3100, vector<long long>(1001, -1));
+        return dfs(start, end, k, dp)%mod;
     }
 };
