@@ -1,40 +1,39 @@
-let root = new Map<string, string>();
-let rank = new Map<string, number>();
 let m = new Map<string, Set<string>>();
+let rank = new Map<string, number>();
+let root = new Map<string, string>();
 
-function find(node: string) : string {
-    if(root[node]==node) return node;
-    return root[node] = find(root[node]);
+function find(s: string): string{
+    if(root.get(s)===s) return s;
+    return root.set(root.get(s)!, find(root.get(s)!)).get(s)!;
 }
 
-function merge(x:string, y:string) {
-    m.get(y)?.add(x);
+function merge(x:string, y:string){
     m.get(x)?.add(y);
+    m.get(y)?.add(x);
     
-    const rx: string = find(x);
-    const ry: string = find(y);
-    
+    let rx: string = find(x);
+    let ry: string = find(y);
     if(rx!=ry){
-        if(rank[rx] >= rank[ry]){
-            root[ry]=rx;
-            rank[rx]+=rank[ry];
-        } else {
-            root[rx]=ry;
-            rank[ry]+=rank[rx];
+        if(rank.get(rx)!>=rank.get(ry)){
+            rank.set(rx, rank.get(rx)!+rank.get(ry));
+            root.set(ry, rx);
+        } else{
+            rank.set(ry, rank.get(ry)!+rank.get(rx));
+            root.set(rx, ry);
         }
     }
 }
 
 function remove(s:string): string{
-    let i = s.length-1;
-    while(i>=0 && s[i]!==' '){
+    let i=s.length-1;
+    while(i>=0 && s[i]!=' '){
         s=s.slice(0, -1);
-        i-=1;
+        i--;
     }
     return s;
 }
 
-function dfs(idx: number, s:string[], temp:string, res:string[]){
+function dfs(idx:number, s:string[], temp:string, res:string[]){
     if(idx>=s.length){
         let t = temp;
         t = t.slice(0, -1);
@@ -46,47 +45,41 @@ function dfs(idx: number, s:string[], temp:string, res:string[]){
     dfs(idx+1, s, temp, res);
     temp = temp.slice(0, -1);
     temp = remove(temp);
-    
-    let neighbors: Set<string> = m.get(s[idx]);
-    
-    if(neighbors!==undefined){
-        for(let next of neighbors.values()){
+    let neighbors = m.get(s[idx]);
+    if(m.get(s[idx])!==undefined){
+        for(let next of m.get(s[idx]).values()){
             temp += (next+" ");
             dfs(idx+1, s, temp, res);
             temp = temp.slice(0, -1);
             temp = remove(temp);
         }
     }
+    
 }
 
 
 function generateSentences(synonyms: string[][], text: string): string[] {
-
-    for(let i=0;i<synonyms.length;i++){
-        const u=synonyms[i][0];
-        const v=synonyms[i][1];
-        root[u]=u;
-        root[v]=v;
-        rank[u]=1;
-        rank[v]=1;
+    for(let s of synonyms){
+        const u = s[0];
+        const v =s[1];
+        root.set(u, u);
+        root.set(v, v);
+        rank.set(u, 1);
+        rank.set(v, 1);
         m.set(u, new Set<string>());
         m.set(v, new Set<string>());
     }
     
-    for(let s of synonyms){
-        merge(s[0], s[1]);
-    }
+    for(let s of synonyms) merge(s[0], s[1]);
     
     for(let [v, u] of root.entries()){
-        if(find(u) !== v){
-            m.get(find(u))?.add(v);
-        }
+        if(find(u)!==v) m.get(find(u))?.add(v);
     }
     
     for(let [u, v] of m.entries()){
         for(let y of v){
             for(let z of v){
-                if(y!=z) {
+                if(y!=z){
                     m.get(y)?.add(z);
                     m.get(z)?.add(y);
                 }
@@ -97,46 +90,15 @@ function generateSentences(synonyms: string[][], text: string): string[] {
         }
     }
     
-    // for(let [u, v] of m.entries()){
-    //     console.log(u, "->");
-    //     for(let k of v) console.log(k);
-    // }
     
-    let tempString: string = "";
-    let splitString = text.split(" ");
+    
+    let s: string[] = text.split(" ");
+    let temp: string="";
     let res: string[] = [];
-    
-    dfs(0, splitString, tempString, res);
-    res.sort();
+    dfs(0, s, temp, res);
     root.clear();
     rank.clear();
     m.clear();
-        
+    res.sort();
     return res;
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-    
-    
-    
-    
 };
