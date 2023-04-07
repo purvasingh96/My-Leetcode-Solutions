@@ -17,11 +17,12 @@ private:
             int newy = y+dy[i];
             
             if(isValid(newx, newy, grid) && !visited[newx][newy] && grid[newx][newy]!=-1){
-                visited[newx][newy]=true;
+                int t = grid[newx][newy];
+                grid[newx][newy]=-1;
                 target-=1;
                 backtrack(newx, newy, target, tx, ty, grid, visited, ans);
                 target+=1;
-                visited[newx][newy]=false;
+                grid[newx][newy]=t;
             }
         }
     }
