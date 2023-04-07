@@ -1,14 +1,13 @@
 const dx: number[] = [0, 1, 0, -1];
 const dy: number[] = [1, 0, -1, 0];
-let answer=0;
 
 function isValid(x:number, y:number, grid:number[][]): boolean{
     return x>=0 && y>=0 && x<grid.length && y<grid[0].length;
 }
 
-function backtrack(x:number, y:number, tx:number, ty:number, target: number, grid: number[][], ans: number){
+function backtrack(x:number, y:number, tx:number, ty:number, target: number, grid: number[][], ans: {val: number}){
     if(x==tx && y==ty){
-        if(target==-1) answer+=1;
+        if(target==-1) ans.val+=1;
         return;
     }
     
@@ -53,9 +52,7 @@ function uniquePathsIII(grid: number[][]): number {
         }
     }
     
-    let ans: number=0;
+    let ans= {val: 0}
     backtrack(sx, sy, tx, ty, target, grid, ans);
-    let tk = answer;
-    answer=0;
-    return tk;
+    return ans.val;
 };
