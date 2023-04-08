@@ -25,9 +25,6 @@ function uniquePathsWithObstacles(g: number[][]): number {
         dp[0][j]=1;
     }
     
-    for(let x of dp){
-        for(let y of x) console.log(y);
-    }
     
     for(let i=1;i<m;i++){
         for(let j=1;j<n;j++){
