@@ -1,49 +1,46 @@
 class Solution {
 private:
-    void dfs(int l, int r, unordered_map<char, int>& m, string& temp, unordered_set<string>& res, char mid){
+    void backtrack(int l, int r, unordered_map<char, int>& m, string& s, string& temp, vector<string>& res){
         if(l>=r){
-            if(l==r) {
+            if(l==r){
                 for(auto x:m){
                     if(x.second==1){
-                        temp[l] = x.first;
+                        temp[l]=x.first;
                     }
                 }
             }
-            res.insert(temp);
+            res.push_back(temp);
             return;
         }
         
         for(auto it:m){
-            if(it.second!=0 && it.second>=2){
-                char c = it.first;
-                temp[l] =c;
-                temp[r]=c;
+            if(it.second >= 2){
+                temp[l]=it.first;
+                temp[r] = it.first;
                 m[it.first]-=2;
-                dfs(l+1, r-1, m, temp, res, mid);
+                backtrack(l+1, r-1, m, s, temp, res);
                 m[it.first]+=2;
-                temp[r] = ' ';
-                temp[l] = ' ';
+                temp[r]='#';
+                temp[l]='#';
             }
         }
     }
+        
 public:
     vector<string> generatePalindromes(string s) {
-        unordered_set<string> res;
-        int n = s.length();
         unordered_map<char, int> m;
-        string temp(n, '#');
         for(auto c:s) m[c]+=1;
-        int ones=0;
-        char mid;
-        for(auto x:m){
+        int count=0;
+        for(auto x:m) {
             if(x.second==1){
-                ones+=1;
-                if(ones > 1) return {};
+                count+=1;
+                if(count>1) return {};
             }
         }
-        
-        dfs(0, n-1, m, temp, res, mid);
-        vector<string> ans(res.begin(), res.end());
-        return ans;
+        vector<string> res;
+        int n = s.length();
+        string temp(n, '#');
+        backtrack(0, n-1, m, s, temp, res);
+        return res;
     }
 };
