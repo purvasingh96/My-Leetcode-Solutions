@@ -1,48 +1,56 @@
 class Solution {
 private:
-    int parseNum(string& s, int& i){
-        int len = s.length();
-        int temp=0;
+    int dfs(int& i, string s, vector<int> res, char op, int temp){
         
-        for(;i<s.length() && isdigit(s[i]);i++){
-            temp = (temp*10 + (s[i]-'0'));
-        }
-        
-        return temp;
-    }
-    
-    int parseExp(string& s, int& i){
-        int n = s.length();
-        stack<int> st;
-        char op = '+';
-        
-        
-        for(;i<s.length() && op!=')';i++){
-            
-                if(s[i] == ' ') continue;
-                int num = s[i] == '(' ? parseExp(s, ++i) : parseNum(s, i);
-                
-                if(op == '+') {st.push(num);}
-                else if(op == '-') st.push(-num);
+        while(i<s.length() && s[i]!=')'){
+            if(s[i]==' '){
+                i+=1;
+                continue;
+            }
+            else if(isdigit(s[i])){
+                temp = temp*10 + (s[i]-'0');
+                i+=1;
+            } else if(s[i] == '+' || s[i] == '-'){
+                // original operator
+                if(temp!=0){
+                    if(op=='+'){
+                        res.push_back(temp);
+                    } else {
+                        res.push_back(-temp);
+                    }
+                }
                 
                 op = s[i];
-            
+                temp=0;
+                i+=1;
+            } else if(s[i] == '('){
+                vector<int> t;
+                i+=1;
+                temp=0;
+                int val = dfs(i, s, t, '+', temp);
+                
+                if(op == '+') res.push_back(val);
+                else res.push_back(-val);
+                
+                i+=1;
+            }
         }
         
-        int res=0;
-        
-        while(st.size()!=0){
-            res+=st.top();
-            st.pop();
+        if(temp){
+            if(op=='+'){
+                res.push_back(temp);
+            } else res.push_back(-temp);
         }
-        cout<<"res: "<<res<<"\n";
-        return res;
+        
+        return accumulate(res.begin(), res.end(), 0);
     }
-    
-    
 public:
     int calculate(string s) {
+        s = "("+s+")";
         int i=0;
-        return parseExp(s, i);
+        vector<int> res;
+        int temp=0;
+        char op='+';
+        return dfs(i, s, res, op, temp);
     }
 };
