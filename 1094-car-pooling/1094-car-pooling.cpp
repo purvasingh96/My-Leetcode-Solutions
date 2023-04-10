@@ -1,7 +1,7 @@
 class Solution {
 public:
     bool carPooling(vector<vector<int>>& trips, int capacity) {
-        vector<int> res(1e5+1, 0);
+        vector<int> res(1001, 0);
         for(auto t:trips){
             int p = t[0], s=t[1], e=t[2];
             res[s]+=p;
