@@ -22,7 +22,7 @@ class PQ<T>{
         let insert: boolean = false;
         
         for(let i=0;i<this.queue.length;i++){
-            if(this.comp(this.queue[i], x) < 0){
+            if(this.comp(x, this.queue[i]) < 0){
                 this.queue.splice(i, 0, x);
                 insert=true;
                 break;
@@ -53,7 +53,7 @@ class PQ<T>{
 
 
 function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
-    let pq = new PQ<ListNode>((a, b) => (b.val-a.val));
+    let pq = new PQ<ListNode>((a, b) => (a.val - b.val));
     
     for(let node of lists){
         if(node) pq.enqueue(node);
