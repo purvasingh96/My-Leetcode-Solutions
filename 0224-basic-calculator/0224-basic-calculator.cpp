@@ -1,56 +1,47 @@
 class Solution {
 private:
-    int dfs(int& i, string s, vector<int> res, char op, int temp){
-        
+    int dfs(int& i, string s, vector<int> res, int t, char op){
         while(i<s.length() && s[i]!=')'){
-            if(s[i]==' '){
+            if(s[i]==' ') {
                 i+=1;
                 continue;
-            }
-            else if(isdigit(s[i])){
-                temp = temp*10 + (s[i]-'0');
+            } else if(isdigit(s[i])){
+                t = t*10 + (s[i]-'0');
                 i+=1;
-            } else if(s[i] == '+' || s[i] == '-'){
-                // original operator
-                if(temp!=0){
-                    if(op=='+'){
-                        res.push_back(temp);
-                    } else {
-                        res.push_back(-temp);
-                    }
+            } else if(s[i] == '+' || s[i]=='-'){
+                if(t!=0){
+                    if(op == '+'){
+                        res.push_back(t);
+                    } else res.push_back(-t);
                 }
-                
-                op = s[i];
-                temp=0;
+                op=s[i];
+                t=0;
                 i+=1;
             } else if(s[i] == '('){
-                vector<int> t;
+                t=0;
+                vector<int> temp;
                 i+=1;
-                temp=0;
-                int val = dfs(i, s, t, '+', temp);
-                
+                int val = dfs(i, s, temp, t, '+');
                 if(op == '+') res.push_back(val);
                 else res.push_back(-val);
-                
                 i+=1;
             }
         }
         
-        if(temp){
-            if(op=='+'){
-                res.push_back(temp);
-            } else res.push_back(-temp);
+        if(t){
+            if(op == '+') res.push_back(t);
+            else res.push_back(-t);
         }
         
         return accumulate(res.begin(), res.end(), 0);
     }
 public:
     int calculate(string s) {
-        s = "("+s+")";
+        s = "(" + s +")";
         int i=0;
         vector<int> res;
-        int temp=0;
+        int t=0;
         char op='+';
-        return dfs(i, s, res, op, temp);
+        return dfs(i, s, res, t, op);
     }
 };
