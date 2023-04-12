@@ -1,3 +1,8 @@
+/*
+TC: O(N*3^L)
+SC: O(L)
+*/
+
 class Solution {
 private:
     int dx[4] = {0, 1, 0, -1};
