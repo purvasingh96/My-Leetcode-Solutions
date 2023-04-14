@@ -1,21 +1,35 @@
+#define pp pair<int, int>
+
+class MyComp{
+public:
+    bool operator()(pp& a, pp& b){
+        // i, val
+        return a.second < b.second;
+    }
+};
+
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        priority_queue<vector<int>> pq;
-        for(int i=0;i<k;i++){
-            pq.push({nums[i], i});
+        priority_queue<pp, vector<pp>, MyComp> pq;
+        int i=0;
+        for(i=0;i<k;i++){
+            pq.push({i, nums[i]});
         }
-        int right=k;
         vector<int> res;
-        res.push_back(pq.top()[0]);
+        res.push_back(pq.top().second);
         
-        while(right<nums.size()){
-            while(!pq.empty() && right-pq.top()[1] >= k){
-                pq.pop();
+        while(i<nums.size()){
+            pq.push({i, nums[i]});
+            if(i-pq.top().first+1 <=k){
+                res.push_back(pq.top().second);
+            } else {
+                while(!pq.empty() && i-pq.top().first+1 > k){
+                    pq.pop();
+                }
+                if(!pq.empty()) res.push_back(pq.top().second);
             }
-            pq.push({nums[right], right});
-            right+=1;
-            res.push_back(pq.top()[0]);
+            i+=1;
         }
         
         return res;
