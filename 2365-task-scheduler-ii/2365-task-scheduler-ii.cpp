@@ -1,33 +1,24 @@
 class Solution {
 public:
     long long taskSchedulerII(vector<int>& tasks, int space) {
-        map<long long, long long> m;
+        unordered_map<int, long long> m;
         
-        long long i=0, r=0;
+        for(auto x:tasks) m[x]=0;
         
-        while(i<tasks.size()){
-            
-            if(m.find(tasks[i])==m.end()){
-                m[tasks[i]] = r;
-                
-            } else{
-                int diff = r-m[tasks[i]];
-                
-                if( diff  <= space){ 
-                    r = (m[tasks[i]] + (space+1));
-                    m[tasks[i]] = r;
-                } else {
-                    m[tasks[i]] = r;
-                }
-                
+        long long t=1;
+        for(int i=0;i<tasks.size();i++){
+            if(m[tasks[i]] <= t) {
+                m[tasks[i]]=t+space+1;
+            } else if(m[tasks[i]]==0){
+                m[tasks[i]]=t+space+1;
+            } else {
+                t = m[tasks[i]];
+                m[tasks[i]] = t+space+1;
             }
-            
-            r+=1;
-            i+=1;
-            
+            t+=1;                
         }
         
-        return r;
+        return t-1;
         
     }
 };
