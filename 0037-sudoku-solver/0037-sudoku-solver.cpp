@@ -27,11 +27,11 @@ private:
     
     void dfs(int k, vector<vector<char>>& board, vector<unordered_set<char>>& boxes, vector<vector<int>>& coords, int& totalDots){
         
-        if(totalDots==0) {
-            if(ans.size()==0) ans=board;
+//         if(totalDots==0) {
+//             if(ans.size()==0) ans=board;
             
-            return;
-        }
+//             return;
+//         }
         
         if(k>=coords.size()) {
             return;
@@ -47,10 +47,12 @@ private:
                     board[x][y] = target;
                     totalDots-=1;
                     dfs(k+1, board, boxes, coords, totalDots);
+                    if(totalDots!=0){
+                        totalDots+=1;
+                        board[x][y] = '.';
+                        boxes[id].erase(target);
+                    }
                     
-                    totalDots+=1;
-                    board[x][y] = '.';
-                    boxes[id].erase(target);
                 }
             }
                
@@ -78,7 +80,7 @@ public:
             }
         }
         dfs(0, board, boxes, coords, total);
-        board=ans;
+        //board=ans;
         
     }
 };
