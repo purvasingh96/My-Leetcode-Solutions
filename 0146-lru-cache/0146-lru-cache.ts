@@ -1,76 +1,72 @@
-
 class Node{
-prev: Node;
- next: Node;
- key: number;
- val: number;
-
-    constructor(key: number, val:number){
+    public prev;
+    public next;
+    public key;
+    public value;
+    constructor(key: number, value: number) {
         this.prev=null;
         this.next=null;
+        this.value=value;
         this.key=key;
-        this.val=val;
     }
 }
 
 class LRUCache {
-
-m = new Map<number, Node>();
- c: number;
- capacity: number;
- h: Node;  
- t: Node; 
+    private head: Node = null;
+    private tail: Node = null;
+    private c: number;
+    private m = new Map<number, Node>();
 
     constructor(capacity: number) {
-        this.c=0;
-        this.capacity = capacity;
-        this.h = new Node(-1, -1);
-        this.t = new Node(-1, -1);
-        this.h.next=this.t;
-        this.t.prev=this.h;
+        this.head = new Node(-1, -1);
+        this.tail = new Node(-1, -1);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+        this.c = capacity;
     }
-    
-     removeNode(node: Node){
-        let prev: Node = node.prev;
-        let next: Node = node.next;
-        prev.next=next;
-        next.prev=prev;
-        this.c-=1;
+
+    remove(node:Node){
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
         this.m.delete(node.key);
     }
+
     
- addNodeFront(node: Node){
-        let prev: Node = this.t.prev;
-        prev.next=node;
-        node.prev=prev;
-        node.next=this.t;
-        this.t.prev=node;
+    addToFront(node: Node){
+        if(this.m.size == this.c) {
+            this.remove(this.head.next);
+        }
+        let back = this.tail.prev;
+        this.tail.prev = node;
+        node.prev = back;
+        back.next = node;
+        node.next=this.tail;
         this.m.set(node.key, node);
-        this.c+=1;
     }
 
     get(key: number): number {
-        let found: boolean =false;
+        //console.log("calling get : ", key, "m.size: ", this.m.size, "front: ", this.tail.prev.key);
         if(this.m.get(key)==undefined) return -1;
-        let node: Node = this.m.get(key);
-        this.removeNode(node);
-        this.addNodeFront(node);
-        return node.val;
+        let target = this.m.get(key);
+        this.remove(target);
+        this.addToFront(target);
+        return target.value;
     }
 
     put(key: number, value: number): void {
-        if(this.m.get(key)!=undefined){
-            let node: Node = this.m.get(key);
-            this.removeNode(node);
-            node.val = value;
-            this.addNodeFront(node);
-        } else {
-            if(this.c==this.capacity) {
-                this.removeNode(this.h.next);
-            }
-            let node: Node = new Node(key, value);
-            this.addNodeFront(node);
+        //console.log("calling put : ", key, "m.size: ", this.m.size, "front: ", this.tail.prev.key);
+        let target: Node = null;
+        
+        if(this.m.get(key) == undefined){
+            target = new Node(key, value);
         }
+        else {
+           target = this.m.get(key);
+            this.remove(target);
+            target.value = value;
+        }
+
+        this.addToFront(target); 
     }
 }
 
