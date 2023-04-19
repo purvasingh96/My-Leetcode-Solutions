@@ -1,122 +1,59 @@
 class Solution {
 private:
-    unordered_map<string, string> root;
-    unordered_map<string, int> rank;
-    unordered_map<string, unordered_set<string>> m;
-    
-    string find(string s){
-        if(root[s] == s) return s;
-        return root[s] = find(root[s]);
+    string buildSentence(vector<string>& str){
+        string res="";
+        for(auto x:str){
+            res += x;
+            res+=" ";
+        }
+        res.pop_back();
+        return res;
     }
-    
-    void merge(string u, string v){
-        m[u].insert(v);
-        m[v].insert(u);
-        string rx = find(u);
-        string ry = find(v);
-        
-        if(rx!=ry){
-            if(rank[rx]>=rank[ry]){
-            root[ry]=rx;
-            rank[rx]+=rank[ry];
-        } else {
-            root[rx]=ry;
-            rank[ry]+=rank[rx];
-        }
-        }
-        
-        
-    }
-    
-    void removeLastWord(string& s){
-        int i=s.length()-1;
-        while(i>=0 && s[i]!=' '){
-            s.pop_back();
-            i-=1;
-        }
-    }
-    
-    void dfs(int idx, vector<string>& s, string& temp, vector<string>& res){
-        if(idx >= s.size()){
-            string t = temp;
-            t.pop_back();
-            res.push_back(t);
-            return;
-        }
-        
-        // dont take neigbors
-        temp += (s[idx] + " ");
-        dfs(idx+1, s, temp, res);
-        temp.pop_back();
-        removeLastWord(temp);
-        
-        // take neighbors
-        for(auto next:m[s[idx]]){
-            temp += (next+ " ");
-            dfs(idx+1, s, temp, res);
-            temp.pop_back();
-            removeLastWord(temp);
-        }
-    }
-    
+
 public:
     vector<string> generateSentences(vector<vector<string>>& synonyms, string text) {
-        for(auto x:synonyms){
-            root[x[0]]=x[0];
-            root[x[1]] = x[1];
-            rank[x[0]]=1;
-            rank[x[1]]=1;
+        set<string> ans;
+        ans.insert(text);
+        unordered_map<string, vector<string>> m;
+        
+        for(auto s:synonyms){
+            m[s[0]].push_back(s[1]);
+            m[s[1]].push_back(s[0]);
         }
         
-        for(auto x:synonyms){
-            merge(x[0], x[1]);
-        }
-        
-        // [a, b], [c, d] 
-        // adj[a]=>{a, b}
-        for(auto x:root){
-            string u = find(x.second);
-            string v = x.first;
-            if(u!=v) m[u].insert(v);
-        }
-        
-        // [a, b], [b, c], [c, d], [d, e]
-        /*
-          
-            adj[a] -> {b, c, d, e}
-            adj[b] -> {a, c}
-            adj[c] -> {b, d}
-            adj[d] -> {c, e}
-            adj[e] -> {d}
-          
-            
-        */
-        for(auto x:m){
-            for(auto y:x.second){
-                for(auto z:x.second){
-                    if(y!=z){
-                        m[y].insert(z);
-                        m[z].insert(y);
-                    }
-                }
-            }
-            for(auto y:x.second){
-                if(y==x.first) x.second.erase(y);
-            }
-        }
+        vector<string> words;
+        queue<vector<string>> q;
         
         stringstream ss(text);
-        string t;
-        vector<string> s;
-        while(getline(ss, t, ' ')){
-            s.push_back(t);
+        string buff;
+        
+        while(getline(ss, buff, ' ')){
+            words.push_back(buff);
         }
         
-        vector<string> res;
-        string temp="";
-        dfs(0, s, temp, res);
-        sort(res.begin(), res.end());
-        return res;
+        q.push(words);
+        
+        
+        while(!q.empty()){
+            vector<string> f = q.front();
+            q.pop();
+            for(auto& wd : f){
+                if (m.count(wd) == 0) continue; // if word not in graph, skip
+                else{
+                    for (auto& syno : m[wd]){
+                        wd = syno; // replace by new synoymous word
+                        string newText = buildSentence(f);
+                        if (ans.count(newText) == 0){
+                            ans.insert(newText); // insert new text string to ans
+                            q.push(f); // push new word vector to que
+                        }
+                    }
+                }
+            }   
+        }
+        
+        vector<string> result(ans.begin(), ans.end());
+        return result;
         
     }
 };
