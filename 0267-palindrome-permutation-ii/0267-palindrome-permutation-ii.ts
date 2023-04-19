@@ -1,48 +1,43 @@
-function backtrack(l: number, r:number, m:Map<string, number>, s: string, temp: string, res:{val: string[]}){
-    if(l >= r){
-        if(l == r){
-             for(let [k,v] of m.entries()){
-                 if(v==1) {
-                     temp = temp.slice(0, l) + k + temp.slice(l+1);
-                     break;
-                 }
-             }
-        }
-        
-        res.val.push(temp);
-        return;
-    }
-    
-    for(let  [k, v] of m.entries()){
+function helper(temp: string, s:string, c: string, m:Map<string, number>, ans: {val: string[]}){
+    let valid=0;
+    for(let [k, v] of m.entries()){
         if(v>=2){
-            let og = temp;
-            temp = temp.slice(0, l) + k + temp.slice(l+1);
-            temp = temp.slice(0, r) + k + temp.slice(r+1);
-            l+=1;
-            r-=1;
             m.set(k, m.get(k)-2);
-            backtrack(l, r, m, s, temp, res);
+            temp+=k;
+            helper(temp, s,c, m, ans);
+            temp = temp.slice(0, -1);
             m.set(k, m.get(k)+2);
-            r+=1;
-            l-=1;
-            temp = og;
+            valid+=1;
         }
     }
     
-    
+    if(valid==0){
+        let rs = temp;
+        rs = rs.split("").reverse().join("");
+        ans.val.push(temp+c+rs);
+    }
 }
 
 function generatePalindromes(s: string): string[] {
     let m = new Map<string, number>();
-    for(let c of s){
+    for(let c of s) {
         m.set(c, (m.get(c) ?? 0)+1);
     }
     
-    let res: {val: string[]} = {val: []};
-    let n = s.length;
-    let l=0, r = n-1;
-    let temp = "#".repeat(n);
+    let answer : {val: string[]} = {val: []};
     
-    backtrack(l, r, m, s, temp, res)
-    return res.val;
+    let odd=0;
+    let c : string="";
+    for(let [k,v] of m.entries()){
+        if(v%2!=0){
+            odd+=1;
+            c = k;
+        }
+    }
+    
+    if(odd>1) return answer.val;
+    let temp: string = "";
+    helper(temp, s, c, m, answer);
+    return answer.val;
+    
 };
