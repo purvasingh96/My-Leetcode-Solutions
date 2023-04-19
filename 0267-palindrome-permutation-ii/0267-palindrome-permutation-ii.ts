@@ -1,28 +1,31 @@
-function backtrack(l:number, r:number, m:Map<string, number>,temp:string, res:string[]): void {
-    
-    if(l>=r){
-        if(l==r){
-            for(let [key, value] of m.entries()){
-                if(value==1){
-                    temp = temp.slice(0, l) + key + temp.slice(l+1);
-                }
-            }
+function backtrack(l: number, r:number, m:Map<string, number>, s: string, temp: string, res:{val: string[]}){
+    if(l >= r){
+        if(l == r){
+             for(let [k,v] of m.entries()){
+                 if(v==1) {
+                     temp = temp.slice(0, l) + k + temp.slice(l+1);
+                     break;
+                 }
+             }
         }
-        res.push(temp);
+        
+        res.val.push(temp);
         return;
     }
     
-    for(let [key, value] of m.entries()){
-        if(value>=2){
-            temp = temp.slice(0, l) + key + temp.slice(l+1);
-            temp = temp.slice(0, r) + key + temp.slice(r+1);
-            m.set(key, m.get(key)-2);
+    for(let  [k, v] of m.entries()){
+        if(v>=2){
+            let og = temp;
+            temp = temp.slice(0, l) + k + temp.slice(l+1);
+            temp = temp.slice(0, r) + k + temp.slice(r+1);
             l+=1;
             r-=1;
-            backtrack(l, r, m, temp, res);
+            m.set(k, m.get(k)-2);
+            backtrack(l, r, m, s, temp, res);
+            m.set(k, m.get(k)+2);
             r+=1;
             l-=1;
-            m.set(key, m.get(key)+2);
+            temp = og;
         }
     }
     
@@ -30,20 +33,16 @@ function backtrack(l:number, r:number, m:Map<string, number>,temp:string, res:st
 }
 
 function generatePalindromes(s: string): string[] {
-const m = new Map<string, number>();
-    for (const c of s) {
-      m.set(c, (m.get(c) ?? 0) + 1);
+    let m = new Map<string, number>();
+    for(let c of s){
+        m.set(c, (m.get(c) ?? 0)+1);
     }
-    let count = 0;
-    for (const value of m.values()) {
-      if (value == 1) {
-        count += 1;
-        if (count > 1) return [];
-      }
-    }
-    const res: string[] = [];
-    const n = s.length;
-    let temp = '#'.repeat(n);
-    backtrack(0, n - 1, m, temp, res);
-    return res;
+    
+    let res: {val: string[]} = {val: []};
+    let n = s.length;
+    let l=0, r = n-1;
+    let temp = "#".repeat(n);
+    
+    backtrack(l, r, m, s, temp, res)
+    return res.val;
 };
