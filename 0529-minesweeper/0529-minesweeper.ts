@@ -5,70 +5,45 @@ function isValid(x:number, y:number, board: string[][]): boolean {
     return x>=0 && y>=0 && x<board.length && y<board[0].length;
 }
 
-function returnMines(x:number, y:number, board:string[][]): string {
-    let mines:number = 0;
-    for(let i=0;i<8;i++){
-        let newX: number = x+dx[i];
-        let newY: number = y+dy[i];
-        if(isValid(newX, newY, board) && board[newX][newY]=='M'){
-            mines+=1;
+function returnMines(x:number, y:number, grid:string[][]){
+    let c=0;
+    for(let k=0;k<8;k++){
+        let new_x = x+dx[k];
+        let new_y = y+dy[k];
+        if(isValid(new_x, new_y, grid) && grid[new_x][new_y]=="M"){
+            c+=1;
+        }
+    }
+    return c;
+}
+
+function dfs(x: number, y:number, grid: string[][]){
+    
+    
+    if(grid[x][y] == "E"){
+        let mines = returnMines(x, y, grid);
+        if(mines > 0){
+            grid[x][y] = mines.toString();
+        } else {
+            grid[x][y] = "B";
+            for(let i=0;i<8;i++){
+                let new_x = x + dx[i];
+                let new_y = y + dy[i];
+                
+                if(isValid(new_x, new_y, grid) && grid[new_x][new_y]!="B"){
+                    dfs(new_x, new_y, grid);
+                }
+                
+            }
         }
     }
     
-    //console.log()
-    return mines.toString();
+    
 }
-
-function dfs(x:number, y:number, board: string[][], visited: boolean[][]){
-    if(board[x][y]=='E'){
-        let mines:string = returnMines(x, y, board);
-        if(returnMines(x, y, board)=="0"){
-            board[x][y]='B';
-            for(let i=0;i<8;i++){
-                let newX: number = x+dx[i];
-                let newY: number = y+dy[i];
-                
-                if(isValid(newX, newY, board) && !visited[newX][newY] && board[newX][newY]=='E'){
-                    visited[newX][newY]=true;
-                    dfs(newX, newY, board, visited);
-                }
-            }
-        } else {
-            board[x][y]=mines;
-        }
-    }
-}
-
 
 function updateBoard(board: string[][], click: number[]): string[][] {
-    let visited=[]
-    const m: number = board.length;
-    const n: number = board[0].length;
-    
-    for(let i=0;i<m;i++){
-        visited.push(new Array<boolean>(n));
-    }
-    
-    for(let i=0;i<m;i++){
-        for(let j=0;j<n;j++){
-            visited[i][j]=false;
-        }
-    }
-    
-    const x:number = click[0];
-    const y: number = click[1];
-    
-    visited[x][y]=true;
-    
-    if(board[x][y]=='M'){
-        board[x][y]='X';
-        return board;
-    }
-    
-    dfs(x, y, board, visited);
-    //visited.clear();
-    
+    let x = click[0], y = click[1];
+    if(board[x][y] == "M") board[x][y]="X";
+    else dfs(x, y, board);
     return board;
-    
-    
 };
