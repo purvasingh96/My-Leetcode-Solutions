@@ -1,34 +1,37 @@
 class ProductOfNumbers {
-    private n: number;
-    private prod: number[];
     private lzp: number;
+    private prod: number[];
     private mod: number;
-    
+    private sz: number;
     constructor() {
-        this.n=0;
-        this.mod=1e9+7;
+        this.lzp=-1;
+        this.mod = 1e9+7;
         this.prod = [];
+        this.sz=0;
     }
 
     add(num: number): void {
-        if(num==0) {
+        if(num == 0) {
+            this.lzp = this.sz;
             this.prod.push(1);
-            this.lzp=this.n;
-        } else {
-            if(this.prod.length==0){
-                this.prod.push(num);
-            } else {
-                let p: number = this.prod[this.n-1]*num;
-                this.prod.push(p%this.mod);
+        }
+        else {
+            if(this.prod.length==0) this.prod.push(num%this.mod);
+        else {
+                let p = this.prod[this.sz-1] * num;
+                p = p%this.mod;
+                this.prod.push(p);
             }
         }
-        this.n+=1;
+        this.sz+=1;
+        //console.log(this.prod);
     }
 
     getProduct(k: number): number {
-        if(this.n-k <= this.lzp) return 0;
-        if(k>=this.n) return this.prod[this.n-1];
-        return this.prod[this.n-1]/this.prod[this.n-k-1];
+        if(this.sz - k <= this.lzp) return 0;
+        if(k  >= this.sz) return this.prod[this.prod.length-1];
+        
+        return this.prod[this.sz-1]/this.prod[this.sz - k-1];
     }
 }
 
