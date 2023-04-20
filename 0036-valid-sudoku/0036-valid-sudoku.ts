@@ -18,7 +18,7 @@ function isValid(x:number, y:number, grid:string[][], boxes:string[][]){
     
     let id: number = boxId(x, y);
     
-    if((boxes[id].find((z) => z==grid[x][y]))!=undefined) return false;
+    if(boxes[id].find(z => (z==grid[x][y])) != undefined) return false;
     boxes[id].push(grid[x][y]);
     return true;
 }
