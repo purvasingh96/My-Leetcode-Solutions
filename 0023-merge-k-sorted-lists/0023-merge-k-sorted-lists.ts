@@ -9,54 +9,52 @@
  *     }
  * }
  */
-
 type Comparator<T> = (a:T, b:T) => number;
-
-class PQ<T> {
-    private pq: T[] = [];
-    private comp: Comparator<T>;
+class PQ<T>{
+    public pq: T[] = [];
+    public comp: Comparator<T>;
     constructor(comp: Comparator<T>) {
         this.comp = comp;
     }
-    
-    hasLeft(i:number) : boolean{
-        return this.left(i) < this.size();
+
+    size() : number {
+        return this.pq.length;
     }
 
-    hasRight(i: number): boolean{
-        return this.right(i) < this.size();
-    }
+    empty() : boolean{
+            return this.size()==0;
+        }
     
     top(): T | undefined {
+        if(this.size()==0) return undefined;
         return this.pq[0];
     }
-    
 
-    left(i: number) : number {
+    left(i: number) : number{
         return 2*i+1;
     }
-    
-    right(i: number): number {
+
+    right(i: number) : number {
         return 2*i+2;
     }
-    
+
     parent(i: number) : number {
         return Math.floor((i-1)/2);
     }
 
-    size(): number {
-        return this.pq.length;
+    hasLeft(i: number) : boolean {
+        return this.left(i) < this.size();
     }
-    
-    empty(): boolean {
-        return this.size()==0;
+
+    hasRight(i: number) : boolean {
+        return this.right(i) < this.size();
     }
 
     enqueue(val: T) : void {
         this.pq.push(val);
         this.heapUp(this.size()-1);
     }
-
+    
     dequeue() : T | undefined {
         if(this.size()==0) return undefined;
         let root = this.pq[0];
@@ -65,62 +63,65 @@ class PQ<T> {
             this.pq[0] = last;
             this.heapDown(0);
         }
+        
         return root;
     }
 
-    heapUp(i: number): void {
+    heapUp(i: number) : void{
         while(i>0){
             let p = this.parent(i);
-            if(this.comp(this.pq[i], this.pq[p]) < 0){
+            if(this.comp(this.pq[i], this.pq[p]) < 0) {
                 [this.pq[i], this.pq[p]] = [this.pq[p], this.pq[i]];
-                i =p;
+                i=p;
             } else break;
         }
     }
 
-    heapDown(i: number) : void {
-        
+    heapDown(i: number) : void{
         while(true){
             let l = this.left(i);
             let r = this.right(i);
-            let minIndex = i;
-
-            if(this.hasLeft(i) && this.comp(this.pq[l], this.pq[minIndex]) < 0){
-                minIndex = l;
-            }
-
-            if(this.hasRight(i) && this.comp(this.pq[r], this.pq[minIndex]) < 0){
-                minIndex = r;
+            let min=i;
+            
+            if(this.hasLeft(i) && this.comp(this.pq[l], this.pq[min]) < 0){
+                min = l;
             }
             
-            if(minIndex!=i){
-                [this.pq[i], this.pq[minIndex]] = [this.pq[minIndex], this.pq[i]];
-                i = minIndex;
-            } else break;
+            if(this.hasRight(i) && this.comp(this.pq[r], this.pq[min]) < 0){
+                min = r;
+            }
             
+            if(min == i) break;
+            else {
+                [this.pq[min], this.pq[i]] = [this.pq[i], this.pq[min]];
+                i = min;
+            }
+        }
+    }
+
+
+    
+}
+
+function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+
+    let pq = new PQ<ListNode>((a: ListNode, b: ListNode) => (a.val - b.val));
+    let temp = new ListNode(-1);
+    for(let node of lists){
+       if(node) pq.enqueue(node); 
+    }
+    let ans = temp;
+    while(!pq.empty()){
+        let f = pq.top();
+        pq.dequeue();
+        if(f){
+            temp.next = new ListNode(f.val);
+            temp = temp.next;
+            if(f.next) pq.enqueue(f.next);
         }
         
     }
-}
-
-
-
-function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
-  let pq = new PQ<ListNode>((a, b) => (a.val - b.val));
+    return ans.next;
     
-    for(let node of lists){
-        if(node) pq.enqueue(node);
-    }
     
-    let ans = new ListNode(0);
-    let res = ans;
-    
-    while(!pq.empty()){
-        let f = pq.top(); pq.dequeue();
-        ans.next = f;
-        ans = ans.next;
-        if(f.next) pq.enqueue(f.next);
-    }
-    
-    return res.next;
 };
