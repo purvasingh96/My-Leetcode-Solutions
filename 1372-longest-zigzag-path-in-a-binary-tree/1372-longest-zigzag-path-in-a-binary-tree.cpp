@@ -22,29 +22,16 @@ public:
             char dir = f.first.first;
             int len = f.first.second;
             TreeNode* node = f.second;
-            //cout<<node->val<<"\n";
             ans = max(ans, len);
             
             if(dir == 'L'){
-               // cout<<"dir is l\n";
                 if(node->right) q.push({{'R', len+1}, node->right});
                 if(node->left) q.push({{'L', 1}, node->left});
                 
             } else if(dir == 'R'){
-                //cout<<"dir is R\n";
                 if(node->left) q.push({{'L', len+1}, node->left});
                 if(node->right) q.push({{'R', 1}, node->right});
             }
-            
-//             if(node->left) {
-//                 //cout<<"q.push({{'R', 1}, node->right});\n";
-//                 q.push({{'L', 1}, node->left});
-//             }
-//             if(node->right) {
-                
-//                 //cout<<"q.push({{'L', 1}, node->left});\n";
-//                 q.push({{'R', 1}, node->right});
-//             }
             
         }
         return ans;
