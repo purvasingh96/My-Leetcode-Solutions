@@ -91,31 +91,26 @@ class pair<T, U> {
 }
 
 function maxSlidingWindow(nums: number[], k: number): number[] {
+    let pq = new PQ<pair<number, number>>((a: pair<number, number>, b:pair<number, number>) => b.second - a.second);
     
-    let pq: PQ<pair<number, number>> = new PQ<pair<number, number>>((a: pair<number, number>, b: pair<number, number>) => (b.second - a.second));
-    let res: number[] = [];
-    let i=0;
-    for(i=0;i<k;i++){
-        let p: pair<number, number> = new pair(i, nums[i]);
+    for(let i=0;i<k;i++){
+        let p = new pair(i, nums[i]);
         pq.enqueue(p);
     }
     
+    let res: number[] = [];
     res.push(pq.top().second);
     
-    while(i<nums.length){
+    for(let i=k;i<nums.length;i++){
+        while(pq.size()!=0 && i - pq.top().first+1 > k){
+            pq.dequeue();
+        }
         let p = new pair(i, nums[i]);
         pq.enqueue(p);
-        if(i - pq.top().first+1 <= k){
-            res.push(pq.top().second);
-        } else {
-            while(pq.size()!=0 && i-pq.top().first+1 > k){
-                pq.dequeue();
-            }
-            if(pq.size()!=0) res.push(pq.top().second);
-        }
-        
-        i+=1;
+        res.push(pq.top().second);
     }
     
     return res;
+    
+    
 };
