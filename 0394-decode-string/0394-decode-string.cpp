@@ -1,31 +1,34 @@
 class Solution {
 private:
-    string dfs(int& i, string& s){
-        string res="";
-        while(i<s.length() && s[i]!=']'){
-            if(!isdigit(s[i])){
-                res.push_back(s[i++]);
-            } else {
-                int k=0;
-                while(isdigit(s[i])){
-                    k = k*10 + s[i]-'0';
-                    i+=1;
-                }
+    string dfs(int& idx, string s, int t){
+        string temp = "";
+        while(idx<s.length() && s[idx]!=']'){
+            if(isdigit(s[idx])){
+                t = t*10+(s[idx]-'0');
+                idx+=1;
+            } else if(isalpha(s[idx])){
+                temp.push_back(s[idx]);
+                idx+=1;
+            } else if(s[idx] == '['){
+                idx+=1;
+                int f = t;
+                string res = dfs(idx, s, 0);
                 
-                i+=1;
-                string decodedString = dfs(i, s);
-                i+=1;
-                while(k--){
-                    res += decodedString;
+                while(f--){
+                    temp+=res;
                 }
+                idx+=1;
+                t=0;
             }
         }
         
-        return res;
+        return temp;
     }
 public:
     string decodeString(string s) {
-        int i=0;
-        return dfs(i, s);
+        string answer="";
+        int idx=0;
+        return dfs(idx, s, 0);
+        
     }
 };
