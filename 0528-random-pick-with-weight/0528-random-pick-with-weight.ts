@@ -1,27 +1,49 @@
 class Solution {
-  weights: number[]
-  constructor(w: number[]) {
-    const sum = w.reduce((acc, cur) => acc + cur)
-
-    this.weights = w
-
-    for (let i = 0; i < w.length; i++) {
-      const num = w[i]
-      this.weights[i] = num / sum
-      if (i > 0) this.weights[i] += this.weights[i - 1]
+    private w: number[] = [];
+    private ps: number[] = [];
+    
+    binarySearch(target:number){
+        let l: number =0;
+        let r:number = this.ps.length-1;
+        let ans:number=0;
+        let idx:number=0;
+        while(l<=r){
+            let mid: number = l + Math.floor((r-l)/2);
+            if(this.ps[mid] > target){
+                ans=this.ps[mid];
+                idx = mid;
+                r=mid-1;
+            } else {
+                l=mid+1;
+            }
+        }
+        
+        return idx;
     }
-  }
-
-  pickIndex(): number {
-    const randomNum = Math.random()
-    let left = 0
-    let right = this.weights.length - 1
-    while (left < right) {
-      const mid = Math.floor((left + right) / 2)
-      if (randomNum > this.weights[mid]) left = mid + 1
-      else right = mid
+    
+    constructor(w: number[]) {
+        this.w=w;
+        this.ps.push(w[0]);
+        for(let i=1;i<w.length;i++){
+            this.ps.push(this.ps[this.ps.length-1] + w[i]);
+        }
     }
 
-    return left
-  }
+    pickIndex(): number {
+        let min: number = 0;
+        let max: number = this.ps[this.ps.length-1];
+        
+        let randIndex = Math.floor(Math.random() * (this.ps[this.ps.length-1]));
+        let bs = this.binarySearch(randIndex);
+        //console.log(randIndex);
+        if(bs == this.ps.length) return this.ps.length-1;
+        return bs;
+        
+    }
 }
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * var obj = new Solution(w)
+ * var param_1 = obj.pickIndex()
+ */
