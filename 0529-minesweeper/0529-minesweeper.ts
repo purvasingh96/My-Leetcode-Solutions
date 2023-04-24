@@ -17,23 +17,23 @@ function returnMines(x:number, y:number, grid:string[][]){
     return c;
 }
 
-function dfs(x: number, y:number, grid: string[][]){
-    
-    
-    if(grid[x][y] == "E"){
-        let mines = returnMines(x, y, grid);
-        if(mines > 0){
-            grid[x][y] = mines.toString();
+
+
+function dfs(x: number, y: number, board: string[][]){
+    if(board[x][y] == "E"){
+        let m = returnMines(x, y, board)
+        if(m!=0){
+            board[x][y] = m.toString();
         } else {
-            grid[x][y] = "B";
-            for(let i=0;i<8;i++){
-                let new_x = x + dx[i];
-                let new_y = y + dy[i];
+            board[x][y] = "B";
+            
+            for(let k=0;k<8;k++){
+                let new_x = x + dx[k];
+                let new_y = y+dy[k];
                 
-                if(isValid(new_x, new_y, grid) && grid[new_x][new_y]!="B"){
-                    dfs(new_x, new_y, grid);
+                if(isValid(new_x, new_y, board) && board[new_x][new_y]!="B"){
+                    dfs(new_x, new_y, board);
                 }
-                
             }
         }
     }
@@ -41,9 +41,14 @@ function dfs(x: number, y:number, grid: string[][]){
     
 }
 
+
 function updateBoard(board: string[][], click: number[]): string[][] {
     let x = click[0], y = click[1];
-    if(board[x][y] == "M") board[x][y]="X";
-    else dfs(x, y, board);
+    if(board[x][y]=="M") {
+        board[x][y] = "X";
+        return board;
+    }
+    
+    dfs(x, y, board);
     return board;
 };
