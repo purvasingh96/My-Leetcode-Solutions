@@ -1,26 +1,23 @@
-let i;
-function dfs(s: string, d: number, op: string) : number {
+
+let i: number;
+function dfs(s: string, d: number, op: string){
     let st: number[] = [];
-    
     while(i<s.length && s[i]!=")"){
-        //console.log(i, s[i]);
-        if(s[i] == " ") {
+        if(s[i]==" "){
             i+=1;
             continue;
-        }
-        else if(s[i] >="0" && s[i]<="9"){
-            //console.log("digit");
-            d=d*10 + (s[i].charCodeAt(0) - "0".charCodeAt(0));
-        } else if(s[i] == "("){
+        } else if(!isNaN(parseInt(s[i]))){
+            // digit
+            d = d*10 + (s[i].charCodeAt(0) - "0".charCodeAt(0));
+        } else if(s[i]=="("){
             i+=1;
-            if(op == "+") st.push(d);
-            else st.push(-d);
-            let res = dfs(s, 0, "+");
-            if(op == "+") st.push(res);
-            else st.push(-res);
+            d=0;
+            let temp = dfs(s, d, "+");
+            
+            if(op == "+") st.push(temp);
+            else st.push(-temp);
             
         } else {
-            // operator
             if(op == "+") st.push(d);
             else st.push(-d);
             op = s[i];
@@ -32,17 +29,17 @@ function dfs(s: string, d: number, op: string) : number {
     if(op == "+") st.push(d);
     else st.push(-d);
     
-    let ans =0;
-    for(let i=0;i<st.length;i++){
-        ans += st[i];
-    }
-    
+    let ans=0;
+    for(let x of st) ans+=x;
     return ans;
     
 }
 
+
 function calculate(s: string): number {
-    s = "("+s+")";
-    i = 0;
-    return dfs(s, 0, "+");
+    i=0;
+    let d=0;
+    let op = "+";
+    s="("+s+")";
+    return dfs(s, d, op);
 };
