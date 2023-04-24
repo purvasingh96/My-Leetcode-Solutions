@@ -1,82 +1,93 @@
 /**
  Do not return anything, modify board in-place instead.
  */
-function boxId(i: number, j:number){
-    let z:number = Math.floor(i/3);
-    return z*3 + Math.floor(j/3);
+
+function boxid(i: number, j:number){
+    return Math.floor(i/3)*3 + Math.floor(j/3);
 }
 
-function isValid(x: number, y:number, val:string, boxes:string[][], grid: string[][]): boolean {
-    // row valid
-    for(let i=0;i<grid.length;i++){
-        if(grid[i][y] == val) return false;
+function isvalid(val: string, x:number, y:number, board:string[][], boxes: string[][]){
+    for(let i=0;i<board.length;i++){
+        if(board[i][y]==val) return false;
     }
     
-    // col valid
-    for(let j=0;j<grid[0].length;j++){
-        if(grid[x][j]==val) return false;
+    for(let j=0;j<board[0].length;j++){
+        if(board[x][j] == val) return false;
     }
     
-    // box valid
-    let id: number = boxId(x, y);
-    if(boxes[id].find((z)=>z==val) != undefined) return false;
+    let id = boxid(x, y);
+    if(boxes[id].find(z => z==val)!=undefined) return false;
+    
     return true;
 }
 
 
-function dfs(k: number, total: number, boxes: string[][], grid: string[][], coords:number[][]) : boolean{
-    if(k>=coords.length) return true;
+function dfs(idx: number, boxes: string[][], board: string[][], states:number[][]) : boolean{
+    if(idx >= states.length) return true;
     
-    let x = coords[k][0];
-    let y = coords[k][1];
+    let x = states[idx][0], y = states[idx][1];
+    let id = boxid(x, y);
     
     for(let i=1;i<=9;i++){
-        let target: string = i.toString();
-        
-        if(isValid(x, y, target, boxes, grid)){
-            grid[x][y]  =target;
-            total-=1;
-            let id: number = boxId(x, y);
+        let target = i.toString();
+        if(isvalid(target, x, y, board, boxes)){
+            board[x][y] = target;
             boxes[id].push(target);
-            
-            if(dfs(k+1, total, boxes, grid, coords)) return true;
-            
+            if(dfs(idx+1, boxes, board, states)) return true;
             boxes[id].pop();
-            total+=1;
-            grid[x][y]="."
-             
+            board[x][y]=".";
         }
     }
-    
-    return false;
     
 }
 
 function solveSudoku(board: string[][]): void {
-    let boxes: string[][] = [];
-    let total: number=0;
-    let coords: number[][] = [];
 
+    
+    
+    let states: number[][] = [];
+    let boxes: string[][] = Array.from(Array(9), ()=>new Array());
 
-    for(let i=0;i<9;i++) boxes.push(new Array<string>());
-
+    
     for(let i=0;i<board.length;i++){
         for(let j=0;j<board[0].length;j++){
             if(board[i][j] == "."){
-                total+=1;
-                let c = new Array<number>();
-                c.push(i);
-                c.push(j);
-                coords.push(c);
+                let p = [i,j];
+                states.push(p);
             } else {
-                
-                boxes[boxId(i, j)].push(board[i][j]);
+                boxes[boxid(i, j)].push(board[i][j]);
             }
         }
     }
-
-    dfs(0, total, boxes, board, coords);
     
-
-
+    
+    
+    
+    dfs(0, boxes, board, states);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 };
