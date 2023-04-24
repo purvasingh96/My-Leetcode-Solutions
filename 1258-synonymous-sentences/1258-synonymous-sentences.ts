@@ -1,49 +1,75 @@
-function build(s: string[]){
-    let t :string= "";
-    for(let word of s){
-        t += word;
-        t+=" ";
+class queue<T>{
+    private q: T[] = [];
+    constructor(){}
+
+    empty() : boolean {
+        return this.size()==0;
     }
     
-    t = t.slice(0, -1);
-    return t;
+    size() : number {
+        return this.q.length;
+    }
+
+    push(val: T) : void {
+        this.q.push(val);
+    }
+    
+    pop() : void {
+        this.q.shift();
+    }
+    
+    front() : T | undefined {
+        if(this.size()==0) return undefined;
+        return this.q[0];
+    }
+
+}
+
+function buildUtil(s: string[]){
+    let res = s.join(" ");
+    return res;
 }
 
 function generateSentences(synonyms: string[][], text: string): string[] {
-    let q: string[][] = [];
-    let splt = text.split(" ");
-    q.push(splt);
-    let st = new Set<string>();
-    st.add(text);
-    let m = new Map<string, string[]>();
+    let q= new queue<string[]>();
+    let s = text.split(" ");
+    let ans: string[] = [];
+    let ansSet = new Set<string>();
+   
+    q.push(s);
+    ansSet.add(text);
     
-    for(let s of synonyms){
-        m.set(s[0], [...m.get(s[0]) || [], s[1]]);
-        m.set(s[1], [...m.get(s[1]) || [], s[0]]);
+    let m = new Map<string, string[]>();
+    for(let syno of synonyms){
+        let u = syno[0], v = syno[1];
+        
+        m.set(u, [...m.get(u)||[], v]);
+        m.set(v, [...m.get(v)||[], u]);
+        
     }
     
-    while(q.length!=0){
-        let f: string[] = q[0];
-        q.shift();
-        
+    //console.log(m);
+   
+    while(!q.empty()){
+        let f = q.front();
+        q.pop();
         for(let i=0;i<f.length;i++){
             let word = f[i];
             if(m.get(word)!=undefined){
                 for(let syno of m.get(word)){
                     f[i] = syno;
-                    let temp: string = build(f);
-                    if(!st.has(temp)){
-                        st.add(temp);
+                    let next = buildUtil([...f]);
+                    if(!ansSet.has(next)){
                         q.push([...f]);
+                        ansSet.add(next);
                     }
+                    
                 }
             }
         }
- 
     }
     
-    let ans :  string[] = [];
-    for(let x of st) ans.push(x);
+    for(let words of ansSet) ans.push(words);
     ans.sort();
     return ans;
     
