@@ -90,50 +90,45 @@ class PQ<T>{
     }
 }
 
-class Pair<T, U>{
+class pair<T, U>{
     constructor(public first: T, public second:U){}
 }
 
-
 function getSkyline(buildings: number[][]): number[][] {
     let live = new PQ<number>((a, b) => (b-a));
-    let dead = new PQ<number>((a, b) =>(b-a));
+    let dead = new PQ<number>((a, b) => (b-a));
+    let temp = new Array<pair<number, number>>();
     let res: number[][] = [];
-    let temp = new Array<Pair<number, number>>();
-    
     
     for(let b of buildings){
-        let ps = new Pair(b[0], b[2]);
-        let pe = new Pair(b[1], -b[2]);
-        temp.push(ps);
-        temp.push(pe);
+        let x1 = b[0], x2 = b[1], ht = b[2];
+        temp.push(new pair(x1, ht));
+        temp.push(new pair(x2, -ht));
     }
     
-    temp.sort((a: Pair<number, number>, b: Pair<number, number>) => (a.first == b.first) ? (b.second-a.second) : (a.first - b.first));
+    temp.sort((a: pair<number, number>, b:pair<number, number>) => (a.first == b.first) ? (b.second - a.second) : (a.first - b.first));
     
-    for(let x of temp){
-        if(x.second > 0){
-            live.enqueue(x.second);
-        } else {
-            dead.enqueue(-x.second);
-        }
+    
+    let ongoingHeight = 0;
+    
+    for(let t of temp){
+        if(t.second > 0) {
+            live.enqueue(t.second);
+        } else dead.enqueue(-t.second);
         
         while(!live.empty() && !dead.empty() && live.top() == dead.top()){
             live.dequeue();
             dead.dequeue();
         }
         
-        let maxHeight = live.size()==0 ? 0: live.top();
+        ongoingHeight = live.empty() ? 0:live.top();
         
-        
-        if(res.length==0 || res[res.length-1][1] != maxHeight){
-            res.push([x.first, maxHeight]);
+        if(res.length==0 || res[res.length-1][1] != ongoingHeight){
+            res.push([t.first, ongoingHeight]);
         }
         
     }
     
     return res;
-    
-    
     
 };
