@@ -24,6 +24,7 @@ function numIslands(grid: string[][]): number {
     for(let i=0;i<grid.length;i++){
         for(let j=0;j<grid[0].length;j++){
             if(grid[i][j] == "1"){
+                grid[i][j]="0";
                 ans+=1;
                 dfs(i, j, grid);
             }
