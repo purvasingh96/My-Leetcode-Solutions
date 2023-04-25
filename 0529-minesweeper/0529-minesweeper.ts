@@ -20,7 +20,11 @@ function returnMines(x:number, y:number, grid:string[][]){
 
 
 function dfs(x: number, y: number, board: string[][]){
-    if(board[x][y] == "E"){
+    if(board[x][y] == "M"){
+        board[x][y] == "X";
+        return;
+    }
+    else if(board[x][y] == "E"){
         let m = returnMines(x, y, board)
         if(m!=0){
             board[x][y] = m.toString();
