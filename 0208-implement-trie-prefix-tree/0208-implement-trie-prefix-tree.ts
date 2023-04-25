@@ -1,12 +1,10 @@
 class TrieNode{
     public eow: boolean;
-    public children: TrieNode[];
+    public children;
     constructor(){
         this.eow=false;
-        this.children=[];
-        for(let i=0;i<26;i++){
-            this.children.push(null);
-        }
+        this.children= Array.from(Array<TrieNode>(26).fill(null));
+        
     }
 }
 
