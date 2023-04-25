@@ -1,25 +1,27 @@
 class SmallestInfiniteSet {
 private:
     vector<bool> live;
+    priority_queue<int,vector<int>, greater<int>> pq;
 public:
     SmallestInfiniteSet() {
         live.resize(1001, true);
+        for(int i=1;i<=1000;i++){
+            pq.push(i);
+        }
     }
     
     int popSmallest() {
-        for(int i=1;i<live.size();i++){
-            if(live[i]){
-                live[i]=false;
-                return i;
-            }
-        }
+        int top = pq.top();
+        live[top]=false;
+        pq.pop();
+        return top;
         
-        return 0;
     }
     
     void addBack(int num) {
         if(live[num]==false) {
             live[num]=true;
+            pq.push(num);
         }
     }
 };
