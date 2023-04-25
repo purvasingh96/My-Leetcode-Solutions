@@ -40,6 +40,6 @@ function calculate(s: string): number {
     i=0;
     let d=0;
     let op = "+";
-    s="("+s+")";
+    //s="("+s+")";
     return dfs(s, d, op);
 };
