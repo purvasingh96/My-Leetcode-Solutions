@@ -2,9 +2,8 @@
 # @param {Integer} n
 # @return {Integer[]}
 def shuffle(nums, n)
-    $i, $j= 0, n
+    $i, $j, $k = 0, n, nums.size
     arr = Array.new
-    $k = nums.size
     while $i<n && $j<$k do
         arr.push(nums[$i])
         arr.push(nums[$j])
