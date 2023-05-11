@@ -1,22 +1,24 @@
-class Solution {
-private:
-    void helper(int idx, vector<int> temp, vector<vector<int>>& ans, vector<int>& nums){
-        if(idx >= nums.size()) {
-            ans.push_back(temp);
-            return;
-        }
-        
-        // dont choose
-        helper(idx+1, temp, ans, nums);
-        temp.push_back(nums[idx]);
-        helper(idx+1, temp, ans, nums);
-        
-    }
-public:
-    vector<vector<int>> subsets(vector<int>& nums) {
-        vector<int> temp;
-        vector<vector<int>> ans;
-        helper(0, temp, ans, nums);
-        return ans;
-    }
-};
+# @param {Integer[]} nums
+# @return {Integer[][]}
+
+def helper(idx, temp=[], res, nums)
+    if(idx >= nums.size)
+        res << temp
+        return
+    end
+    
+    # dont chose
+    helper(idx+1, temp, res, nums)
+    
+    # choose
+    helper(idx+1, temp+[nums[idx]], res, nums)
+    
+end
+
+def subsets(nums)
+    temp = []
+    res=[]
+    
+    helper(0, temp, res, nums)
+    res
+end
