@@ -16,9 +16,12 @@ def helper(idx, temp=[], res, nums)
 end
 
 def subsets(nums)
-    temp = []
-    res=[]
+#     temp = []
+#     res=[]
     
-    helper(0, temp, res, nums)
+#     helper(0, temp, res, nums)
+#     res
+    res = [[]]
+    nums.each {|num| res += res.map {|arr| arr + [num]}}
     res
 end
