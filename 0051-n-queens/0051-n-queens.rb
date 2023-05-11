@@ -32,7 +32,6 @@ def backtrack(row, board, ans=[])
     
     (0..n-1).each do |col|
         if isValid(row, col, board)
-            print("yes")
             board[row][col] = 'Q'
             backtrack(row+1, board, ans)
             board[row][col] = '.'
