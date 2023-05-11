@@ -4,7 +4,6 @@ public:
         if(s.length() <= 9) return s.length();
         int ans=0;
         vector<int> m(10, 0);
-        vector<int> y(26, -1);
         vector<int> l(26, 0);
         
         vector<int> temp;
