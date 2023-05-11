@@ -5,8 +5,8 @@ def shuffle(nums, n)
     i,j,k = 0, n, nums.size
     arr = Array.new
     while i<n && j<k do
-        arr.push(nums[i])
-        arr.push(nums[j])
+        arr << nums[i]
+        arr << nums[j]
         i+=1
         j+=1
     end
