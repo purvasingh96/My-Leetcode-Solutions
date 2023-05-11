@@ -1,34 +1,24 @@
-class Solution {
-public:
-    vector<vector<int>> onesMinusZeros(vector<vector<int>>& grid) {
-        vector<int> row_ones;
-        vector<int> col_ones;
-        int m = grid.size(), n = grid[0].size();
+# @param {Integer[][]} grid
+# @return {Integer[][]}
+def ones_minus_zeros(grid)
+    m = grid.size
+    n = grid[0].size
+    diff = []
+    
+    one_rows = (grid.map {|row| row.sum})
+    one_cols = (grid.transpose.map {|col| col.sum})
+    
+    puts(one_rows)
+    puts("doen")
+    
+    (0..m-1).each do |i|
+        row = []
+        #puts("i: ", i)
+        (0..n-1).each do |j|
+            row<<(2*(one_rows[i] + one_cols[j]) - (m+n))
+        end
         
-        for(auto x:grid){
-            row_ones.push_back(accumulate(x.begin(), x.end(), 0));
-        }
-        
-        for(int j=0;j<grid[0].size();j++){
-            int sum=0;
-            for(int i=0;i<grid.size();i++){
-                sum += grid[i][j];
-            }
-            col_ones.push_back(sum);
-        }
-        
-        vector<vector<int>> res(m, vector<int>(n, 0));
-        
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                int onerow = row_ones[i];
-                int onecol = col_ones[j];
-                res[i][j] = 2*(onerow + onecol) - (m+n);
-            }
-        }
-        
-        return res;
-        
-        
-    }
-};
+        diff << row
+    end
+    diff
+end
