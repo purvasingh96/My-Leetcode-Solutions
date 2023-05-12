@@ -20,17 +20,9 @@ def find_difference(nums1, nums2)
     v1, v2 = [], []
     ans = []
     
-    m1.each do |k, v|
-        if v==1
-            v1 << k
-        end
-    end
+    m1.map {|k,v| v==1?v1<<k:next}
     
-    m2.each do |k, v|
-        if v==1
-            v2 << k
-        end
-    end
+    m2.map {|k,v| v==1?v2<<k:next}
     
     ans << v1
     ans << v2
