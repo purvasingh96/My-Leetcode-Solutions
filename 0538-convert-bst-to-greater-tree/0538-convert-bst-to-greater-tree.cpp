@@ -11,32 +11,22 @@
  */
 class Solution {
 private:
-    int temp;
-    int dfs(TreeNode* root){
-        if(!root) return 0;
+    void dfs(TreeNode* root, int& temp){
+        if(!root) return;
         
-        int r=0, l=0;
-        if(root->right) {
-            r = dfs(root->right);
-            
-            // root->val += r;
-            // temp = root->val;
-            }
-            root->val += temp;
-         temp = root->val;
-        if(root->left){
-            
-            l = dfs(root->left);
-        } 
+        if(root->right) dfs(root->right, temp);
         
+        root->val += temp;
+        temp = root->val;
+        
+        if(root->left) dfs(root->left, temp);
        
-        return temp;
     }
 public:
     TreeNode* convertBST(TreeNode* root) {
         TreeNode* ans = root;
-        temp=0;
-        dfs(root);
+        int temp=0;
+        dfs(root, temp);
         return ans;
     }
 };
