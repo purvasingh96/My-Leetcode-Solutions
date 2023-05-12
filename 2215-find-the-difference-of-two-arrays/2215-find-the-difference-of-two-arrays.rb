@@ -24,8 +24,7 @@ def find_difference(nums1, nums2)
     
     m2.map {|k,v| v==1?v2<<k:next}
     
-    ans << v1
-    ans << v2
+    ans = [v1, v2]
     
     ans
     
