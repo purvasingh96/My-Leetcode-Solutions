@@ -4,9 +4,14 @@
  * @return {number[]}
  */
 var filter = function(arr, fn) {
-    let res = [];
+    let idx=0;
     for(let i=0;i<arr.length;i++){
-        if(fn(arr[i], i)) res.push(arr[i]);
+        if(fn(arr[i], i)){
+            arr[idx++] = arr[i];
+        } 
     }
-    return res;
+    
+    while(arr.length > idx) arr.pop();
+    
+    return arr;
 };
