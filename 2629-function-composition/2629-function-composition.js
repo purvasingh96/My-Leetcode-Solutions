@@ -4,10 +4,7 @@
  */
 var compose = function(functions) {
 	return function(x) {
-        return functions.reverse().reduce((accumulator, f) => {
-             accumulator = f(accumulator);
-            return accumulator;
-        }, x);
+        return functions.reverse().reduce((y, f) => f(y), x);
     }
 };
 
