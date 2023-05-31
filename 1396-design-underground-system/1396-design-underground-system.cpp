@@ -1,48 +1,34 @@
 class UndergroundSystem {
 private:
-    map<int, pair<string, int>> cache;
-    map<pair<string, string>, pair<int, int>> m;
+    unordered_map<int, pair<string, int>> cinData;
+    unordered_map<string, pair<double, double>> checkoutData;
     
 public:
     UndergroundSystem() {
-        //cache.resize(1000000);    
+        
     }
     
     void checkIn(int id, string stationName, int t) {
-        auto info = make_pair(stationName, t);
-        cache[id] = info;
+        cinData[id] = {stationName, t};
+    }
+    
+    void checkOut(int id, string end, int t) {
+        auto checkinValues = cinData[id];
+        cinData.erase(id);
+        string start =  checkinValues.first;
+
+        string key = start+"->"+end;
+        checkoutData[key].first += (t - checkinValues.second);
+        checkoutData[key].second += 1;
         
     }
     
-    void checkOut(int id, string stationName, int t) {
-        auto checkInInfo = cache[id];
+    double getAverageTime(string s, string e) {
+        string key = s+"->"+e;
+        double totalTime = checkoutData[key].first;
+        double trips = checkoutData[key].second;
         
-        cache[id] = {};
-        
-        int time_diff = t - checkInInfo.second;
-      
-        auto p = make_pair(checkInInfo.first, stationName);
-        
-        
-            // last time, cur size
-        auto timeInfo = m[p];
-        int total_time =   timeInfo.first + time_diff;
-        int size = timeInfo.second+1;
-        auto new_info = make_pair(total_time, size);
-        m[p] = new_info;
-            
-         
-         
-       
-    }
-    
-    double getAverageTime(string startStation, string endStation) {
-        double avg = 0.0;
-        auto p = make_pair(startStation, endStation);
-        
-        avg = (double)m[p].first/m[p].second;
-        
-        return avg;
+        return totalTime/trips;
     }
 };
 
