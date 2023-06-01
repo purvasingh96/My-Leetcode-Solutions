@@ -5,9 +5,8 @@ public:
         vector<int> res;
         int startRow=0, startCol=0, endRow=matrix.size(), endCol= matrix[0].size();
         int sz = endRow * endCol;
+        
         while(res.size()!=sz){
-            // for(auto x:res) cout<<x<<" ";
-            // cout<<"\n";
             if(dir == 'R'){
                 int i = startRow;
                 for(int j=startCol;j<endCol;j++) res.push_back(matrix[i][j]);
