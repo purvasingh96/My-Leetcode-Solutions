@@ -2,10 +2,11 @@ class Solution {
 private:
     vector<int> root;
     vector<int> rank;
-    int count;
+    int provinces;
+    
     int find(int x){
-        if(root[x]==x) return x;
-        return root[x]=find(root[x]);
+        if(root[x] == x) return x;
+        return root[x] = find(root[x]);
     }
     
     void merge(int x, int y){
@@ -13,34 +14,56 @@ private:
         int ry = find(y);
         
         if(rx!=ry){
-            count-=1;
-            if(rank[rx]>=rank[ry]){
+            if(rank[rx] >= rank[ry]){
                 root[ry]=rx;
                 rank[rx]+=rank[ry];
-            } else{
+            } else {
                 root[rx]=ry;
                 rank[ry]+=rank[rx];
             }
+            provinces-=1;
         }
     }
+    
+    
 public:
-    int findCircleNum(vector<vector<int>>& res) {
-        int n = res.size();
-        root.resize(n);
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int n = isConnected.size();
+        root.resize(n, 0);
+        for(int i=0;i<n;i++) root[i] = i;
         rank.resize(n, 1);
-        count=n;
-        for(int i=0;i<n;i++) root[i]=i;
+        provinces = n;
         
-        unordered_map<int, vector<int>> adj;
         
-        for(int u=0;u<res.size();u++){
-            for(int v=0;v<res[0].size();v++){
-                if(res[u][v]){
-                    merge(u, v);
+        for(int u=0;u<n;u++){
+            for(int v=0;v<n;v++){
+                if(isConnected[u][v]){
+                    merge(u,v);
+                    //cout<<"u: "<<u<<" v: "<<v<<" provinces: "<<provinces<<"\n";
                 }
             }
         }
         
-        return count;
+        return provinces;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 };
