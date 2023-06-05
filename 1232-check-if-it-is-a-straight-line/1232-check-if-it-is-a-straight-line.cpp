@@ -9,9 +9,7 @@ public:
     bool checkStraightLine(vector<vector<int>>& coord) {
         if(coord.size()==2) return true;
         double m = slope(coord[0], coord[1]);
-        //cout<<"m: "<<m<<"\n";
         for(int i=1;i<coord.size();i++){
-            //cout<<slope(coord[i], coord[i-1])<<"\n";
             if(slope(coord[i], coord[i-1])!=m) return false;
         }
         
