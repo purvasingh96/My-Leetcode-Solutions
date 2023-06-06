@@ -1,53 +1,54 @@
 class Solution {
 private:
-    unordered_map<string, pair<string, double>> root;
-    
-    pair<string, double> find(pair<string, double> x){
-        if(root[x.first].first == x.first) return x;
-        double prod = (double)x.second*root[x.first].second;
-        return find({root[x.first].first, prod});
-    }
-    
-    void merge(pair<string, double> x, pair<string, double> y){
-        auto rx = find(x);
-        auto ry = find(y);
+    double dfs(string u, string target, double val, unordered_map<string, vector<pair<string, double>>>& edges, unordered_map<string, bool> visited){
+        //cout<<"u: "<<u<<" target: "<<target<<" val: "<<val<<"\n";
+        if(u == target) return val;
         
-        if(rx.first != ry.first){
-            double div = (double)(ry.second)/rx.second;
-            root[rx.first]={ry.first, div};
+        double ans = -1.0;
+        if(!visited[u]){
+            visited[u] = true;
+            for(auto c:edges[u]){
+                
+                 double res = dfs(c.first, target, val*c.second, edges, visited);    
+                if(res!=-1) return res;
+            }
         }
+        
+        
+        return ans;
     }
-    
 public:
     vector<double> calcEquation(vector<vector<string>>& e, vector<double>& v, vector<vector<string>>& q) {
-        for(auto x:e){
-            string u = x[0], v=x[1];
-            root[u]={u, 1.00};
-            root[v]={v, 1.00};
-        }
+        unordered_map<string, vector<pair<string, double>>> edges;
+        vector<double> ans;
+        unordered_map<string, bool> visited;
+        
         for(int i=0;i<e.size();i++){
-            merge({e[i][0], 1.00}, {e[i][1], v[i]});
+            string from = e[i][0], to = e[i][1];
+            auto value = v[i];
+            
+            edges[from].push_back({to, value});
+            edges[to].push_back({from, (double)1/value});
+            visited[from] = false;
+            visited[to] = false;
         }
         
-//         cout<<find({"a", 1.00}).first<<" "<<find({"a", 1.00}).second<<"\n";
-//         cout<<find({"b", 1.00}).first<<" "<<find({"b", 1.00}).second<<"\n";
+        // for(auto x:edges){
+        //     cout<<x.first<<" => ";
+        //     for(auto y:x.second) cout<<y.first<<" "<<y.second<<"\n";
+        // }
         
-        vector<double> res;
-        for(auto x:q){
-            string u = x[0], v=x[1];
-            if(root.find(u)==root.end() || root.find(v)==root.end()) res.push_back(-1.00000);
-            else {
-                auto ansU = find({u, 1.00});
-                auto ansV = find({v, 1.00});
-                if(ansU.first != ansV.first) res.push_back(-1.00000);
-                else {
-                    double ans = (double)ansU.second/ansV.second;
-                    res.push_back(ans);
-                }
-                
+        for(int i=0;i<q.size();i++){
+            string u = q[i][0], target = q[i][1];
+            if(edges.find(u) == edges.end() || edges.find(target) == edges.end()) {
+                ans.push_back(-1.0);
+            } else {
+                double result = dfs(u, target, 1.0, edges, visited);
+                ans.push_back(result);
             }
             
         }
-        return res;
+        
+        return ans;
     }
 };
