@@ -1,33 +1,39 @@
 class SnapshotArray {
-vector<vector<pair<int,int>>> m;
-int s;
+private:
+    unordered_map<int, vector<pair<int, int>>> m;
+    int snap_id;
+    int length;
 public:
     SnapshotArray(int length) {
-        m.resize(length);
-        s=0;
+        snap_id = 0;
+        this->length = length;
+        for(int i=0;i<length;i++){
+            m[i].push_back({snap_id, 0});
+        }
     }
     
     void set(int index, int val) {
-        if(!m[index].empty() && m[index].back().first == s){
-            m[index].pop_back();
-        }
-        m[index].push_back({s, val});
+        if(m[index].back().first == snap_id){
+            m[index].pop_back();  
+        } 
+        m[index].push_back({snap_id, val});
     }
     
     int snap() {
-        s+=1;
-        return s-1;
+        int t = snap_id;
+        snap_id+=1;
+        // for(int i=0;i<length;i++){
+        //     m[i].push_back({snap_id, m[i].back().second});
+        // }
+        return t;
     }
     
     int get(int index, int snap_id) {
-        // auto it = upper_bound(m[index].begin(), m[index].end(), pair<int, int>(snap_id, 0), [](const pair<int, int>& a, const pair<int, int>& b){
-        //     return a.first < b.first;
-        // });
         auto it = upper_bound(m[index].begin(), m[index].end(), pair<int, int>(snap_id, INT_MAX), [](const pair<int, int>& a, const pair<int, int>& b){
             return a.first < b.first;
         });
+        if(it == m[index].begin()) return 0;
         
-        if(it==m[index].begin()) return 0;
         return prev(it)->second;
     }
 };
