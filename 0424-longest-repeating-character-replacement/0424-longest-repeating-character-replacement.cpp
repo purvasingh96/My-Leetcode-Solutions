@@ -8,7 +8,7 @@ public:
         
         for(;r<s.length();r++){
             m[s[r]]+=1;
-            for(auto x:m) maxFreq = max(maxFreq, x.second);
+            maxFreq = max(maxFreq, m[s[r]]);
             
             int len = r-l+1;
             if(len - maxFreq <= k){
