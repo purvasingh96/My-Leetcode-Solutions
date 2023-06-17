@@ -2,23 +2,36 @@ class Solution {
 public:
     int characterReplacement(string s, int k) {
         int maxFreq=0;
-        vector<int> count(26,0);
-        int left=0, ans=0, right=0;
+        unordered_map<char, int> m;
+        int maxLen = 0;
+        int l=0, r=0;
         
-        for(;right<s.length();right++){
-            count[s[right]-'A']+=1;
-            maxFreq = max(maxFreq, count[s[right]-'A']);
-            //cout<<"maxFDreq: "<<maxFreq<<" "; 
-            int n = right-left+1;
-            //cout<<"n: "<<n<<"\n";
-            if(n-maxFreq > k){
-                //cout<<right<<"\n";
-                ans =max(ans, right-left);
-                count[s[left]-'A']-=1;
-                left+=1;
-            } 
+        for(;r<s.length();r++){
+            m[s[r]]+=1;
+            for(auto x:m) maxFreq = max(maxFreq, x.second);
+            
+            int len = r-l+1;
+            //cout<<"maxFreq: "<<maxFreq<<" len: "<<len<<"\n";
+            if(len - maxFreq <= k){
+                maxLen = max(maxLen, r-l+1);
+            } else {
+                
+                while(l<r && len - maxFreq > k){
+                    m[s[l]]-=1;
+                    for(auto x:m){
+                        maxFreq = max(maxFreq, x.second);
+                    }
+                    l+=1;
+                    len = r-l+1;
+                }
+                
+            }
+            
+            maxLen = max(maxLen, r-l+1);
+            //cout<<maxLen<<"\n";
         }
         
-        return max(ans, right-left);
+        return maxLen;
+        
     }
 };
