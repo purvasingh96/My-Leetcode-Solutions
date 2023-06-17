@@ -11,7 +11,6 @@ public:
             for(auto x:m) maxFreq = max(maxFreq, x.second);
             
             int len = r-l+1;
-            //cout<<"maxFreq: "<<maxFreq<<" len: "<<len<<"\n";
             if(len - maxFreq <= k){
                 maxLen = max(maxLen, r-l+1);
             } else {
@@ -28,7 +27,6 @@ public:
             }
             
             maxLen = max(maxLen, r-l+1);
-            //cout<<maxLen<<"\n";
         }
         
         return maxLen;
