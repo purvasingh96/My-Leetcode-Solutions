@@ -1,51 +1,35 @@
 class Solution {
-private:
-    
 public:
     string minWindow(string s, string t) {
-        int left=0, right=0;
-        unordered_map<char, int> m1;
-        unordered_map<char, int> m2;
-        
-        for(auto c:t) m2[c] += 1;
-        
-        int n = s.length();
-        int len = INT_MAX;
-        string temp="";
-        string ans="";
         int c=0;
+        unordered_map<char, int> ms;
+        unordered_map<char, int> mt;
+        int l=0, r=0;
+        int minLen=INT_MAX;
+        string ans="";
         
-        while(right < n){
-            if(m2.find(s[right])!=m2.end()){
-                m1[s[right]]+=1;
-                if(m1[s[right]] <= m2[s[right]]){
-                    c+=1;
+        for(auto c:t) mt[c]+=1;
+        
+        for(;r<s.length();r++){
+            ms[s[r]]+=1;
+            
+            if(mt.find(s[r])!=mt.end() && ms[s[r]] <= mt[s[r]]){
+                c+=1;
+            }
+            
+            if(c == t.length()){
+                while(l<r && (mt.find(s[l]) == mt.end() || ms[s[l]] > mt[s[l]])){
+                    ms[s[l]]-=1;
+                    l+=1;
+                }
+                if(r-l+1 < minLen){
+                    minLen = r-l+1;
+                    ans = s.substr(l, minLen);
                 }
             }
-            
-            if(c >= t.length()){
-               
-            while(left < right &&
-                  (m2.find(s[left])==m2.end() || m1[s[left]] > m2[s[left]])){
-                
-                m1[s[left]]-=1;
-                
-                left+=1;
-            }
-            if((right-left+1) < len){
-                len = (right-left+1);
-                ans = s.substr(left, len);
-            }
-            
-            
-            }
-            
-            
-            
-            right+=1;
         }
         
-        return len==INT_MAX ? "":ans;
+        return ans;
         
     }
 };
