@@ -15,18 +15,13 @@ public:
                 maxLen = max(maxLen, r-l+1);
             } else {
                 
-                while(l<r && len - maxFreq > k){
                     m[s[l]]-=1;
-                    for(auto x:m){
-                        maxFreq = max(maxFreq, x.second);
-                    }
                     l+=1;
-                    len = r-l+1;
-                }
+                
                 
             }
             
-            maxLen = max(maxLen, r-l+1);
+            
         }
         
         return maxLen;
