@@ -1,37 +1,36 @@
-#define pp pair<int, int>
-
-class MyComp{
-public:
-    bool operator()(pp& a, pp& b){
-        // i, val
-        return a.second < b.second;
-    }
-};
-
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        priority_queue<pp, vector<pp>, MyComp> pq;
+        deque<pair<int, int>> q;
         int i=0;
-        for(i=0;i<k;i++){
-            pq.push({i, nums[i]});
-        }
         vector<int> res;
-        res.push_back(pq.top().second);
         
-        while(i<nums.size()){
-            pq.push({i, nums[i]});
-            if(i-pq.top().first+1 <=k){
-                res.push_back(pq.top().second);
-            } else {
-                while(!pq.empty() && i-pq.top().first+1 > k){
-                    pq.pop();
+        for(;i<k;i++){
+            while(!q.empty() && q.back().first < nums[i]){
+                    q.pop_back();
                 }
-                if(!pq.empty()) res.push_back(pq.top().second);
+            q.push_back({nums[i], i});
+        }
+        
+        res.push_back(q.front().first);
+        
+        for(;i<nums.size();i++){
+            // pop back to maintain decreasing monotonic queue
+            while(!q.empty() && q.back().first < nums[i]){
+                q.pop_back();
             }
-            i+=1;
+            
+            q.push_back({nums[i], i});
+            
+            while(!q.empty() && (i - q.front().second) >= k){
+                q.pop_front();
+            }
+            
+            res.push_back(q.front().first);
+            
         }
         
         return res;
+        
     }
 };
