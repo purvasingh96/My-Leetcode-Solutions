@@ -1,27 +1,34 @@
 class Solution {
 private:
     bool isVowel(char c){
-        vector<char> vowels = {'a', 'e', 'i', 'o', 'u'};
-        return find(vowels.begin(), vowels.end(), c)!=vowels.end();
+        return c=='a' || c=='e' || c=='i' || c=='o' || c=='u';
     }
 public:
     int maxVowels(string s, int k) {
+        int l=0, r=k-1;
+        vector<int> count(26, 0);
         
-        int j=k;
-        int c=0;
-        for(int p=0;p<k;p++){
-            if(isVowel(s[p])) c+=1;
+        int countVowels=0, i=l, ans=INT_MIN;
+        
+        for(;i<=r;i++){
+            count[s[i]-'a']+=1;
+            if(isVowel(s[i])) countVowels += 1;
+            ans = max(ans, countVowels);
         }
         
-        int ans = c;
-        while(j<s.length()){
-            if(isVowel(s[j])) c+=1;
-            if(isVowel(s[j-k])) c-=1;
-            ans = max(ans, c);
-            j+=1;
+        
+        for(;i<s.length();i++){
+            count[s[i]-'a']+=1;
+            if(isVowel(s[i])) countVowels += 1;
+            
+            count[s[l]-'a']-=1;
+            if(isVowel(s[l])) countVowels -= 1;
+            
+            l+=1;
+            
+            ans = max(ans, countVowels);
         }
         
         return ans;
-        
     }
 };
