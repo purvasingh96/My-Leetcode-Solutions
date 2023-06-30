@@ -18,14 +18,13 @@ private:
         
     }
     
-    
     void quickSelect(int left, int right, int k_smallest, unordered_map<int, int>& freq, vector<int>& res){
-        
-        int pivot_idx = left + rand()%(right - left+1);
-        
+        int pivot_idx = left + rand()%(right-left+1);
         pivot_idx = partitionAndSort(left, right, pivot_idx, freq, res);
         
-        if(pivot_idx == k_smallest) return;
+        if(pivot_idx == k_smallest){
+            return;
+        }
         else if(pivot_idx > k_smallest){
             quickSelect(left, pivot_idx-1, k_smallest, freq, res);
         } else {
@@ -33,23 +32,24 @@ private:
         }
         
     }
-
+    
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> m;
-        for(auto x:nums) m[x]+=1;
-        
+        // quick select implementation
+        unordered_map<int, int> freq;
         vector<int> res;
-        for(auto x:m) res.push_back(x.first);
+        for(auto x:nums) freq[x]+=1;
+        for(auto x:freq){
+            res.push_back(x.first);
+        }
         
         int n = res.size();
-        quickSelect(0, n-1, n-k, m, res);
+        quickSelect(0, n-1, n-k, freq, res);
         
         vector<int> ans;
         for(int i=n-k;i<n;i++) ans.push_back(res[i]);
         
         return ans;
-        
         
     }
 };
