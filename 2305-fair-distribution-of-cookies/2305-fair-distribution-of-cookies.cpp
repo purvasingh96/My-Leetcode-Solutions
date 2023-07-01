@@ -1,24 +1,28 @@
 class Solution {
 private:
-    void back_track(int start, vector<int>& cookies, int k, vector<int>& res, int& minsum){
-        if(start == cookies.size()){
-            int maxsum = *max_element(res.begin(), res.end());
-            minsum = min(minsum, maxsum);
+    void backtrack(int i, vector<int>& cookies, vector<int>& values, int& minSum){
+        
+        if(i == cookies.size()){
+            // calculate min Sum
+            int maxSum = *max_element(values.begin(), values.end());
+            minSum = min(minSum, maxSum);
             return;
         }
         
-        for(int i=0;i<k;i++){
-            res[i] += cookies[start];
-            back_track(start+1, cookies, k, res, minsum);
-            res[i] -= cookies[start];
+        
+        for(int j=0;j<values.size();j++){
+            values[j] += cookies[i];
+            backtrack(i+1, cookies, values, minSum);
+            values[j] -= cookies[i];
         }
+        
         
     }
 public:
     int distributeCookies(vector<int>& cookies, int k) {
-        vector<int> res(k,0);
-        int minsum=INT_MAX;
-        back_track(0, cookies, k, res, minsum);
-        return minsum;
+        vector<int> values(k, 0);
+        int minSum = INT_MAX;
+        backtrack(0, cookies, values, minSum);
+        return minSum;
     }
 };
