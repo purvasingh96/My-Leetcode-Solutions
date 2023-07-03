@@ -1,31 +1,38 @@
 class Solution {
 public:
-    bool buddyStrings(string s, string goal) {
+    bool buddyStrings(string s, string t) {
+        if(s.length() < 2) return false;
+        if(s.length()!=t.length()) return false;
         
-        int s1=-1, s2=-1;
-        if(s.length()!=goal.length()) return false;
-        int count=0;
+        int pos1=-1, pos2=-1;
+        int c=0;
+        bool greaterThanTwo=false;
+        unordered_map<char, int> m;
         
-        bool hasEvenCount=false;
-        vector<int> c(26, 0);
-        
-        for(int i=0;i<s.length();i++){   
-            c[s[i]-'a'] +=1;
-            if(c[s[i]-'a']%2==0) hasEvenCount=true;
-            if(s[i]!=goal[i]){
-                if(s1==-1) s1=i;
-                else s2=i;
-                count+=1;
-                if(count > 2) return false;
+        for(int i=0;i<s.length();i++){
+            if(s[i]!=t[i]){
+                c+=1;
+                if(c>2) return false;
+                if(pos1==-1) pos1=i;
+                else pos2=i;
             }
-            
+            m[s[i]]+=1;
+            if(m[s[i]] >=2 ) greaterThanTwo = true;
         }
         
-        if(count==1) return false;
+        if(pos1 == -1 && pos2==-1){
+            char c = s[0];
+            int n = s.length();
+            string k(n, c);
+            return k==s || greaterThanTwo;
+            
+        } else if(pos1==-1 || pos2==-1) return false;
         
-        if(count==0) return hasEvenCount;
+        char temp = s[pos1];
+        s[pos1] = s[pos2];
+        s[pos2] = temp;
         
-        return goal[s1]==s[s2] && goal[s2] == s[s1];
-        
+        return s == t;
+    
     }
 };
