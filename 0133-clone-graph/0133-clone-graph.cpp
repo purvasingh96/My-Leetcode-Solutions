@@ -1,52 +1,29 @@
-/*
-// Definition for a Node.
-class Node {
-public:
-    int val;
-    vector<Node*> neighbors;
-    Node() {
-        val = 0;
-        neighbors = vector<Node*>();
-    }
-    Node(int _val) {
-        val = _val;
-        neighbors = vector<Node*>();
-    }
-    Node(int _val, vector<Node*> _neighbors) {
-        val = _val;
-        neighbors = _neighbors;
-    }
-};
-*/
-
 class Solution {
-
 private:
-    unordered_map<Node*, Node*> m;
-    
-    Node* dfs(Node* ogNode){
-        if(!ogNode) return ogNode;
+   
+    Node* dfs(Node* parent, unordered_map<Node*, bool>& visited, unordered_map<Node*, Node*>& m){
+        if(m.find(parent)!=m.end()) return m[parent];
+        m[parent] = new Node(parent->val);
         
-        if(m.find(ogNode)!=m.end()) return m[ogNode];
-       
-        Node* newNode = new Node(ogNode->val);
-        m[ogNode] = newNode;
-        
-        for(auto child:ogNode->neighbors){
-                Node* newChild = dfs(child);
-                newNode->neighbors.push_back(newChild);
-            
+        for(auto child:parent->neighbors){
+            if(!visited[child]){
+                visited[child] = true;
+                m[parent]->neighbors.push_back(dfs(child, visited, m));
+            } else {
+               m[parent]->neighbors.push_back(m[child]);
+            }
         }
         
-        return newNode;
-        
+        return m[parent];
     }
-    
-   
     
 public:
     Node* cloneGraph(Node* node) {
-        return dfs(node);
+        if(!node) return node;
+        unordered_map<Node*, Node*> m;
+        unordered_map<Node*, bool> visited;
+        visited[node] = true;
+        return dfs(node, visited, m);
         
     }
 };
