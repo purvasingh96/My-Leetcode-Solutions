@@ -1,36 +1,38 @@
 class Solution {
 public:
-    bool canFinish(int n, vector<vector<int>>& prerequisites) {
-        // topological sort
+    bool canFinish(int n, vector<vector<int>>& p) {
         unordered_map<int, vector<int>> m;
         vector<int> indegree(n, 0);
         
-        for(auto p:prerequisites){
-            m[p[1]].push_back(p[0]);
-            indegree[p[0]]+=1;
+        for(auto x:p){
+            int u = x[1], v = x[0];
+            m[u].push_back(v);
+            indegree[v]+=1;
         }
         
+        int c=0;
         queue<int> q;
-        int completed=0;
-        for(int i=0;i<indegree.size();i++){
-            if(indegree[i]==0) {
-                completed+=1;
+        for(int i=0;i<n;i++){
+            if(indegree[i] == 0){
                 q.push(i);
+                c+=1;
             }
         }
+        
+        if(q.size()==0) return false;
         
         while(!q.empty()){
-            auto u = q.front();
-            q.pop();
-            for(auto v:m[u]){
-                indegree[v]-=1;
-                if(indegree[v]==0){
-                    completed+=1;
-                    q.push(v);
+            int node = q.front();q.pop();
+            for(auto y:m[node]){
+                indegree[y]-=1;
+                if(indegree[y] == 0){
+                    q.push(y);
+                    c+=1;
                 }
-            }
+            } 
         }
         
-        return completed==n;
+        return c == n;
+        
     }
 };
