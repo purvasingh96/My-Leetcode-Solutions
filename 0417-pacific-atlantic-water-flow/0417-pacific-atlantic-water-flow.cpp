@@ -2,12 +2,14 @@ class Solution {
 private:
     int dx[4] = {0, 1, 0, -1};
     int dy[4] = {1, 0, -1, 0};
+    vector<vector<int>> ans;
 
     bool isValid(int x, int y, vector<vector<int>>& grid){
             return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
     }
     void dfs(int x, int y, vector<vector<int>>& heights, vector<vector<string>>& dp, string val, vector<vector<bool>>& visited){
         dp[x][y] += val;
+        if(dp[x][y] == "PA") ans.push_back({x, y});
         
         for(int i=0;i<4;i++){
             int new_x = x + dx[i];
@@ -26,6 +28,7 @@ public:
         int m = heights.size(), n = heights[0].size();
         vector<vector<string>> dp(m, vector<string>(n, ""));
         vector<vector<bool>>visited(m, vector<bool>(n, false));
+        
         
         // pacific
         for(int i=0;i<m;i++){
@@ -65,14 +68,14 @@ public:
             }
         }
         //cout<<"here";
-        vector<vector<int>> ans;
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                if(dp[i][j] == "PA"){
-                    ans.push_back({i, j});
-                }
-            }
-        }
+        
+        // for(int i=0;i<m;i++){
+        //     for(int j=0;j<n;j++){
+        //         if(dp[i][j] == "PA"){
+        //             ans.push_back({i, j});
+        //         }
+        //     }
+        // }
         
         return ans;
         
