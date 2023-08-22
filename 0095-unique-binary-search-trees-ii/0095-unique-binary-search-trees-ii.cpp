@@ -11,33 +11,36 @@
  */
 class Solution {
 private:
-    vector<TreeNode*> generateTree(int l, int r){
+    vector<TreeNode*> backtrack(int start, int end, map<pair<int, int>, vector<TreeNode*>>& dp){
         vector<TreeNode*> res;
-        if(l>r) {
+        if(start>end){
             res.push_back(NULL);
             return res;
         }
-        for(int i=l;i<=r;i++){
-            vector<TreeNode*> left = generateTree(l, i-1);
-            vector<TreeNode*> right  = generateTree(i+1, r);
+        
+        if(dp.find({start, end})!=dp.end()) return dp[{start, end}];
+        
+        
+        for(int i=start;i<=end;i++){
+            auto left = backtrack(start, i-1, dp);
+            auto right = backtrack(i+1, end,  dp);
             
-            for(auto x:left){
-                for(auto y:right){
-                    TreeNode* root = new TreeNode(i);
-                    root->left = x;
-                    root->right = y;
+            for(auto l:left){
+                for(auto r:right) {
+                    TreeNode* root = new TreeNode(i, l, r);
                     res.push_back(root);
                 }
             }
-            
+        
         }
         
-        return res;
+        return dp[{start, end}] = res;
     }
 public:
     vector<TreeNode*> generateTrees(int n) {
-        vector<TreeNode*> res;
-        return generateTree(1, n);
+        map<pair<int, int>, vector<TreeNode*>> dp;
+        
+        return backtrack(1, n, dp);
         
     }
 };
