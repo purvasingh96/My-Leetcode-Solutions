@@ -1,37 +1,40 @@
+// class MyCompare{
+//  public:
+//     bool operator()(const pair<char, int>& a, const pair<char, int>& b){
+//         if(a.second == b.second) return 
+//     }
+// };
 class Solution {
 public:
     string reorganizeString(string s) {
+        // reorganise high frequency chars first
         priority_queue<pair<int, char>> pq;
-        queue<pair<pair<int, int>, char>> q;
         unordered_map<char, int> m;
-        for(auto c:s) m[c]+=1;
+        for(auto x:s){
+            m[x]+=1;
+        }
+        
         for(auto x:m){
             pq.push({x.second, x.first});
         }
         
-        int len = s.length();
         string res="";
-        int n = 1;
-        int i=0;
-        while(true){
-            if(!q.empty() && q.front().first.second == i){
-                pq.push({q.front().first.first, q.front().second});
-                q.pop();
-            }
-            bool found=false;
-            if(!pq.empty()){
+        while(!pq.empty()){
+            if(res.length()==0 || res.back()!=pq.top().second){
+                res.push_back(pq.top().second);
                 auto f = pq.top();pq.pop();
-                if(f.first-1>0) q.push({{f.first-1, i+n+1}, f.second});
-                res.push_back(f.second);
-                found=true;
-            }
-            
-            //cout<<"res: "<<res<<"\n";
-            if(!found) return "";
-            if(res.length() == len) return res;
-            i+=1;
+                f.first -=1;
+                if(f.first!=0) pq.push(f);
+            }  else {
+                auto f = pq.top();pq.pop();
+                if(pq.empty()) return "";
+                res.push_back(pq.top().second);
+                auto t = pq.top();pq.pop();
+                t.first -=1;
+                if(t.first!=0) pq.push(t);
+                pq.push(f);
+            }          
         }
         return res;
-        
     }
 };
