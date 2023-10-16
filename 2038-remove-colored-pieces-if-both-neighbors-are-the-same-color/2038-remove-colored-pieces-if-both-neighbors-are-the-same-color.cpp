@@ -1,25 +1,21 @@
 class Solution {
 public:
     bool winnerOfGame(string colors) {
-        if(colors.length() < 3) return false;
+        int movesB=0, movesA=0;
+        int cb=0, ca=0;
+        int n = colors.size();
+        int start=0;
         
-        int ca=0, cb=0;
-        int l=3;
-        string s = colors.substr(0, 3);
-        if(s == "AAA") ca+=1;
-        else if(s=="BBB") cb+=1;
-        
-        while(l<colors.length()){
-            s.push_back(colors[l]);
-            s.erase(s.begin());
-            
-            if(s == "AAA") ca+=1;
-            else if(s == "BBB") cb+=1;
-            l+=1;
+        while(start<n){
+            int end=start+1;
+            while(end<n && colors[end]==colors[end-1]){
+                end+=1;
+            }
+            int moves = max(end-start-2, 0);
+            colors[start]=='A' ? (movesA += moves) : (movesB += moves);
+            start=end;
         }
-        //cout<<ca<<" "<<cb;
         
-        return ca > cb;
-        
+        return movesA > movesB;
     }
 };
