@@ -1,47 +1,48 @@
+class MyComp{
+public:
+    bool operator()(const vector<int>& a, const vector<int>& b){
+        // course, time, indegree
+        return a[1] > b[1];
+    }
+};
+
 class Solution {
 public:
     int minimumTime(int n, vector<vector<int>>& relations, vector<int>& time) {
+        //course, time, indegree
+         int total=0;
         vector<int> indegree(n+1, 0);
-        map<int, vector<int>> adj;
-        queue<pair<int, int>> q;
-        int ans=0;
-        vector<int> ttc(n+1);
+        vector<int> maxTime(n+1, 0);
+        unordered_map<int, vector<int>> adj;
         
-        for(auto r:relations){
-            adj[r[0]].push_back(r[1]);
-            indegree[r[1]]+=1;
+        for(int i=0;i<relations.size();i++){
+            indegree[relations[i][1]]+=1;
+            adj[relations[i][0]].push_back(relations[i][1]);
         }
         
-        for(int i=1;i<indegree.size();i++){
-            if(indegree[i] == 0){
-                q.push({i,0});
+        queue<int> q;
+        for(int i=1;i<=n;i++){
+            if(indegree[i]==0){
+                maxTime[i] = max(maxTime[i], time[i-1]);
+                q.push(i);
             }
         }
         
         while(!q.empty()){
-            
-            int s = q.size();
-            
-            auto f = q.front();
+            auto node = q.front();
             q.pop();
             
-            int totalTime = f.second + time[f.first-1];
-            ttc[f.first] = totalTime;
-            
-            for(auto c:adj[f.first]){
-                
-                ttc[c] = max(ttc[c], totalTime);
-                indegree[c]-=1;
-                
-                if(indegree[c]==0){
-                    q.push({c, ttc[c]});
+            for(auto x:adj[node]){
+                indegree[x]-=1;
+                maxTime[x] = max(maxTime[x], maxTime[node]+time[x-1]);
+                if(indegree[x]==0){
+                    q.push(x);
                 }
-                
             }
-            
         }
         
-        return *max_element(ttc.begin(), ttc.end());
         
+        
+        return *max_element(maxTime.begin(), maxTime.end());
     }
 };
