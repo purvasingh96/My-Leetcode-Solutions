@@ -10,23 +10,35 @@ public:
 */
 
 class Solution {
+
 public:
     Node* lowestCommonAncestor(Node* p, Node * q) {
-        // parent is ancesor of node
-        vector<Node*> ancestor_p;
-        
-        Node* parent_p = p;
-        
-        while(parent_p!=NULL) {
-            ancestor_p.push_back(parent_p);
-            parent_p = parent_p->parent;
+        map<Node*, bool> visited;
+          
+            
+        while(p && q){
+            if(visited[p] == true) return p;
+            if(visited[q] == true) return q; 
+            if(p == q) return p;
+            visited[p] = true;
+            visited[q] = true; 
+            p = p->parent;
+            q = q->parent;
         }
         
-        Node* parent_q = q;
-        
-        while(find(ancestor_p.begin(), ancestor_p.end(), parent_q) == ancestor_p.end()) {
-            parent_q = parent_q->parent;
+        while(p){
+            if(visited[p] == true) return p;
+            visited[p] = true;
+            p = p->parent;
         }
-        return parent_q;
+        
+        while(q){
+            if(visited[q] == true) return q;
+            visited[q] = true;
+            q = q->parent;
+        }
+        
+        return NULL;
+        
     }
 };
