@@ -1,33 +1,46 @@
 class Solution {
 public:
-    string balanceString(string s, char open, char close) {
-        int balance=0;
-        string ans="";
+    string minRemoveToMakeValid(string s) {
+        stack<pair<char, int>> st;
+        string res = "";
+        vector<int> idx;
         
-        for(int i=0;i<s.length();i++) {
-            if(s[i] == open) {
-                balance+=1;
-            } 
+        for(int i=0;i<s.length();i++){
+                char c = s[i];
+                if(c == '('){
+                    st.push({'(', i});
+                } else if(c== ')') {
+                    if(st.empty()){
+                        idx.push_back(i);
+                    } else {
+                        st.pop();
+                    } 
+                }
             
-            if(s[i] == close) {
-                if(balance == 0) continue;
-                balance -= 1;
-            }
-            
-            ans += s[i];
         }
         
-        return ans;
-    }
-    
-    
-    string minRemoveToMakeValid(string s) {
+        while(!st.empty()){
+            auto c = st.top();
+            st.pop();
+            idx.push_back(c.second);
+        }
         
-        string res = balanceString(s, '(', ')');
-        reverse(res.begin(), res.end());
-        res = balanceString(res, ')', '(');
-        reverse(res.begin(), res.end());
+        sort(idx.begin(), idx.end());
+        int j=0;
+        
+        for(int i=0;i<s.length();i++){
+            if(j>=idx.size()){
+                res += s[i];
+            } else {
+               if(i!=idx[j]){
+                 res += s[i];
+                } else {
+                    j+=1;
+                } 
+            }
+            
+        }
+        
         return res;
-        
     }
 };
