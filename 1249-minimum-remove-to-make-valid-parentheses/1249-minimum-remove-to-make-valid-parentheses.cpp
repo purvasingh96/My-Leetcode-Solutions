@@ -3,7 +3,7 @@ public:
     string minRemoveToMakeValid(string s) {
         stack<pair<char, int>> st;
         string res = "";
-        vector<int> idx;
+        set<int> idx;
         
         for(int i=0;i<s.length();i++){
                 char c = s[i];
@@ -11,7 +11,7 @@ public:
                     st.push({'(', i});
                 } else if(c== ')') {
                     if(st.empty()){
-                        idx.push_back(i);
+                        idx.insert(i);
                     } else {
                         st.pop();
                     } 
@@ -22,20 +22,20 @@ public:
         while(!st.empty()){
             auto c = st.top();
             st.pop();
-            idx.push_back(c.second);
+            idx.insert(c.second);
         }
         
-        sort(idx.begin(), idx.end());
-        int j=0;
+       
+        auto it = idx.begin();
         
         for(int i=0;i<s.length();i++){
-            if(j>=idx.size()){
+            if(it==idx.end()){
                 res += s[i];
             } else {
-               if(i!=idx[j]){
+               if(i!=*it){
                  res += s[i];
                 } else {
-                    j+=1;
+                    it++;
                 } 
             }
             
