@@ -1,54 +1,34 @@
 class Solution {
-private:
-    bool isdigit(char c){
-        return c>='0' && c<='9';
-    }
 public:
     int calculate(string s) {
-        stack<int> st;
-        char sign = '+';
+        int res=0, lastNumber=0;
+        int curr=0;
+        char sign='+';
         
-        // O(N);
         for(int i=0;i<s.length();i++){
-            if(s[i] == ' '){
-                continue;
-            } else {
-                if(isdigit(s[i])){
-                    int d=0;
-                    while(i<s.length() && isdigit(s[i])){
-                        d = d*10 + (s[i]-'0');
-                        i+=1;
-                    }
-                    if(sign == '+'){
-                        st.push(d);
-                    } else if(sign == '-'){
-                        st.push(-1*d);
-                    } else if(sign == '/'){
-                        int top = st.top();
-                        st.pop();
-                        st.push(top/d);
-                    } else if(sign == '*'){
-                        int top = st.top();
-                        st.pop();
-                        st.push(top*d);
-                    }
-                    i-=1;
-                } else {
-                    sign = s[i];
+            if(isdigit(s[i])){
+                curr = curr*10 + (s[i]-'0');
+            }
+            
+            
+            if(!isdigit(s[i]) && !iswspace(s[i]) || i == s.length() - 1){
+                if(sign == '+' || sign == '-'){
+                    res += lastNumber;
+                    lastNumber = (sign == '+') ? curr : (-1 * curr);
                 }
+                else if(sign == '*'){
+                    lastNumber = lastNumber*curr;
+                }
+                else if(sign == '/'){
+                    lastNumber = lastNumber/curr;
+                }
+                
+                sign = s[i];
+                curr=0;
             }
         }
         
-        // O(L)
-        int ans=0;
-        while(!st.empty()){
-            int top = st.top();
-            st.pop();
-            ans += top;
-        }
-        
-        // O(N+L), O(L)
-        
-        return ans;
+        res += lastNumber;
+        return res;
     }
 };
