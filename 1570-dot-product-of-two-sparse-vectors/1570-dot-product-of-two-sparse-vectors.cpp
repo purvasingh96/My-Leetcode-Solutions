@@ -1,34 +1,24 @@
 class SparseVector {
 public:
-    map<int, int> m;
-    int n;
+    map<int, int> cache;
     SparseVector(vector<int> &nums) {
-        for(int i=0;i<nums.size();i++) {
-            if(nums[i]!=0) {
-                m[i] = nums[i];
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]!=0){
+                 cache[i] = nums[i];
             }
         }
-        n=nums.size();
     }
     
-    int returnLen() {
-        return n;
-    }
-
     // Return the dotProduct of two sparse vectors
     int dotProduct(SparseVector& vec) {
-        int res=0;
+        int prod =0;
+       for(auto x:vec.cache){
+           if(cache.find(x.first)!=cache.end()){
+               prod += (cache[x.first] * x.second);
+           }
+       }
         
-        for(auto x:m) {
-            
-            if(vec.m.find(x.first)!=vec.m.end()) {
-                res += (x.second*vec.m[x.first]);
-            }
-            
-        }
-        
-        return res;
-     
+        return prod;
     }
 };
 
