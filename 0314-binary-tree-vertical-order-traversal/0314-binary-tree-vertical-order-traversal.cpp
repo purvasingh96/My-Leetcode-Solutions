@@ -11,31 +11,32 @@
  */
 class Solution {
 private:
-    vector<int> sortNodes(vector<pair<int, int>>& nodes){
-        vector<int> res;
-        sort(nodes.begin(), nodes.end(), [](const pair<int, int>& a, const pair<int, int>& b){
-            return a.second < b.second;
-        });
-        for(auto node:nodes){
-            res.push_back(node.first);
-        }
-        return res;
-    }
-    
-    void inorder(TreeNode* root, int row, int col, map<int, vector<pair<int, int>>>& res){
+    void dfs(TreeNode* root, int row, int col, map<int, vector<pair<int, int>>>& m){
         if(!root) return;
-        inorder(root->left, row+1, col-1, res);
-        res[col].push_back({root->val, row});
-        inorder(root->right, row+1, col+1, res);
+        dfs(root->left, row+1, col-1, m);
+        m[col].push_back({row, root->val});
+        dfs(root->right, row+1, col+1, m);
     }
 public:
     vector<vector<int>> verticalOrder(TreeNode* root) {
-        map<int, vector<pair<int, int>>> res;
-        inorder(root, 0, 0, res);
-        vector<vector<int>> ans;
-        for(auto val:res){
-           ans.push_back(sortNodes(val.second));
+        vector<vector<int>> res;
+        map<int, vector<pair<int, int>>> m;
+        
+        dfs(root, 0, 0, m);
+        
+        for(auto x:m){
+            vector<pair<int, int>> temp = x.second;
+            
+            sort(temp.begin(), temp.end(), [](const pair<int, int>& a, const pair<int, int>& b){
+                return a.first < b.first;
+            });
+            vector<int> temp2;
+            for(auto x:temp){
+                temp2.push_back(x.second);
+            }
+            res.push_back(temp2);
         }
-        return ans;
+        
+        return res;
     }
 };
