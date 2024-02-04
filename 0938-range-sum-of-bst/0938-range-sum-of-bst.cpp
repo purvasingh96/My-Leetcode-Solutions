@@ -13,11 +13,18 @@ class Solution {
 private:
     void dfs(TreeNode* root, int low, int high, int& total){
         if(!root) return;
-        dfs(root->left, low, high, total);
+        if(root->val > low){
+            dfs(root->left, low, high, total);    
+        }
+        
         if(root->val >= low && root->val <=high){
             total += root->val;
         }
-        dfs(root->right, low, high, total);
+        
+        if(root->val < high){
+            dfs(root->right, low, high, total);    
+        }
+        
     }
 public:
     int rangeSumBST(TreeNode* root, int low, int high) {
