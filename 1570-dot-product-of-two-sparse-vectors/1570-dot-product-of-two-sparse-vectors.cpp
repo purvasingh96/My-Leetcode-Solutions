@@ -1,7 +1,8 @@
 class SparseVector {
 public:
-    map<int, int> m;
+    vector<int> m;
     SparseVector(vector<int> &nums) {
+        m.resize(nums.size(), -1);
         for(int i=0;i<nums.size();i++){
             if(nums[i]!=0){
                 m[i] = nums[i];
@@ -12,9 +13,9 @@ public:
     // Return the dotProduct of two sparse vectors
     int dotProduct(SparseVector& vec) {
         int prod=0;
-        for(auto x:vec.m){
-            if(m.find(x.first)!=m.end()){
-                prod += (m[x.first] * x.second);
+        for(int i=0;i<vec.m.size();i++){
+            if(vec.m[i]!=-1 && m[i]!=-1){
+                prod += (m[i] * vec.m[i]);
             }
         }
         
