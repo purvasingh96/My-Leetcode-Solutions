@@ -10,18 +10,18 @@ public:
 */
 
 class Solution {
-
 public:
     Node* lowestCommonAncestor(Node* p, Node * q) {
-        map<Node*, bool> visited;
-          
-            
+        unordered_map<Node*, bool> visited;
+        
         while(p && q){
-            if(visited[p] == true) return p;
-            if(visited[q] == true) return q; 
             if(p == q) return p;
+            if(visited[p] == true) return p;
+            if(visited[q] == true) return q;
+            
             visited[p] = true;
-            visited[q] = true; 
+            visited[q] = true;
+            
             p = p->parent;
             q = q->parent;
         }
@@ -36,9 +36,8 @@ public:
             if(visited[q] == true) return q;
             visited[q] = true;
             q = q->parent;
-        }
+        }        
         
         return NULL;
-        
     }
 };
