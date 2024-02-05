@@ -24,12 +24,8 @@ public:
             return temp;
         }
         
-        //for(auto x:t) cout<<x;
-        //cout<<"\n";
         string res="";
-        //cout<<"balance:: "<<balance;
         for(int i=t.size()-1;i>=0;i--){
-            //cout<<"t[i]:: "<<t[i]<<"\n";
             if(t[i] == '('){
                 balance -=1;
                 if(balance >= 0){
@@ -41,7 +37,7 @@ public:
                 res += t[i];
             }
         }
-        cout<<"res:: "<<res<<"\n";
+        
         reverse(res.begin(), res.end());
         return res;
     }
