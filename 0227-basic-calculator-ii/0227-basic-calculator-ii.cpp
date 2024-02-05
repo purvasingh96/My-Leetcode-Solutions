@@ -1,34 +1,30 @@
 class Solution {
 public:
     int calculate(string s) {
-        int res=0, lastNumber=0;
-        int curr=0;
+        int curr=0, last=0, res=0;
         char sign='+';
         
         for(int i=0;i<s.length();i++){
-            if(isdigit(s[i])){
-                curr = curr*10 + (s[i]-'0');
+            char c = s[i];
+            if(isdigit(c)){
+                curr = curr*10 + (c-'0');
             }
-            
-            
-            if(!isdigit(s[i]) && !iswspace(s[i]) || i == s.length() - 1){
+            if(!isdigit(c) && c!=' ' || i==s.length()-1) {
                 if(sign == '+' || sign == '-'){
-                    res += lastNumber;
-                    lastNumber = (sign == '+') ? curr : (-1 * curr);
-                }
-                else if(sign == '*'){
-                    lastNumber = lastNumber*curr;
+                    res += last;
+                    last = sign == '+' ? curr : -curr;
                 }
                 else if(sign == '/'){
-                    lastNumber = lastNumber/curr;
+                    last = last / curr;
+                } else if(sign == '*'){
+                    last = last * curr;
                 }
-                
-                sign = s[i];
+                sign=c;
                 curr=0;
             }
         }
         
-        res += lastNumber;
+        res += last;
         return res;
     }
 };
