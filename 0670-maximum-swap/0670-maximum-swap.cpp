@@ -1,28 +1,22 @@
 class Solution {
 public:
     int maximumSwap(int num) {
-        string og = to_string(num);
-        unordered_map<int, int> m;
+        vector<int> lastPos(10);
         string s = to_string(num);
-        
-        sort(s.begin(), s.end(), [](const char& a, const char& b){
-            return a-'a'>b - 'a';
-        });
-        
-        
-       
-        for(int i=0;i<og.length();i++){
-            m[og[i]] = i;
+        for(int i=0;i<s.length();i++){
+            lastPos[s[i]-'0']=i;
         }
         
         for(int i=0;i<s.length();i++){
-            if(og[i]!=s[i]){
-                int j = m[s[i]];
-                swap(og[i], og[j]);
-                return stoi(og);
+            for(int j='9';j>s[i];j--){
+                if(lastPos[j-'0']>i){
+                    swap(s[i], s[lastPos[j-'0']]);
+                    return stoi(s);
+                }
             }
         }
         
         return num;
+        
     }
 };
