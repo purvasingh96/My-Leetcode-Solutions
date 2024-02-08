@@ -10,25 +10,21 @@
  * };
  */
 class Solution {
-private:
-    void dfs(TreeNode* root, vector<int>& res){
-        if(!root) return;
-        dfs(root->left, res);
-        res.push_back(root->val);
-        dfs(root->right, res);
-    }
+
 public:
     int closestValue(TreeNode* root, double target) {
-        vector<int> res;
-        dfs(root, res);
-        
-        sort(res.begin(), res.end(), [&](const int& a, const int& b){
-            if(abs(target - a) != abs(target -b)){
-                return abs(target - a) < abs(target-b);
+        int closestNode=root->val;
+        int val;
+        while(root){
+            val = root->val;
+            if(abs(target - val) < abs(target - closestNode) || 
+              (abs(target - val) == abs(target - closestNode) && val < closestNode)){
+                closestNode = val;
             }
-            return a<b;
-        });
+            
+            root = target < val ? root->left : root->right;
+        }
         
-        return res[0];
+        return closestNode;
     }
 };
