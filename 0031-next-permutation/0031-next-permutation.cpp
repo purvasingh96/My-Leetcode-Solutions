@@ -1,34 +1,35 @@
 class Solution {
 public:
     void nextPermutation(vector<int>& nums) {
-        vector<int> temp;
-        vector<int> index;
+        vector<int> res;
+        bool peak=false;
+        int start=-1, end=-1;
         
-        bool found=false;
         for(int i=nums.size()-1;i>=0;i--){
-            if(temp.empty() || temp.back() <= nums[i]){
-                temp.push_back(nums[i]);
-                index.push_back(i);
-            } else{
-                auto it = upper_bound(temp.begin(), temp.end(), nums[i]);
-                if(it == temp.end()) continue;
-                else {
-                    int idx = it - temp.begin();
-                    
-                    int t = temp[idx];
-                    nums[index[idx]] = nums[i];
-                    nums[i] = t;
-                    
-                    sort(nums.begin()+i+1, nums.end());
-                    found=true;
-                    break;
+            if(res.size() == 0 || nums[res.back()] <= nums[i]) {
+                res.push_back(i);
+            } else {
+                peak=true;
+                int lastIndex=-1;
+                
+                while(res.size()!=0 && nums[res.back()] > nums[i]){
+                    lastIndex = res.back();
+                    res.pop_back();
                 }
+                
+                    start = i;
+                    end = lastIndex;
+                    break;
+                
             }
         }
         
-        // decreasing order;
-        if(!found){
+        if(!peak){
+            // entire series in decreasing order
             sort(nums.begin(), nums.end());
+        } else {
+            swap(nums[start], nums[end]);
+            sort(nums.begin()+start+1, nums.end());
         }
     }
 };
