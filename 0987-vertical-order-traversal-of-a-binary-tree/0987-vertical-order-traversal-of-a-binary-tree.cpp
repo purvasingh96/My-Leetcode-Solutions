@@ -22,13 +22,7 @@ public:
     vector<vector<int>> verticalTraversal(TreeNode* root) {
         map<int, vector<pair<int, int>>> m;
         dfs(root, 0, 0, m);
-        // for(auto x:m){
-        //     cout<<"col: "<<x.first<<" -> ";
-        //     for(auto y:x.second){
-        //         cout<<"(val: "<<y.first<<", row: "<<y.second<<"), ";
-        //     }
-        //     cout<<"\n";
-        // }
+       
         vector<vector<int>> res;
         for(auto x:m){
             sort(x.second.begin(), x.second.end(), [](const pair<int, int>& a, const pair<int, int>& b){
