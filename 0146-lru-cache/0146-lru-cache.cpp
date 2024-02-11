@@ -1,80 +1,69 @@
 class Node{
- public:
-    Node* next;
-    Node* prev;
+public:
     int key;
     int val;
-    Node(int key, int val){
-        this->key=key;
-        this->val=val;
-        this->next=NULL;
-        this->prev=NULL;
+    Node* next;
+    Node* prev;
+    Node(int k, int v){
+        this->key = k;
+        this->val = v;
+        this->next = NULL;
+        this->prev = NULL;
     }
 };
 
 class LRUCache {
-private:
-    Node* h;
-    Node* t;
-    int c;
-    int capacity;
-    unordered_map<int, Node*> m;
 public:
+    int cap;
+    Node* head;
+    Node* last;
+    unordered_map<int, Node*> m;
+    
     LRUCache(int capacity) {
-        c=0;
-        this->capacity = capacity;
-        h = new Node(-1, -1);
-        t = new Node(-1, -1);
-        h->next=t;
-        t->prev=h;
+        this->cap = capacity;
+        head = new Node(-1, -1);
+        last = new Node(-1, -1);
+        head->next = last;
+        last->prev = head;
     }
     
-    void removeNode(Node* node){
-        Node* prev=node->prev;
-        prev->next=node->next;
-        node->next->prev=prev;
-        m.erase(node->key);
-        c-=1;
+    void removeNode(Node* target){
+        Node* prev = target->prev;
+        Node* next = target->next;
+        prev->next = next;
+        next->prev = prev;
+        m.erase(m.find(target->key));
     }
     
-    void insertNodeInFront(Node* node){
-        Node* prev = t->prev;
-        prev->next=node;
-        node->prev=prev;
-        node->next=t;
-        t->prev=node;
-        m[node->key] = node;
-        c+=1;
+    void insertNode(Node* target){
+        if(m.size() == cap){
+            removeNode(head->next);
+        }
+        Node* prev = last->prev;
+        prev->next=target;
+        target->prev = prev;
+        target->next =last;
+        last->prev = target;
+        m[target->key] = target;
     }
     
     int get(int key) {
-        //cout<<"getting: "<<key<<"\n";
-        if(m.find(key)==m.end()) return -1;
-        Node* node = m[key];
-        removeNode(node);
-        insertNodeInFront(node);
-        return node->val;
+        if(m.find(key)==m.end()){
+            return -1;
+        }
+        Node* target = m[key];
+        removeNode(m[key]);
+        insertNode(target);
+        return m[target->key]->val;
     }
     
     void put(int key, int value) {
+        Node* node= new Node(key, value);
+        
         if(m.find(key)!=m.end()){
-            Node* node = m[key];
-            removeNode(node);
-            node->val = value;
-            insertNodeInFront(node);
-        } else {
-            //cout<<"cap before: "<<c<<" "<<capacity<<"\n";
-            if(c==capacity) removeNode(h->next);
-            //cout<<"cap after: "<<c<<"\n";
-            Node* node = new Node(key, value);
-            //cout<<"inserting: "<<node->key<<"\n";
-            
-            insertNodeInFront(node);
-            //cout<<"h->next: "<<h->next->key<<"\n";
-            //cout<<"t->prev: "<<t->prev->key<<"\n";
-            
-            m[key] = node;
+            removeNode(m[key]);
         }
+        insertNode(node);
     }
 };
 
