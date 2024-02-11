@@ -1,7 +1,26 @@
 class Solution {
 private:
- 
-    int invalids(string s){
+    int invalids(string& s){
+        stack<char> st;
+        for(auto c:s){
+            if(c == '(' || c ==')'){
+               if(st.empty() || c == '('){
+                st.push(c);
+                } else if(c == ')'){
+                    if(!st.empty() && st.top() == '('){
+                        st.pop();
+                    } else {
+                        st.push(c);
+                    }
+                } 
+            }
+            
+        }
+        
+        return st.size();
+    }
+    
+    int countRemoval(string s){
         stack<char> st;
         for(int i=0;i<s.size();i++){
             if(s[i]=='('){
