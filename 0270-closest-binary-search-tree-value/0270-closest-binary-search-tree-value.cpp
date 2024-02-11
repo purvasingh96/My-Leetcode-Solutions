@@ -10,21 +10,30 @@
  * };
  */
 class Solution {
-
-public:
-    int closestValue(TreeNode* root, double target) {
-        int closestNode=root->val;
-        int val;
-        while(root){
-            val = root->val;
-            if(abs(target - val) < abs(target - closestNode) || 
-              (abs(target - val) == abs(target - closestNode) && val < closestNode)){
-                closestNode = val;
+private:
+    void dfs(TreeNode* root, double target, double& minSoFar, int& node){
+        if(!root) return;
+        double diff = abs(root->val - target);
+        if(diff<minSoFar){
+            minSoFar = diff;
+            node = root->val;
+        } else if(diff == minSoFar){
+            if(root->val < node){
+                node = root->val;
             }
-            
-            root = target < val ? root->left : root->right;
         }
         
-        return closestNode;
+        if(target > root->val){
+            dfs(root->right, target, minSoFar, node);
+        } else if(target <= root->val) {
+            dfs(root->left, target, minSoFar, node);
+        }
+    }
+public:
+    int closestValue(TreeNode* root, double target) {
+        double minSoFar=INT_MAX;
+        int node = root->val;
+        dfs(root, target, minSoFar, node);
+        return node;
     }
 };
