@@ -20,29 +20,6 @@ private:
         return st.size();
     }
     
-    int countRemoval(string s){
-        stack<char> st;
-        for(int i=0;i<s.size();i++){
-            if(s[i]=='('){
-                st.push('(');
-            }
-            else if(s[i]==')'){
-                if(st.size()==0){
-                    st.push(')');
-                }
-                else if(st.top()==')'){
-                    st.push(')');
-                }
-                else if(st.top()=='('){
-                    st.pop();
-                }
-            }
-        }
-        
-        int invalid=st.size(); //minimum removals
-        
-        return invalid;
-    }
     
     void dfs(string s, int invalid, unordered_set<string>& st, unordered_map<string, bool>& visited){
         
