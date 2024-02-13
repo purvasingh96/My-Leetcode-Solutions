@@ -14,19 +14,19 @@ private:
         return i;
     }
     
-     void quickSelect(vector<pair<int, int>>& data, int k, int start, int end){
+    void quickSort(vector<pair<int, int>>& data, int k, int start, int end){
         if(start<=end){
-            int pivot = partition(data, start, end);
-            
-            if(k == pivot){
+           int pivot = partition(data,start, end);
+        
+            if(pivot == k){
                 return;
-            } else if(k < pivot){
-                quickSelect(data, k, start, pivot-1);
-            } else if(k>pivot){
-                quickSelect(data, k, pivot+1, end);
-            }
-            
+            } else if(k<pivot){
+                quickSort(data, k, start, pivot-1);
+            } else if(k > pivot){
+                quickSort(data, k, pivot+1, end);
+            } 
         }
+        
     }
     
      int distance(vector<int>& point){
@@ -39,7 +39,7 @@ public:
         for(int i=0;i<points.size();i++){
             data.push_back({i, distance(points[i])});
         }
-        quickSelect(data, k, 0, points.size()-1);
+        quickSort(data, k, 0, points.size()-1);
         
         vector<vector<int>> res;
         for(int i=0;i<k;i++){
