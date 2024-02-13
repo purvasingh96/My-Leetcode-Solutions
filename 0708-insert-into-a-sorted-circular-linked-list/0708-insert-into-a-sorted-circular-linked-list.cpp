@@ -22,44 +22,49 @@ public:
 class Solution {
 public:
     Node* insert(Node* head, int x) {
-        Node* newNode = new Node(x);
         bool insert=false;
-        
         if(!head){
+            Node* newNode = new Node(x);
             newNode->next = newNode;
             return newNode;
         }
+        Node* prev=head;
+        Node* next = head->next;
         
-        Node* prev = head;
-        Node* curr = head->next;
-        
-        while(prev->next!=head){
-            if(prev->val < curr->val){
-                if(prev->val <= x && x<= curr->val){
-                    // insert in between
-                    cout<<"insert!";
+        while(next!=head){
+            if(prev->val < next->val){
+                if(prev->val <= x && x<=next->val){
                     insert=true;
                 }
-            } else if(prev->val > curr->val){
-                if(x<=curr->val || x>= prev->val) {
-                    // insert in front/back
-                   insert = true;
+            } else if(prev->val == next->val){
+                if(x == prev->val){
+                    insert=true;
                 }
-            } 
-            if(insert){
-                Node* temp = prev->next;
-                prev->next = newNode;
-                newNode->next = temp;
-                return head;
+            } else if(prev->val > next->val){
+                if(x > prev->val || x < next->val){
+                    insert=true;
+                }
             }
-            prev=prev->next;
-            curr=curr->next;
             
+            if(insert){
+                Node* nextNode = prev->next;
+                Node* newNode = new Node(x);
+                prev->next = newNode;
+                newNode->next = nextNode;
+                break;
+            } else {
+                prev = prev->next;
+                next = next->next;
+            }
         }
         
-        Node* temp = prev->next;
-        prev->next = newNode;
-        newNode->next = temp;
+        if(!insert){
+            Node* nextNode = prev->next;
+            Node* newNode = new Node(x);
+            prev->next = newNode;
+            newNode->next = nextNode;
+        }
+        
         return head;
     }
 };
