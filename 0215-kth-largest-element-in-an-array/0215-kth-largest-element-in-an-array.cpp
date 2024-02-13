@@ -1,35 +1,34 @@
 class Solution {
 private:
-    int quickSelect(vector<int>& nums, int k){
-        int pivot = nums[rand()%nums.size()];
-        vector<int> left;
-        vector<int> right;
-        vector<int> mid;
-        
-        for(int num:nums){
-            if(num < pivot){
-                right.push_back(num);
-            } else if(num > pivot){
-                left.push_back(num);
-            } else {
-                mid.push_back(num);
+    int partition(vector<int>& nums, int start, int end){
+        int pivot = nums[end];
+        int i = start-1;
+        for(int j=start;j<end;j++){
+            if(nums[j] > pivot){
+                swap(nums[++i], nums[j]);
             }
         }
-        
-        if(left.size() >= k){
-            // ans is in left subarray
-            return quickSelect(left, k);
-        } 
-        
-        if(left.size() + mid.size() < k){
-            return quickSelect(right, k - left.size() - mid.size());
+        swap(nums[++i], nums[end]);
+        return i;
+    }
+    
+    void quickSort(vector<int>& nums, int start, int end, int k){
+       
+        if(start<=end){
+            int pivot = partition(nums, start, end);
+            
+            if(k<=pivot){
+                quickSort(nums, start, pivot-1, k);
+            } else if(k > pivot){
+                quickSort(nums, pivot+1, end, k);
+            }
         }
-        
-        return pivot;
-        
     }
 public:
     int findKthLargest(vector<int>& nums, int k) {
-        return quickSelect(nums, k);
+        // quick select
+        quickSort(nums, 0, nums.size()-1, k);
+        
+        return nums[k-1];
     }
 };
