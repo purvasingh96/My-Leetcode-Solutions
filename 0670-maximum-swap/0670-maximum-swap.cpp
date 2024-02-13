@@ -8,13 +8,6 @@ public:
            pos[s[i]-'0']=i;
             
         }
-        
-        sort(s.begin(), s.end(), [](const char& a, const char& b){
-            return a-'0' > b-'0';
-        });
-        
-        
-        
         for(int i=0;i<og.length();i++){
             for(int d=9;d>og[i]-'0';d--){
                 if(pos[d] > i){
