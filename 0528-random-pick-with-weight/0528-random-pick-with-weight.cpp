@@ -11,11 +11,9 @@ public:
     
     int pickIndex() {
         int low=0, high=res.back();
-        int pivot = rand() % res.back();
-        int i = upper_bound(res.begin(), res.end(), pivot) - res.begin();
-        if(i == res.size()){
-            return res.size()-1;
-        }
+        int pivot = rand()%(res.back())+1;
+        int i = lower_bound(res.begin(), res.end(), pivot) - res.begin();
+        
         return i;
     }
 };
