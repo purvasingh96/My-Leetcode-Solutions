@@ -13,36 +13,35 @@ class Solution {
 public:
     vector<int> rightSideView(TreeNode* root) {
         queue<TreeNode*> q;
-        vector<int> res;
-        if(!root) return res;
+        vector<int> ans;
+        if(!root) return ans;
+        ans.push_back(root->val);
         q.push(root);
-        res.push_back(root->val);
         
         while(!q.empty()){
             int sz = q.size();
-            int rightmost=true;
-            
+            int rightmost=INT_MIN;
             while(sz--){
-                auto f = q.front(); 
+                auto f = q.front();
                 q.pop();
-                if(f->right){
+                if(f->right) {
                     q.push(f->right);
-                    if(rightmost){
-                        res.push_back(f->right->val);
-                        rightmost = false;
-                    } 
+                    if(rightmost == INT_MIN){
+                        rightmost = f->right->val;    
+                    }
                 }
                 if(f->left){
                     q.push(f->left);
-                    if(rightmost){
-                        res.push_back(f->left->val);
-                        rightmost = false;
+                    if(rightmost==INT_MIN){
+                        rightmost = f->left->val;
                     }
                 }
             }
-            
+            if(rightmost != INT_MIN){
+                ans.push_back(rightmost);    
+            }
         }
         
-        return res;
+        return ans;
     }
 };
