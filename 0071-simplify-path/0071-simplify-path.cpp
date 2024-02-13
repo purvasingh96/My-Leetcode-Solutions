@@ -1,40 +1,30 @@
 class Solution {
 public:
     string simplifyPath(string path) {
-        vector<string> st;
-        string res="/";
-        
-        // split based on "/"
         stringstream ss(path);
-        
         string token;
+        string res  = "/";
+        vector<string> st;
         
         while(getline(ss, token, '/')){
-         if(token!=""){
-             if(token == ".."){
-                 // one directory up
-                 if(st.size()!=0){
-                     st.pop_back();
-                 }
-             } else if(token == ".") {
-                 // curr directory
-                 continue;
-             }
-             else {
-                 st.push_back(token);
-             }
-         }
+            //cout<<"token:: "<<token;
+            if(token == "." || token == ""){
+                continue;
+            } else if(token == ".."){
+                if(st.size()!=0){
+                    st.pop_back();
+                }
+            } else {
+                st.push_back(token);
+            }
         }
         
-        for(auto s:st){
-            res += s; 
-            res+="/";
+        for(auto x:st){
+            res += x + "/";
         }
-        
-        if(res.length()>1){
+        if(res.length()!=1){
             res.pop_back();
         }
-        
         return res;
     }
 };
