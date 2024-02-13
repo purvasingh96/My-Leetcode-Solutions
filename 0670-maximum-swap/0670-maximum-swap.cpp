@@ -16,9 +16,11 @@ public:
         
         
         for(int i=0;i<og.length();i++){
-            if(og[i]!=s[i]){
-                swap(og[i], og[pos[s[i]-'0']]);
-                return stoi(og);
+            for(int d=9;d>og[i]-'0';d--){
+                if(pos[d] > i){
+                    swap(og[i], og[pos[d]]);
+                    return stoi(og);
+                }
             }
         }
         
