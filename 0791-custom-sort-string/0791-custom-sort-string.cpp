@@ -1,29 +1,18 @@
 class Solution {
 public:
     string customSortString(string order, string s) {
-        vector<int> count(26, 0);
-        for(char c:s){
-            count[c-'a']+=1;
+        vector<int> ord(26, INT_MAX);
+        int next=0;
+        
+        for(auto c:order){
+            ord[c-'a'] = next;
+            next+=1;
         }
         
-        string res="";
-        for(char c:order){
-            if(count[c-'a']!=0){
-                string st(count[c-'a'], c);
-                res +=st;
-                count[c-'a']=0;
-            }
-        }
+        sort(s.begin(), s.end(), [&](const char& a, const char& b){
+            return ord[a-'a'] < ord[b-'a'];
+        });
         
-        for(int i=0;i<count.size();i++){
-            if(count[i]!=0){
-                char c = (i+'a');
-                string st(count[i], c);
-                res+=st;
-                count[i]=0;
-            }
-        }
-        
-        return res;
+        return s;
     }
 };
