@@ -1,21 +1,22 @@
 class Solution {
-private:
-    vector<int> ps;
-    vector<int> w;
 public:
+    vector<int> res;
     Solution(vector<int>& w) {
-        ps.push_back(w[0]);
-        for(int i=1;i<w.size();i++){
-            ps.push_back(ps.back() + w[i]);
+        int sum=0;
+        for(int i=0;i<w.size();i++){
+            sum += w[i];
+            res.push_back(sum);
         }
-        this->w=w;
     }
     
     int pickIndex() {
-        int idx = rand()%(ps.back());
-        auto it = upper_bound(ps.begin(), ps.end(), idx) - ps.begin();
-        if(it == ps.size()) return ps.size()-1;
-        return it;
+        int low=0, high=res.back();
+        int pivot = rand() % res.back();
+        int i = upper_bound(res.begin(), res.end(), pivot) - res.begin();
+        if(i == res.size()){
+            return res.size()-1;
+        }
+        return i;
     }
 };
 
