@@ -1,22 +1,27 @@
 class Solution {
 public:
     int maximumSwap(int num) {
-        vector<int> lastPos(10);
         string s = to_string(num);
+        string og = s;
+        vector<int> pos(10, -1);
         for(int i=0;i<s.length();i++){
-            lastPos[s[i]-'0']=i;
+           pos[s[i]-'0']=i;
+            
         }
         
-        for(int i=0;i<s.length();i++){
-            for(int j='9';j>s[i];j--){
-                if(lastPos[j-'0']>i){
-                    swap(s[i], s[lastPos[j-'0']]);
-                    return stoi(s);
-                }
+        sort(s.begin(), s.end(), [](const char& a, const char& b){
+            return a-'0' > b-'0';
+        });
+        
+        
+        
+        for(int i=0;i<og.length();i++){
+            if(og[i]!=s[i]){
+                swap(og[i], og[pos[s[i]-'0']]);
+                return stoi(og);
             }
         }
         
-        return num;
-        
+        return stoi(og);
     }
 };
