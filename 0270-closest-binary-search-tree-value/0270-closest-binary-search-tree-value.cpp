@@ -11,29 +11,29 @@
  */
 class Solution {
 private:
-    void dfs(TreeNode* root, double target, double& minSoFar, int& node){
+    void dfs(TreeNode* root, double target, double& minVal, int& node){
         if(!root) return;
-        double diff = abs(root->val - target);
-        if(diff<minSoFar){
-            minSoFar = diff;
-            node = root->val;
-        } else if(diff == minSoFar){
-            if(root->val < node){
+        double dist = abs(root->val - target);
+            if(dist<minVal){
+                minVal = dist;
                 node = root->val;
+            } else if(dist == minVal){
+                if(root->val < node){
+                    node = root->val;
+                }
             }
-        }
         
-        if(target > root->val){
-            dfs(root->right, target, minSoFar, node);
-        } else if(target <= root->val) {
-            dfs(root->left, target, minSoFar, node);
+        if(root->val >= target){
+            dfs(root->left, target, minVal, node);
+        } else if(target > root->val) {
+            dfs(root->right, target, minVal, node);    
         }
     }
 public:
     int closestValue(TreeNode* root, double target) {
-        double minSoFar=INT_MAX;
         int node = root->val;
-        dfs(root, target, minSoFar, node);
+        double minVal=INT_MAX;
+        dfs(root, target, minVal, node);
         return node;
     }
 };
