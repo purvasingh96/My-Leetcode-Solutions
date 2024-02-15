@@ -13,8 +13,7 @@ private:
         return true;
     }
     
-    bool isInteger(string s, int i=0){
-        // +/- followed by one or more digits
+    bool isInteger(string s){
         if(s.length() == 0){
             return false;
         }
