@@ -2,30 +2,25 @@ class Solution {
 public:
     void nextPermutation(vector<int>& nums) {
         vector<int> res;
-        bool peak=false;
         int start=-1, end=-1;
+        bool found=false;
         
         for(int i=nums.size()-1;i>=0;i--){
-            if(res.size() == 0 || nums[res.back()] <= nums[i]) {
+            if(res.size()==0 || nums[res.back()] <= nums[i]){
                 res.push_back(i);
-            } else {
-                peak=true;
-                int lastIndex=-1;
-                
+            }
+            else {
                 while(res.size()!=0 && nums[res.back()] > nums[i]){
-                    lastIndex = res.back();
+                    end = res.back();
                     res.pop_back();
                 }
-                
-                    start = i;
-                    end = lastIndex;
-                    break;
-                
-            }
+                found = true;
+                start = i;
+                break;
+            }            
         }
         
-        if(!peak){
-            // entire series in decreasing order
+        if(!found){
             sort(nums.begin(), nums.end());
         } else {
             swap(nums[start], nums[end]);
