@@ -8,7 +8,8 @@ public:
     }
     
     int pick(int target) {
-        return m[target][rand()%m[target].size()];
+        int n = m[target].size();
+        return m[target][rand()%n];
     }
 };
 
