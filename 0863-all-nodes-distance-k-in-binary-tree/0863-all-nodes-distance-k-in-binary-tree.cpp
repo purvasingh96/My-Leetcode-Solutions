@@ -9,48 +9,63 @@
  */
 class Solution {
 private:
-    void dfs(TreeNode* root, int depth, unordered_map<TreeNode*, bool>& visited, unordered_map<TreeNode*, TreeNode*>& parent, int k, vector<int>& res){
-        
-        if(depth == k){
-            res.push_back(root->val);
+    void dfs(TreeNode* root, TreeNode* parent, map<TreeNode*, vector<TreeNode*>>& m){
+        if(!root) {
             return;
         }
         
-        if(parent[root]!=NULL && visited[parent[root]] == false){
-            visited[parent[root]]=true;
-            dfs(parent[root], depth+1, visited, parent, k, res);
+        if(parent){
+            m[root].push_back(parent);    
         }
         
-        if(root->left && visited[root->left]==false){
-            visited[root->left]=true;
-            dfs(root->left, depth+1, visited, parent, k, res);
+        if(root->left){
+            m[root].push_back(root->left);
+            dfs(root->left, root, m);
         }
-        
-        if(root->right && visited[root->right]==false){
-            visited[root->right]=true;
-            dfs(root->right, depth+1, visited, parent, k, res);
+        if(root->right){
+            m[root].push_back(root->right);
+            dfs(root->right, root, m);
         }
-        
-    
-        
     }
-    
-    void fillParents(TreeNode* root, TreeNode* p, unordered_map<TreeNode*, TreeNode*>& parent, unordered_map<TreeNode*, bool>& visited){
-        if(!root) return;
-        parent[root] = p;
-        visited[root] = false;
-        fillParents(root->left, root, parent, visited);
-        fillParents(root->right, root, parent, visited);
-        
-    }
+
 public:
     vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        unordered_map<TreeNode*, bool> visited;
-        unordered_map<TreeNode*, TreeNode*> parent;
+        map<TreeNode*, vector<TreeNode*>> m;
+        dfs(root, NULL, m);
         vector<int> res;
-        fillParents(root, NULL, parent, visited);
-        visited[target] = true;
-        dfs(target, 0, visited, parent, k, res);
+        queue<TreeNode*> q;
+        q.push(target);
+        int d=0;
+        map<TreeNode*, bool> visited;
+        visited[target]=true;
+        //cout<<"m.size():: "<<m.size();
+        
+        
+        while(q.size()!=0){
+            int sz = q.size();
+            while(sz--){
+                auto f =q.front();
+                q.pop();
+                if(d==k){
+                    res.push_back(f->val);
+                    
+                }
+                else {
+                   if(m[f].size()!=0){
+                        for(auto x:m[f]){
+                            if(visited[x]==false){
+                                visited[x] = true;
+                                q.push(x);
+                            }
+                            
+                        }
+                    } 
+                }
+                
+            }
+            d+=1;
+        }
+        
         return res;
     }
 };
