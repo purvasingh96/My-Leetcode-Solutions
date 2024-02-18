@@ -1,29 +1,60 @@
-class Solution {
-private:
-   
-    Node* dfs(Node* parent, unordered_map<Node*, bool>& visited, unordered_map<Node*, Node*>& m){
-        if(m.find(parent)!=m.end()) return m[parent];
-        m[parent] = new Node(parent->val);
-        
-        for(auto child:parent->neighbors){
-            if(!visited[child]){
-                visited[child] = true;
-                m[parent]->neighbors.push_back(dfs(child, visited, m));
-            } else {
-               m[parent]->neighbors.push_back(m[child]);
-            }
-        }
-        
-        return m[parent];
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
     }
-    
+    Node(int _val) {
+        val = _val;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+
+class Solution {
 public:
     Node* cloneGraph(Node* node) {
-        if(!node) return node;
+        if(!node){
+            return NULL;
+        }
         unordered_map<Node*, Node*> m;
         unordered_map<Node*, bool> visited;
+        queue<Node*> q;
+        q.push(node);
         visited[node] = true;
-        return dfs(node, visited, m);
+        
+        while(q.size()!=0){
+            
+                auto f = q.front();
+                q.pop();
+                
+                if(m.find(f)==m.end()){
+                    m[f] = new Node(f->val);
+                }
+                
+                for(auto c:f->neighbors){
+                    if(m.find(c)==m.end()){
+                        m[c] = new Node(c->val);
+                    }
+                    m[f]->neighbors.push_back(m[c]);
+                    if(visited[c] == false){
+                        visited[c] = true;
+                        q.push(c);    
+                    }
+                    
+                }
+            
+        }
+        
+        return m[node];
         
     }
 };
