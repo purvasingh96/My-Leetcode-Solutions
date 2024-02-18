@@ -1,17 +1,20 @@
 class Solution {
 private:
-    char hash(char s, int n){
-        return (s - n + 26)%26 + 'a';
+    string hash(string s){
+        string res="";
+        for(int i=0;i<s.length()-1;i++){
+            int diff = abs(s[i]-'a' - s[i+1]-'a' + 26)%26;
+            char d = diff + 'a';
+            res += diff + 'a';
+            res+="#";
+        }
+        return res;
     }
 public:
     vector<vector<string>> groupStrings(vector<string>& strings) {
         unordered_map<string, vector<string>> m;
         for(auto s:strings){
-            string h="";
-            for(auto c:s){
-                h += hash(c, s[0]);
-            }
-            m[h].push_back(s);
+            m[hash(s)].push_back(s);
         }
         
         vector<vector<string>> res;
