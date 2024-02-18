@@ -1,56 +1,57 @@
 class Solution {
 private:
-    int invalids(string& s){
+    bool isvalid(string s){
         stack<char> st;
         for(auto c:s){
-            if(c == '(' || c ==')'){
-               if(st.empty() || c == '('){
+            if(c=='('){
                 st.push(c);
-                } else if(c == ')'){
-                    if(!st.empty() && st.top() == '('){
-                        st.pop();
-                    } else {
-                        st.push(c);
-                    }
-                } 
-            }
-            
+            } else if(c == ')'){
+                if(!st.empty() && st.top() == '('){
+                    st.pop();
+                } else {
+                    st.push(c);
+                }
+            }   
         }
-        
-        return st.size();
-    }
-    
-    
-    void dfs(string s, int invalid, unordered_set<string>& st, unordered_map<string, bool>& visited){
-        
-        if(invalid == 0){
-            if(!invalids(s)){
-                st.insert(s);
-                return;
-            }    
-        }
-        
-        for(int i=0;i<s.length();i++){
-            if(s[i] == ')' || s[i] == '('){
-                string temp = s.substr(0, i) + s.substr(i+1);
-                if(visited[temp] == false){
-                    visited[temp]=true;
-                    dfs(temp, invalid-1, st, visited);
-                } 
-            }
-           
-        }
-        
-        
+        return st.empty();
     }
 public:
     vector<string> removeInvalidParentheses(string s) {
-        int invalid = invalids(s);
+        queue<string> q;
+        q.push(s);
+        vector<string> res;
         unordered_map<string, bool> visited;
-        unordered_set<string> st;
+        visited[s]=true;
+        bool found=false;
         
-        dfs(s, invalid, st, visited);
-        vector<string> res(st.begin(), st.end());
+        while(!q.empty()){
+            int sz = q.size();
+            while(sz--){
+                auto f = q.front();
+                q.pop();
+                //cout<<"f:: "<<f;
+                if(isvalid(f)){
+                    //cout<<"f:: "<<f<<"\n";
+                    found=true;
+                    res.push_back(f);
+                } else{
+                    for(int i=0;i<f.length();i++){
+                        string left = f.substr(0, i);
+                        string right = f.substr(i+1);
+                        string temp = left+right;
+                        if(visited[temp] == false){
+                            visited[temp] = true;
+                            q.push(temp);    
+                        }
+                        
+                    }
+                }
+                    
+            }
+            if(found){
+                break;
+            }
+        }
         return res;
     }
 };
