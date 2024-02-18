@@ -1,45 +1,38 @@
 class Solution {
 private:
-    int dx[4] = {0, 1, 0, -1};
-    int dy[4] = {1, 0, -1, 0};
-
-    bool isValid(int x, int y, vector<vector<char>>& grid){
-            return x>=0 && y>=0 && x<grid.size() && y<grid[0].size();
+    bool isValid(int i, int j, vector<vector<char>>& grid){
+        return i>=0 && j>=0 && i<grid.size() && j<grid[0].size();
     }
     
-    void bfs(int i, int j, vector<vector<char>>& grid){
-        queue<pair<int, int>> q;
-        q.push({i, j});
-        grid[i][j]='0';
+    int dx[4] = {0, 1, 0, -1};
+    int dy[4] = {1, 0, -1, 0};
+    
+    void dfs(vector<vector<char>>& grid, int i, int j){
         
-        while(!q.empty()){
-            auto f= q.front();
-            q.pop();
+        for(int k=0;k<4;k++){
+            int new_x = i + dx[k];
+            int new_y = j + dy[k];
             
-            int x = f.first, y =f.second;
-            
-            for(int i=0;i<4;i++){
-                int new_x = x + dx[i];
-                int new_y = y + dy[i];
-                if(isValid(new_x, new_y, grid) && grid[new_x][new_y]=='1'){
-                    grid[new_x][new_y]='0';
-                    q.push({new_x, new_y});
-                }
+            if(isValid(new_x, new_y, grid) && grid[new_x][new_y] == '1'){
+                grid[new_x][new_y] = '0';
+                dfs(grid, new_x, new_y);
             }
         }
-        
     }
 public:
     int numIslands(vector<vector<char>>& grid) {
-        int ans=0;
+        int count=0;
+        
         for(int i=0;i<grid.size();i++){
             for(int j=0;j<grid[0].size();j++){
-                if(grid[i][j]=='1') {
-                    bfs(i, j, grid);
-                    ans+=1;
+                if(grid[i][j] == '1'){
+                    grid[i][j] = '0';
+                    dfs(grid, i, j);
+                    count+=1;
                 }
             }
         }
-        return ans;
+        
+        return count;
     }
 };
