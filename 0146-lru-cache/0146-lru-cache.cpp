@@ -1,69 +1,78 @@
 class Node{
 public:
-    int key;
-    int val;
     Node* next;
     Node* prev;
+    int val;
+    int key;
     Node(int k, int v){
-        this->key = k;
-        this->val = v;
-        this->next = NULL;
-        this->prev = NULL;
+        val = v;
+        key = k;
+        next = NULL;
+        prev = NULL;
     }
 };
 
 class LRUCache {
 public:
-    int cap;
-    Node* head;
+     Node* head;
     Node* last;
+    int c;
     unordered_map<int, Node*> m;
     
-    LRUCache(int capacity) {
-        this->cap = capacity;
-        head = new Node(-1, -1);
-        last = new Node(-1, -1);
-        head->next = last;
-        last->prev = head;
+    void insertFront(Node* node){
+        
+        Node* temp = last->prev;
+        temp->next = node;
+        node->prev=temp;
+        node->next=last;
+        last->prev=node;
+        m[node->key] = node;
     }
     
-    void removeNode(Node* target){
-        Node* prev = target->prev;
-        Node* next = target->next;
-        prev->next = next;
+    void deleteNode(Node* node){
+        Node* prev = node->prev;
+        Node* next = node->next;
+        prev->next =next;
         next->prev = prev;
-        m.erase(m.find(target->key));
+        m.erase(node->key);
     }
     
-    void insertNode(Node* target){
-        if(m.size() == cap){
-            removeNode(head->next);
-        }
-        Node* prev = last->prev;
-        prev->next=target;
-        target->prev = prev;
-        target->next =last;
-        last->prev = target;
-        m[target->key] = target;
+    LRUCache(int capacity) {
+        c = capacity;
+        head = new Node(0, 0);
+        last = new Node(0, 0);
+        
+        head->next =last;
+        last->prev=head;
     }
     
     int get(int key) {
         if(m.find(key)==m.end()){
             return -1;
         }
-        Node* target = m[key];
-        removeNode(m[key]);
-        insertNode(target);
-        return m[target->key]->val;
+        Node* node = m[key];
+        deleteNode(node);
+        insertFront(node);
+        return m[key]->val;
     }
     
     void put(int key, int value) {
-        Node* node= new Node(key, value);
-        
+       
+        Node* node;
         if(m.find(key)!=m.end()){
-            removeNode(m[key]);
+            node = m[key];
+            deleteNode(node);
+            node->val = value;
+        } else {
+             if(m.size() == c){
+                // already at capacity
+                deleteNode(head->next);
+            }
+
+            node = new Node(key, value);
         }
-        insertNode(node);
+        insertFront(node);
+        
     }
 };
 
