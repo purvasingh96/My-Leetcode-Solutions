@@ -6,12 +6,11 @@ public:
         
         for(int i=0;i<nums.size();i++){
             
-            if(nums[i] != expected){
                 if(expected <= nums[i]-1){
                     res.push_back({expected, nums[i]-1});    
                 }
                 
-            }
+            
             expected = nums[i]+1;
         }
         
