@@ -4,7 +4,8 @@ private:
         cout<<s<<" ";
         string res="";
         for(int i=0;i<s.length()-1;i++){
-            int diff = abs(s[i]-'a' - s[i+1]-'a' + 26)%26;
+            int diff = (abs(s[i]-'a' - s[i+1]-'a') + 26)%26;
+            cout<<"diff:: "<<diff<<"\n";
             char d = diff + '0';
             res += d;
             res+="#";
