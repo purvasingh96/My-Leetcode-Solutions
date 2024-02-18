@@ -17,49 +17,32 @@ public:
 class Solution {
 public:
     Node* copyRandomList(Node* head) {
-        // clone problems
-        map<Node*, Node*> m;
+        unordered_map<Node*, Node*> m;
         Node* ans = head;
-        
         while(head){
             
-            Node* newNode = m.find(head) == m.end() ? new Node(head->val) : m[head];
-            m[head] = newNode;
-            // find next Node
-            Node* next = head->next;
-            if(next == NULL){
-                newNode->next = NULL;
+            if(m.find(head)==m.end()){
+                Node* node = new Node(head->val);
+                m[head] = node;
             }
-            else{
-                if(m.find(next) == m.end()){
-                    Node* nextNode = new Node(next->val);
-                    m[next] = nextNode;
+            
+                if(head->next){
+                    if(m.find(head->next)==m.end()){
+                        m[head->next] = new Node(head->next->val);
+                    }
+                    m[head]->next = m[head->next];
                 }
-                m[head]->next = m[next];
+                if(head->random){
+                    if(m.find(head->random)==m.end()){
+                        m[head->random] = new Node(head->random->val);
+                    }
+                    m[head]->random = m[head->random];
+                
             }
-            
-            
-            // find random node
-            
-            Node* random = head->random;
-        
-            if(random == NULL){
-                newNode->random = NULL;
-            }
-            else {
-                if(m.find(random) == m.end()){
-                    Node* randomNode = new Node(random->val);
-                    m[random] = randomNode;
-                }
-
-                m[head]->random = m[random];
-            }
-            
-            
-            //m[head] = newNode;     
-            head=head->next;
+            head = head->next;
         }
         
         return m[ans];
+        
     }
 };
