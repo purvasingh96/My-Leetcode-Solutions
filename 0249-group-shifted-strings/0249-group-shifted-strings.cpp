@@ -1,13 +1,15 @@
 class Solution {
 private:
     string hash(string s){
+        cout<<s<<" ";
         string res="";
         for(int i=0;i<s.length()-1;i++){
             int diff = abs(s[i]-'a' - s[i+1]-'a' + 26)%26;
-            char d = diff + 'a';
-            res += diff + 'a';
+            char d = diff + '0';
+            res += d;
             res+="#";
         }
+        cout<<"res:: "<<res<<"\n";
         return res;
     }
 public:
