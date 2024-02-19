@@ -1,46 +1,48 @@
 class Solution {
 private:
     vector<string> split(string s){
-        string res = "";
+        string res="";
         vector<string> ans;
         
-        for(auto c:s){
-            if(c!=':'){
-                res += c;
-            } else {
+        for(int i=0;i<s.length();i++){
+            if(s[i] == ':'){
                 ans.push_back(res);
                 res="";
             }
+            else {
+                res += s[i];
+            }
         }
-        ans.push_back(res);
+        
+        if(res!=""){
+            ans.push_back(res);
+        }
+        
         return ans;
     }
 public:
     vector<int> exclusiveTime(int n, vector<string>& logs) {
-       vector<int> res(n, 0);
-        int prev_time=0;
         stack<int> st;
+        vector<int> ans(n, 0);
+        int prev_time = 0;
         
         for(auto l:logs){
-            auto temp = split(l);
-            int idx = stoi(temp[0]);
-            string op = temp[1];
-            int time = stoi(temp[2]);
+            vector<string> x = split(l);
+            int idx = stoi(x[0]);
+            int curr_time = stoi(x[2]);
+            string op = x[1];
             
             if(op == "start"){
-                if(!st.empty()){
-                    res[st.top()] += (time - prev_time);
-                }
-               st.push(idx);
-                prev_time = time;
+                int j = st.empty() ? idx : st.top();
+                ans[j] += curr_time - prev_time;
+                prev_time = curr_time;
+                st.push(idx);
             } else {
-                res[idx] += (time - prev_time+1);
+                ans[idx] += curr_time-prev_time+1;
+                prev_time = curr_time+1;
                 st.pop();
-                prev_time = time+1;
             }
         }
-        
-        return res;
-            
+        return ans;
     }
 };
