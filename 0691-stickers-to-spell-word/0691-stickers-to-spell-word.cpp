@@ -49,7 +49,7 @@ public:
                 char temp_target = temp[0];
                 
                 for(auto s_f:s_freq){
-                    if(s_f[temp_target-'a']!=0){
+                    if(s_f[temp_target-'a']>0){
                         // explore
                         q.push(t_f);
                         for(int i=0;i<s_f.size();i++){
