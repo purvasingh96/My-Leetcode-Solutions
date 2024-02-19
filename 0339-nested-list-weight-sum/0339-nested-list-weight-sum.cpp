@@ -29,20 +29,20 @@
  */
 class Solution {
 private:
-    int dfs(vector<NestedInteger>& nestedList, int depth){
-      int total=0;
-        for(NestedInteger n: nestedList){
-            if(n.isInteger()){
-                total += n.getInteger()*depth;
+    int dfs(vector<NestedInteger> list, int d){
+       
+        int total=0;
+        for(auto x:list){
+            if(!x.isInteger()){
+                total += dfs(x.getList(), d+1);
             } else {
-                total += dfs(n.getList(), depth+1);
+                total += d*x.getInteger();
             }
         }
         return total;
     }
-    
 public:
     int depthSum(vector<NestedInteger>& nestedList) {
-       return dfs(nestedList, 1);
+        return dfs(nestedList, 1);
     }
 };
