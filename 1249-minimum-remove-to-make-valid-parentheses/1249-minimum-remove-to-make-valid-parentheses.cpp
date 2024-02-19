@@ -1,44 +1,42 @@
 class Solution {
-public:
-    string minRemoveToMakeValid(string s) {
-        int balance =0;
-        vector<char> t;
-        
-        for(auto c:s){
-            if(c == ')'){
-                balance -=1;
-                if(balance <0){
-                    balance+=1;
-                    continue;
-                }
-            } else if(c == '('){
-                balance +=1;
-            }
-            t.push_back(c);
-        }
-        
-        if(balance <= 0){
-            // all invalid ) have been removed
-            string temp ="";
-            for(auto c:t) temp += c;
-            return temp;
-        }
-        
+private:
+    int eraseInvalidClosingBrackets(string& s){
+        int balance=0;
         string res="";
-        for(int i=t.size()-1;i>=0;i--){
-            if(t[i] == '('){
-                balance -=1;
-                if(balance >= 0){
-                    continue;
+        for(int i=0;i<s.length();i++){
+            if(s[i] == ')'){
+                balance-=1;
+                if(balance < 0){
+                    balance+=1;   
                 } else {
-                    res += t[i];
+                    res += s[i];
                 }
             } else {
-                res += t[i];
+                if(s[i] == '('){
+                    balance+=1;
+                }
+                res += s[i];
             }
         }
         
-        reverse(res.begin(), res.end());
-        return res;
+        s=res;
+        
+        return balance;
+    }
+public:
+    string minRemoveToMakeValid(string s) {
+        int balance = eraseInvalidClosingBrackets(s);
+        cout<<"balance:: "<<balance<<"\n";
+        cout<<"s:: "<<s<<"\n";
+        for(int i=s.length()-1;i>=0;i--){
+            if(s[i] == '(') {
+                if(balance>0){
+                    balance-=1;
+                    s.erase(i, 1);
+                }
+            }
+        }
+        
+        return s;
     }
 };
