@@ -10,39 +10,41 @@
  * };
  */
 class Solution {
+private:
+    void dfs(TreeNode* root, int row, int col, map<int, vector<pair<int, int>>>& m){
+        if(!root) {
+            return;
+        }
+        m[col].push_back({row, root->val});
+        
+        if(root->left){
+            dfs(root->left, row+1, col-1, m);    
+        }
+        if(root->right){
+            dfs(root->right, row+1, col+1, m);
+        }
+        
+    }
 public:
     vector<vector<int>> verticalOrder(TreeNode* root) {
-        unordered_map<int, vector<int>> m;
+        map<int, vector<pair<int, int>>> m;
+        dfs(root, 0, 0,m);
         vector<vector<int>> res;
-        // node, {row, col}
-        queue<pair<TreeNode*, pair<int, int>>> q;
-        int minCol=INT_MAX, maxCol = INT_MIN;
-        if(!root) return res;
-        
-        q.push({root, {0, 0}});
-        
-        while(!q.empty()){
-            auto x = q.front();
-            q.pop();
-            auto node = x.first;
-            int row = x.second.first, col = x.second.second;
-            minCol = min(minCol, col);
-            maxCol = max(maxCol, col);
-            m[col].push_back(node->val);
-            if(node->left){
-                q.push({node->left, {row+1, col-1}});
+        for(auto x:m){
+            sort(x.second.begin(), x.second.end(), [](const pair<int, int>& a, const pair<int, int>& b){
+               if(a.first!=b.first){
+                   return a.first < b.first;
+               }
+                return false;
+            });
+            vector<int> temp;
+            for(auto y:x.second){
+                temp.push_back(y.second);
             }
-            if(node->right){
-                q.push({node->right, {row+1, col+1}});
-            }
+            res.push_back(temp);
         }
         
-        
-        for(int i=minCol;i<=maxCol;i++){
-            res.push_back(m[i]);
-        }
-        
+       
         return res;
-        
     }
 };
