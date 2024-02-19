@@ -1,61 +1,62 @@
 class Solution {
 private:
-    bool oneOrMoreDigits(string s){
-        if(s.length() == 0) {
-            return false;
-        }
+    bool isOneOrMoreDigits(string s){
+        if(s.length()==0) return false;
         for(int i=0;i<s.length();i++){
             if(!isdigit(s[i])){
                 return false;
             }
         }
-        
         return true;
     }
     
     bool isInteger(string s){
-        if(s.length() == 0){
-            return false;
+        if(s.length()==0) return false;
+        if(s[0] == '+' || s[0] == '-'){
+            return isOneOrMoreDigits(s.substr(1));
         }
-        return oneOrMoreDigits(s);
+        return isOneOrMoreDigits(s);
     }
     
     bool isDecimal(string s){
+        if(s.length()==0) return false;
+        if(s[0] == '+' || s[0] == '-'){
+            return isDecimal(s.substr(1));
+        }
         
+        string left="", right="";
         for(int i=0;i<s.length();i++){
             if(s[i] == '.'){
-                string left = s.substr(0, i);
-                string right = s.substr(i+1);
-                return (
-                    isInteger(left) && right.length()==0 ||
-                    isInteger(left) && oneOrMoreDigits(right) ||
-                    left.length()==0 && oneOrMoreDigits(right)
-                );
+                left = s.substr(0, i);
+                right = s.substr(i+1);
+                break;
             }
         }
         
-        return isInteger(s);
+        return isOneOrMoreDigits(left) && right.length()==0 || 
+            isOneOrMoreDigits(left) && isOneOrMoreDigits(right) ||
+            left.length()==0 && isOneOrMoreDigits(right);
+        
     }
 public:
     bool isNumber(string s) {
-        if(s[0] == '+' || s[0] == '-'){
-            s=s.substr(1);
-        }
+        string left="", right="";
         for(int i=0;i<s.length();i++){
-            if(s[i] == 'e' || s[i]=='E'){ 
-                if(i == 0){
-                    return false;
-                }
-                string left = s.substr(0, i);
-                string right = s.substr(i+1);
-                if(right[0] == '+' || right[0] == '-'){
-                    right = right.substr(1);
-                }
-                
-                return (isInteger(left) || isDecimal(left)) && (isInteger(right));
+            if(s[i] == 'E' || s[i]=='e'){
+                left = s.substr(0, i);
+                right = s.substr(i+1);
+                break;
             }
         }
+        cout<<"left: "<<left<<" right: "<<right;
+        if(right.length()==0){
+            // no e's
+            cout<<"here";
+            cout<<"isDecimal(s):: "<<isDecimal(s)<<"\n";
+            cout<<"isInteger(s):: "<<isInteger(s)<<"\n";
+            return isDecimal(s) || isInteger(s);
+        }
         
-        return (isInteger(s) || isDecimal(s));
+        return (isDecimal(left) || isInteger(left)) && isInteger(right);
     }
 };
