@@ -2,41 +2,41 @@ class Solution {
 public:
     bool validWordAbbreviation(string word, string abbr) {
         stack<char> st;
-        
         for(int i=word.length()-1;i>=0;i--){
             st.push(word[i]);
         }
         
         for(int i=0;i<abbr.length();i++){
-            if(st.empty()) return false;
-            if(abbr[i] == st.top()){
-                st.pop();
-            } else {
-                if(isdigit(abbr[i])){
-                    
-                    if(abbr[i]=='0'){
-                        // leading zero;
-                        return false;
-                    } else {
-                        int j=i;
-                        int digit=0;
-                        while(j<abbr.length() && isdigit(abbr[j])){
-                            digit = digit*10 + (abbr[j]-'0');
-                            j+=1;
-                        }
-                        if(digit > st.size()){
-                            return false;
-                        } else {
-                            while(digit--){
-                                st.pop();
-                            }
-                            i = j-1;
-                        }
-                    }
-                    
-                } else {
+            if(isalpha(abbr[i])){
+                if(st.empty()) {
                     return false;
                 }
+                if(abbr[i] != st.top()){
+                    return false;
+                } else {
+                    st.pop();
+                }
+            } else {
+                int d =0;
+                if(abbr[i] == '0'){
+                    // leading zero;
+                    return false;
+                }
+                while(i<abbr.length() && isdigit(abbr[i])){
+                    d = d*10 + (abbr[i] - '0');
+                    i+=1;
+                }
+                cout<<"d: "<<d<<"\n";
+                    
+                i-=1;
+                while(d){
+                    if(st.empty()){
+                        return false;
+                    }
+                    st.pop();
+                    d-=1;
+                }
+                //cout<<"st.top(): "<<st.top()<<" i: "<<i<<"\n";
             }
         }
         
