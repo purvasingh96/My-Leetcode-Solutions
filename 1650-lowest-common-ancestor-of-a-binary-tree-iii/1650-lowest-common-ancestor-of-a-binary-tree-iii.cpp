@@ -10,34 +10,27 @@ public:
 */
 
 class Solution {
+private:
+    void lca(Node* p, unordered_map<Node*, bool>& visited){
+       if(p==NULL){
+           return;
+       }
+        visited[p] = true;
+        lca(p->parent, visited);
+    }
+    Node* check(Node* q, unordered_map<Node*, bool>& visited){
+        if(!q){
+            return NULL;
+        }
+        if(visited[q] == true){
+            return q;
+        }
+        return check(q->parent, visited);
+    }
 public:
     Node* lowestCommonAncestor(Node* p, Node * q) {
         unordered_map<Node*, bool> visited;
-        
-        while(p && q){
-            if(p == q) return p;
-            if(visited[p] == true) return p;
-            if(visited[q] == true) return q;
-            
-            visited[p] = true;
-            visited[q] = true;
-            
-            p = p->parent;
-            q = q->parent;
-        }
-        
-        while(p){
-            if(visited[p] == true) return p;
-            visited[p] = true;
-            p = p->parent;
-        }
-        
-        while(q){
-            if(visited[q] == true) return q;
-            visited[q] = true;
-            q = q->parent;
-        }        
-        
-        return NULL;
+        lca(p, visited);
+        return check(q, visited);
     }
 };
