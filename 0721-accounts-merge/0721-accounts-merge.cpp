@@ -1,12 +1,10 @@
-class UnionFind{
+class DSU{
  public:
     vector<int> root;
     vector<int> size;
-    
-    UnionFind(int n){
+    DSU(int n){
         root.resize(n);
         size.resize(n);
-        
         for(int i=0;i<n;i++){
             root[i]=i;
             size[i]=1;
@@ -14,7 +12,7 @@ class UnionFind{
     }
     
     int find(int x){
-        if(root[x] == x){
+        if(root[x] == x) {
             return x;
         }
         return root[x] = find(root[x]);
@@ -30,52 +28,50 @@ class UnionFind{
                 size[rx] += size[ry];
             } else {
                 root[rx] = ry;
-                size[ry] += size[rx];
+                size[ry]+=size[rx];
             }
         }
     }
+        
 };
 class Solution {
-    
 public:
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
-        unordered_map<string, int> m;
-        vector<vector<string>> ans;
         int n = accounts.size();
-        UnionFind uf(n);
+        DSU dsu(n);
         
+        
+        unordered_map<string, int> m;
         
         for(int i=0;i<accounts.size();i++){
             for(int j=1;j<accounts[i].size();j++){
-                string email = accounts[i][j];
-                
-                if(m.find(email)==m.end()){
-                    m[email] = i;
+                if(m.find(accounts[i][j]) == m.end()){
+                    m[accounts[i][j]] = i;
                 } else {
-                    uf.merge(i, m[email]);
+                    dsu.merge(i, m[accounts[i][j]]);
                 }
             }
         }
         
+        cout<<"working";
         
-        vector<vector<string>> res(n);
+        vector<vector<string>> ans(n);
+        
         for(auto x:m){
-            int idx = uf.find(x.second);
-            //cout<<"idx:: "<<idx<<" "<<x.first<<"\n";
-            res[idx].push_back(x.first);
+            int idx = dsu.find(x.second);
+            ans[idx].push_back(x.first);
         }
-        
-        for(int i=0;i<res.size();i++){
-            vector<string> temp;
-            if(res[i].size()!=0){
-                string account = accounts[i][0];
-                temp.push_back(account);
-                sort(res[i].begin(), res[i].end());
-                temp.insert(temp.end(), res[i].begin(), res[i].end());
-                ans.push_back(temp);
+        vector<vector<string>> res;
+        for(int i=0;i<ans.size();i++){
+            if(ans[i].size()!=0){
+                vector<string> temp;
+                temp.push_back(accounts[i][0]);
+                sort(ans[i].begin(), ans[i].end());
+                temp.insert(temp.end(), ans[i].begin(), ans[i].end());
+                res.push_back(temp);
             }
+            
         }
-        
-        return ans;
+        return res;
     }
 };
