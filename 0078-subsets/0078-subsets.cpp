@@ -1,22 +1,24 @@
 class Solution {
 private:
-    void helper(int idx, vector<int> temp, vector<vector<int>>& ans, vector<int>& nums){
-        if(idx >= nums.size()) {
-            ans.push_back(temp);
+    void backtrack(vector<int>& nums, int i, vector<int>& temp, vector<vector<int>>& res){
+        if(i>=nums.size()) {
+            res.push_back(temp);
             return;
         }
         
-        // dont choose
-        helper(idx+1, temp, ans, nums);
-        temp.push_back(nums[idx]);
-        helper(idx+1, temp, ans, nums);
+        //skip
+        backtrack(nums, i+1, temp, res);
+        // dont skip
+        temp.push_back(nums[i]);
+        backtrack(nums, i+1, temp, res);
+        temp.pop_back();
         
     }
 public:
     vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> res;
         vector<int> temp;
-        vector<vector<int>> ans;
-        helper(0, temp, ans, nums);
-        return ans;
+        backtrack(nums, 0, temp, res);
+        return res;
     }
 };
