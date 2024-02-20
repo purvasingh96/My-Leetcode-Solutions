@@ -1,51 +1,55 @@
 class Solution {
 private:
-    int partition(vector<pair<int, int>>& data, int start, int end){
-        int pivot = data[end].second;
-        int i=start-1;
+    int partition(vector<pair<int, int>>& nums, int start, int end){
+        int pivot = nums[end].second;
+        int i=start-1, j=start;
         
-        for(int j=start;j<end;j++){
-            if(data[j].second <= pivot){
-                swap(data[++i], data[j]);
+        while(j<end){
+            if(nums[j].second <= pivot){
+                i+=1;
+                swap(nums[i], nums[j]);
             }
+            j+=1;
         }
         
-        swap(data[++i], data[end]);
+        i+=1;
+        swap(nums[i], nums[end]);
         return i;
     }
     
-    void quickSort(vector<pair<int, int>>& data, int k, int start, int end){
-        if(start<=end){
-           int pivot = partition(data,start, end);
-        
+    void quickSort(vector<pair<int, int>>& nums, int start, int end, int k){
+        if(start <= end){
+            int pivot = partition(nums, start, end);
+
             if(pivot == k){
                 return;
-            } else if(k<pivot){
-                quickSort(data, k, start, pivot-1);
+            } else if(k < pivot){
+                quickSort(nums, start, pivot-1, k);
             } else if(k > pivot){
-                quickSort(data, k, pivot+1, end);
-            } 
+                quickSort(nums, pivot+1, end, k);
+            }
         }
         
     }
     
-     int distance(vector<int>& point){
-       return pow(point[0], 2) + pow(point[1], 2);
-   }
+    int dist(vector<int>& points){
+        int x1 = points[0], y1 = points[1];
+        return pow(x1, 2) + pow(y1, 2);
+    }
+    
 public:
     vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
-        vector<pair<int, int>> data;
-        
+        vector<pair<int, int>> nums;
         for(int i=0;i<points.size();i++){
-            data.push_back({i, distance(points[i])});
+            nums.push_back({i, dist(points[i])});
         }
-        quickSort(data, k, 0, points.size()-1);
-        
-        vector<vector<int>> res;
+        quickSort(nums, 0, nums.size()-1, k);
+        vector<vector<int>> ans;
         for(int i=0;i<k;i++){
-            int idx = data[i].first;
-            res.push_back(points[idx]);
+            int idx = nums[i].first;
+            ans.push_back(points[idx]);
         }
-        return res;
+        
+        return ans;
     }
 };
