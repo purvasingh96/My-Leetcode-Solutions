@@ -1,23 +1,23 @@
 class MovingAverage {
 public:
-    int k;
-    deque<int> cache;
-    int sumSoFar;
+    int capacity;
+    double sum;
+    deque<int> nums;
     MovingAverage(int size) {
-        k = size;
-        sumSoFar =0;
+        sum=0.0;
+        capacity = size;
     }
     
     double next(int val) {
-        sumSoFar += val;
-        cache.push_back(val);
-        if(cache.size()>k){
-            sumSoFar -= cache[0];
-            cache.pop_front();
-            return (double)sumSoFar/k;
-        } else {
-            return (double)sumSoFar/(cache.size());
+        if(nums.size() == capacity){
+            sum-=nums[0];
+            nums.pop_front();
         }
+        nums.push_back(val);
+        sum += val;
+        int n = nums.size();
+        double avg = (sum/n);
+        return avg;
     }
 };
 
