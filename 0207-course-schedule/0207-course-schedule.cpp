@@ -1,38 +1,41 @@
 class Solution {
 public:
-    bool canFinish(int n, vector<vector<int>>& p) {
-        unordered_map<int, vector<int>> m;
+    bool canFinish(int n, vector<vector<int>>& nums) {
         vector<int> indegree(n, 0);
+        queue<int> q;
+        unordered_map<int, vector<int>> next;
+        int totalCourses = 0;
         
-        for(auto x:p){
-            int u = x[1], v = x[0];
-            m[u].push_back(v);
-            indegree[v]+=1;
+        for(int i=0;i<nums.size();i++){
+            indegree[nums[i][0]] +=1;
+            next[nums[i][1]].push_back(nums[i][0]);
         }
         
-        int c=0;
-        queue<int> q;
         for(int i=0;i<n;i++){
-            if(indegree[i] == 0){
+            if(indegree[i]==0){
                 q.push(i);
-                c+=1;
+                totalCourses+=1;
             }
         }
         
-        if(q.size()==0) return false;
-        
-        while(!q.empty()){
-            int node = q.front();q.pop();
-            for(auto y:m[node]){
-                indegree[y]-=1;
-                if(indegree[y] == 0){
-                    q.push(y);
-                    c+=1;
-                }
-            } 
+        if(q.size()==0){
+            return false;
         }
         
-        return c == n;
+        while(!q.empty()){
+            auto course = q.front();
+            q.pop();
+            for(auto nextCourse:next[course]){
+                indegree[nextCourse]-=1;
+                if(indegree[nextCourse]==0){
+                    totalCourses+=1;
+                    q.push(nextCourse);
+                }
+            }
+            
+        }
+        
+        return totalCourses == n;
         
     }
 };
