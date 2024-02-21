@@ -1,55 +1,50 @@
 class Solution {
 private:
-    int partitionAndSort(int left, int right, int pivot_idx, unordered_map<int, int>& freq, vector<int>& res){
+    // number, freq
+    int partition(vector<pair<int, int>>& nums, int start, int end){
+        int pivot = nums[end].second;
+        int i=start-1, j=start;
         
-        int store_idx = left;
-        int pivot_freq = freq[res[pivot_idx]];
-        swap(res[pivot_idx], res[right]);
-        
-        for(int i=left;i<=right;i++){
-            if(freq[res[i]] < pivot_freq){
-                swap(res[i], res[store_idx]);
-                store_idx+=1;
+        for(;j<end;j++){
+            if(nums[j].second >= pivot){
+                i+=1;
+                swap(nums[i], nums[j]);
             }
         }
-        
-        swap(res[store_idx], res[right]);
-        return store_idx;
-        
+        i+=1;
+        swap(nums[i], nums[end]);
+        return i;
     }
     
-    void quickSelect(int left, int right, int k_smallest, unordered_map<int, int>& freq, vector<int>& res){
-        int pivot_idx = left + rand()%(right-left+1);
-        pivot_idx = partitionAndSort(left, right, pivot_idx, freq, res);
-        
-        if(pivot_idx == k_smallest){
-            return;
+    void quickSort(vector<pair<int, int>>& nums, int start, int end, int k){
+        if(start<=end){
+            int pivot = partition(nums, start, end);
+            if(k <= pivot){
+                quickSort(nums, start, pivot-1, k);
+            } else {
+                quickSort(nums, pivot+1, end, k);
+            }
         }
-        else if(pivot_idx > k_smallest){
-            quickSelect(left, pivot_idx-1, k_smallest, freq, res);
-        } else {
-            quickSelect(pivot_idx+1, right, k_smallest, freq, res);
-        }
-        
     }
-    
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        // quick select implementation
-        unordered_map<int, int> freq;
-        vector<int> res;
-        for(auto x:nums) freq[x]+=1;
-        for(auto x:freq){
-            res.push_back(x.first);
+        unordered_map<int, int> m;
+        for(auto x:nums){
+            m[x]+=1;
+        }
+        vector<pair<int, int>> res;
+        for(auto x:m){
+            res.push_back({x.first, x.second});
+        }
+        quickSort(res, 0, res.size()-1, k);
+        for(auto x:res){
+            cout<<x.first<<" ";
+        }
+        vector<int> ans;
+        for(int i=0;i<k;i++){
+            ans.push_back(res[i].first);
         }
         
-        int n = res.size();
-        quickSelect(0, n-1, n-k, freq, res);
-        
-        vector<int> ans;
-        for(int i=n-k;i<n;i++) ans.push_back(res[i]);
-        
         return ans;
-        
     }
 };
