@@ -11,29 +11,41 @@
  */
 class BSTIterator {
 public:
-    stack<TreeNode*> st;
+    TreeNode* head;
+    TreeNode* rootCopy;
     BSTIterator(TreeNode* root) {
-        leftMostNode(root);
+        head =  root;
+        rootCopy = root;
     }
-    
-    void leftMostNode(TreeNode* root){
-        TreeNode* curr = root;
-        while(curr){
-            st.push(curr);
-            curr = curr->left;
-        }
-    }
-    
+    // Morris?
     int next() {
-        auto node = st.top(); st.pop();
-        if(node->right){
-            leftMostNode(node->right);
+        while(head){
+            if(head->left==NULL){
+                int ans = head->val;
+                head = head->right;
+                return ans;
+            } else {
+                TreeNode* pred = head->left;
+                while(pred->right!=NULL && pred->right!=head){
+                    pred = pred->right;
+                }
+                if(pred->right==NULL){
+                    pred->right=head;
+                    head = head->left;
+                } else {
+                    pred->right=NULL;
+                    int ans = head->val;
+                    head = head->right;
+                    return ans;
+                }
+            }
         }
-        return node->val;
+        
+        return head->val;
     }
     
     bool hasNext() {
-        return st.size()>0;   
+        return head!=NULL;
     }
 };
 
