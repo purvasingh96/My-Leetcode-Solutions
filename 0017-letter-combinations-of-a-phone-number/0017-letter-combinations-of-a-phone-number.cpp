@@ -1,36 +1,38 @@
 class Solution {
 private:
-    void backtrack(int pos, string digits, string& temp, unordered_map<int, string>& m, vector<string>& res){
-        if(temp.length() == digits.length()){
-            res.push_back(temp);
+    void backtrack(string digits, int i, unordered_map<int, vector<char>>& m, string& res, vector<string>& ans){
+        if(i >= digits.length()){
+            ans.push_back(res);
             return;
         }
         
-        int digit = digits[pos] - '0';
-        for(int i=0;i<m[digit].length();i++){
-            temp.push_back(m[digit][i]);
-            backtrack(pos+1, digits, temp, m, res);
-            temp.pop_back();
+        for(auto c:m[digits[i] -'0']){
+            res += c;
+            backtrack(digits, i+1, m, res, ans);
+            res.pop_back();
         }
     }
-    
 public:
     vector<string> letterCombinations(string digits) {
-        if(digits.length() == 0) return {};
-        unordered_map<int, string> m;
-        m[2] = "abc";
-        m[3] = "def";
-        m[4] = "ghi";
-        m[5] = "jkl";
-        m[6] = "mno";
-        m[7] = "pqrs";
-        m[8] = "tuv";
-        m[9] = "wxyz";
+        if(digits.length()==0){
+            return {};
+        }
+        unordered_map<int, vector<char>> m;
+        m[2] = {'a', 'b', 'c'};
+        m[3] = {'d', 'e', 'f'};
+        m[4] = {'g', 'h', 'i'};
+        m[5] = {'j', 'k', 'l'};
+        m[6] = {'m', 'n', 'o'};
+        m[7] = {'p', 'q', 'r', 's'};
+        m[8] = {'t', 'u', 'v'};
+        m[9] = {'w', 'x', 'y', 'z'};
         
-        string temp="";
-        vector<string> res;
+        vector<string> ans;
+        string res="";
         
-        backtrack(0, digits, temp, m, res);
-        return res;
+        backtrack(digits, 0, m, res, ans);
+        
+        return ans;
+        
     }
 };
