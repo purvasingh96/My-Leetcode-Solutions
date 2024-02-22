@@ -1,29 +1,29 @@
 class Solution {
 private:
-    string convert(string& s, vector<int>& res){
-        string ans="";
-        for(auto c:s){
-            string temp(1, (res[c-'a']+'a'));
-            ans+=temp;
+    bool isSorted(string word1, string word2, unordered_map<char, int>& m){
+        
+        for(int i=0;i<min(word1.length(), word2.length());i++){
+            if(m[word1[i]] > m[word2[i]]){
+                return false;
+            } else if(m[word1[i]] < m[word2[i]]){
+                return true;
+            }
         }
-         return ans;   
+        return word1.length() <= word2.length();
     }
 public:
     bool isAlienSorted(vector<string>& words, string order) {
-        vector<int> res(26, 0);
-        vector<string> ans;
-        for(int i=0;i<26;i++){
-            res[order[i] - 'a'] = i;
+        unordered_map<char, int> m;
+        for(int i=0;i<order.length();i++){
+            m[order[i]] = i;
         }
         
-        for(auto x:words){
-            string t = convert(x, res);
-            ans.push_back(t);
-            //cout<<t<<"\n";
+        for(int i=0;i<words.size()-1;i++){
+            if(!isSorted(words[i], words[i+1], m)){
+                return false;
+            }
         }
         
-        vector<string> og = ans;
-        sort(ans.begin(), ans.end());
-        return og == ans;
+        return true;
     }
 };
