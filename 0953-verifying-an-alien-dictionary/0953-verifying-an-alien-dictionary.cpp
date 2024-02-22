@@ -1,11 +1,11 @@
 class Solution {
 private:
-    bool isSorted(string word1, string word2, unordered_map<char, int>& m){
+    bool isSorted(string word1, string word2, vector<int>& m){
         
         for(int i=0;i<min(word1.length(), word2.length());i++){
-            if(m[word1[i]] > m[word2[i]]){
+            if(m[word1[i]-'a'] > m[word2[i]-'a']){
                 return false;
-            } else if(m[word1[i]] < m[word2[i]]){
+            } else if(m[word1[i]-'a'] < m[word2[i]-'a']){
                 return true;
             }
         }
@@ -13,9 +13,9 @@ private:
     }
 public:
     bool isAlienSorted(vector<string>& words, string order) {
-        unordered_map<char, int> m;
+        vector<int> m(26, 0);
         for(int i=0;i<order.length();i++){
-            m[order[i]] = i;
+            m[order[i]-'a'] = i;
         }
         
         for(int i=0;i<words.size()-1;i++){
