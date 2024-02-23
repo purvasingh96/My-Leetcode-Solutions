@@ -1,23 +1,26 @@
 class Solution {
 public:
-    vector<vector<int>> merge(vector<vector<int>>& nums) {
-     // sort by start
-        sort(nums.begin(), nums.end(), [](const vector<int>& a, const vector<int>& b){
-            return a[0] < b[0];
-        });
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        // TC: O(NlogN) + O(N)
+        // SC: O(1)
         
-        vector<vector<int>> res;
+        // O(NlogN)
+        sort(intervals.begin(), intervals.end());
         
-        for(int i=0;i<nums.size();i++){
-            if(res.size() ==0 || res.back()[1] < nums[i][0]){
-                res.push_back(nums[i]);
+        vector<vector<int>> ans;
+        
+        // O(N)
+        for(int i=0;i<intervals.size();i++){
+            if(ans.size() == 0 || ans.back()[1] < intervals[i][0]){
+                ans.push_back(intervals[i]);
             } else {
-                auto f = res.back();
-                res.pop_back();
-                res.push_back({f[0], max(f[1], nums[i][1])});
+                vector<int> back = ans.back();
+                ans.pop_back();
+                ans.push_back({min(back[0], intervals[i][0]), max(back[1], intervals[i][1])});
             }
         }
         
-        return res;
+        return ans;
+        
     }
 };
