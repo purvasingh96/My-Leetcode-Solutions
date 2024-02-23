@@ -10,45 +10,47 @@
  */
 class Solution {
 private:
-    ListNode* merge(ListNode* a, ListNode* b){
-        ListNode* res = new ListNode(0);
-        ListNode* head = res;
-        ListNode* l1 = a;
-        ListNode* l2 = b;
+    ListNode* merge(ListNode* l1, ListNode* l2){
+        ListNode* head = new ListNode(-1);
+        ListNode* ans = head;
         
         while(l1 && l2){
-            if(l1->val <= l2->val){
-                res->next = new ListNode(l1->val);
+            if(l1->val < l2->val){
+                head->next = new ListNode(l1->val);
                 l1 = l1->next;
             } else {
-                res->next = new ListNode(l2->val);
+                head->next = new ListNode(l2->val);
                 l2 = l2->next;
             }
-            res=res->next;
+            head = head->next;
+        }
+        while(l1){
+            head->next = l1;
+            break;
+        }
+        while(l2){
+            head->next = l2;
+            break;
         }
         
-        if(l1){
-            res->next=l1;
-        }
-        
-        if(l2){
-            res->next=l2;
-        }
-        
-        return head->next;
+        return ans->next;
     }
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if(lists.size() == 0) {
+            return NULL;
+        }
         int interval=1;
-        int amt = lists.size();
         
-        while(interval < amt){
-            for(int i=0;i<amt-interval;i+=interval*2){
+        while(interval < lists.size()){
+            for(int i=0;i+interval<lists.size();i+=interval*2){
                 lists[i] = merge(lists[i], lists[i+interval]);
             }
             interval *=2;
         }
         
-        return amt>0 ? lists[0] : NULL;
+        return lists[0];
+        
+        
     }
 };
