@@ -3,46 +3,43 @@ private:
     vector<string> split(string s){
         string res="";
         vector<string> ans;
-        
         for(int i=0;i<s.length();i++){
-            if(s[i] == ':'){
+            if(s[i]==':'){
                 ans.push_back(res);
-                res="";
-            }
-            else {
+                res = "";
+            } else {
                 res += s[i];
             }
         }
-        
-        if(res!=""){
-            ans.push_back(res);
-        }
-        
+        ans.push_back(res);
         return ans;
     }
+    
 public:
     vector<int> exclusiveTime(int n, vector<string>& logs) {
         stack<int> st;
         vector<int> ans(n, 0);
-        int prev_time = 0;
+        int prevTime=0;
         
-        for(auto l:logs){
-            vector<string> x = split(l);
-            int idx = stoi(x[0]);
-            int curr_time = stoi(x[2]);
-            string op = x[1];
+        for(int i=0;i<logs.size();i++){
+            vector<string> data = split(logs[i]);
+            int idx = stoi(data[0]);
+            string op = data[1];
+            int currTime = stoi(data[2]);
             
             if(op == "start"){
-                int j = st.empty() ? idx : st.top();
-                ans[j] += curr_time - prev_time;
-                prev_time = curr_time;
+                int top = st.empty() ? idx:st.top();
+                ans[top] += currTime - prevTime;
+                prevTime = currTime;
                 st.push(idx);
             } else {
-                ans[idx] += curr_time-prev_time+1;
-                prev_time = curr_time+1;
                 st.pop();
+                ans[idx] += currTime - prevTime+1;
+                prevTime = currTime+1;
             }
+            
         }
+        
         return ans;
     }
 };
