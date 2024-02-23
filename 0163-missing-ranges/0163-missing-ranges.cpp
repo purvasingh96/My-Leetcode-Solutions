@@ -5,17 +5,19 @@ public:
         vector<vector<int>> ans;
         
         for(int i=0;i<nums.size();i++){
-            if(nums[i] != expected){
-                if(expected<=nums[i]-1){
-                    ans.push_back({expected, nums[i]-1});    
-                }
-            } 
-            expected = nums[i]+1;
+            if(nums[i] == expected){
+                expected+=1;
+                continue;
+            } else {
+                ans.push_back({expected, nums[i]-1});
+                expected=nums[i]+1;
+            }
         }
         
-        if(expected <= upper){
+        if(expected<=upper){
             ans.push_back({expected, upper});
         }
+        
         return ans;
     }
 };
