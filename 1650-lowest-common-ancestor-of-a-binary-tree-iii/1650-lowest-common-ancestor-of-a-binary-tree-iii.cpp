@@ -11,26 +11,26 @@ public:
 
 class Solution {
 private:
-    void lca(Node* p, unordered_map<Node*, bool>& visited){
-       if(p==NULL){
-           return;
-       }
+    void dfs(Node* p, unordered_map<Node*, bool>& visited){
+        if(!p){
+            return;
+        }
+        
         visited[p] = true;
-        lca(p->parent, visited);
-    }
-    Node* check(Node* q, unordered_map<Node*, bool>& visited){
-        if(!q){
-            return NULL;
-        }
-        if(visited[q] == true){
-            return q;
-        }
-        return check(q->parent, visited);
+        dfs(p->parent, visited);
     }
 public:
     Node* lowestCommonAncestor(Node* p, Node * q) {
-        unordered_map<Node*, bool> visited;
-        lca(p, visited);
-        return check(q, visited);
+        unordered_map<Node*,bool> visited;
+        dfs(p, visited);
+        
+        while(q){
+            if(visited[q] == true){
+                return q;
+            }
+            q = q->parent;
+        }
+        
+        return p;
     }
 };
