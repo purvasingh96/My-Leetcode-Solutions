@@ -1,49 +1,50 @@
 class Solution {
 private:
-    void twoSum(vector<int>& nums, int target, int start, set<vector<int>>& res){
-        int i=start, j=nums.size()-1;
-        
-        while(i<j){
-            int sum = nums[i] + nums[j];
-            
-            if(sum > target){
-                while(j>i && nums[j] == nums[j-1]){
-                    j-=1;
-                }
-                j-=1;
-            }
-            
-            else if(sum < target){
-                while(i<j && nums[i] == nums[i+1]){
-                    i+=1;
-                }
-                i+=1;
-            }
-            
-            else if(sum == target){
-                vector<int> temp = {-target, nums[i], nums[j]};
-                res.insert(temp);
-                while(j>i && nums[j] == nums[j-1]){
-                    j-=1;
-                }
-                while(i<j && nums[i] == nums[i+1]){
-                    i+=1;
+   void twoSum(vector<int>& nums, int start, int end, int target, set<vector<int>>& res){
+         
+        while(start<end){
+            int sum = nums[start] + nums[end];
+            if(sum == target){
+                res.insert({-target, nums[start], nums[end]});
+                
+                while(start < end && nums[start] == nums[start+1]){
+                    start+=1;
                 }
                 
-                i+=1;
-                j-=1;
+                while(start<end && nums[end] == nums[end-1]){
+                    end-=1;
+                }
+                
+                start+=1;
+                end-=1;
+                
+            }
+            
+            else if(sum > target){
+                while(start<end && nums[end] == nums[end-1]){
+                    end-=1;
+                }
+                end-=1;
+            } else {
+                while(start<end && nums[start] == nums[start+1]){
+                    start+=1;
+                }
+                start+=1;
             }
         }
+        
     }
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
-        int start=1;
         set<vector<int>> res;
         sort(nums.begin(), nums.end());
-        while(start<nums.size()){
-            twoSum(nums, -nums[start-1], start, res);
-            start+=1;
+        
+        for(int i=1;i<nums.size();i++){
+            int start = i, end = nums.size()-1;
+            int target = -nums[start-1];
+            twoSum(nums, start, end, target, res);
         }
+        
         vector<vector<int>> ans(res.begin(), res.end());
         return ans;
     }
