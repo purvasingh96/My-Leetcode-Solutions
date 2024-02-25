@@ -9,23 +9,30 @@
  */
 class Solution {
 private:
-    TreeNode* dfs(TreeNode* root, TreeNode* p, TreeNode* q){
-        if(!root) return NULL;
-        if(root == p) return p;
-        if(root == q) return q;
+    TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q){
+        if(!root){
+            return NULL;
+        }
         
-        auto foundP = dfs(root->left, p, q);
-        auto foundQ = dfs(root->right, p, q);
-        
-        if(foundP && foundQ){
+        if(root->val == p->val || root->val == q->val){
             return root;
         }
         
-        if(foundP && !foundQ) return foundP;
-        return foundQ;
+        auto left = lca(root->left, p, q);
+        auto right = lca(root->right, p, q);
+        
+        if(left && right){
+            return root;
+        }
+        
+        if(left){
+            return left;
+        }
+        
+        return right;
     }
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        return dfs(root, p, q);
+        return lca(root, p, q);
     }
 };
