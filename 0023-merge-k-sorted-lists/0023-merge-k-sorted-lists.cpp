@@ -18,18 +18,20 @@ private:
             if(l1->val < l2->val){
                 head->next = new ListNode(l1->val);
                 l1 = l1->next;
-            } else {
+            } else{
                 head->next = new ListNode(l2->val);
                 l2 = l2->next;
             }
             head = head->next;
         }
+        
         while(l1){
             head->next = l1;
             break;
         }
+        
         while(l2){
-            head->next = l2;
+            head->next=l2;
             break;
         }
         
@@ -37,20 +39,16 @@ private:
     }
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        if(lists.size() == 0) {
+        if(lists.size()==0){
             return NULL;
         }
         int interval=1;
-        
-        while(interval < lists.size()){
-            for(int i=0;i+interval<lists.size();i+=interval*2){
+        for(;interval<lists.size();interval*=2){
+            for(int i=0;i +interval< lists.size();i+=interval*2){
                 lists[i] = merge(lists[i], lists[i+interval]);
             }
-            interval *=2;
         }
         
         return lists[0];
-        
-        
     }
 };
