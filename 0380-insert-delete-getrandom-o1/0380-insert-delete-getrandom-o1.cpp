@@ -1,16 +1,13 @@
 class RandomizedSet {
-private:
-    vector<int> res;
-    unordered_map<int, int> m;
 public:
+    unordered_map<int, int> m;
     RandomizedSet() {
         
     }
     
     bool insert(int val) {
         if(m.find(val)==m.end()){
-            res.push_back(val);
-            m[val] = res.size()-1;
+            m[val]+=1;
             return true;
         }
         return false;
@@ -18,10 +15,6 @@ public:
     
     bool remove(int val) {
         if(m.find(val) != m.end()){
-            int og_idx = m[val];
-            res[og_idx] = res.back();
-            m[res.back()] = og_idx;
-            res.pop_back();
             m.erase(val);
             return true;
         }
@@ -29,7 +22,9 @@ public:
     }
     
     int getRandom() {
-        return res[rand()%(res.size())];
+        int idx = rand()%(m.size());
+        auto it = next(m.begin(), idx);
+        return it->first;
     }
 };
 
