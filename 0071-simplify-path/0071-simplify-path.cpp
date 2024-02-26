@@ -1,30 +1,29 @@
 class Solution {
 public:
     string simplifyPath(string path) {
+        vector<string> st;
         stringstream ss(path);
         string token;
-        string res  = "/";
-        vector<string> st;
         
         while(getline(ss, token, '/')){
-            //cout<<"token:: "<<token;
-            if(token == "." || token == ""){
+            if(token == "."){
                 continue;
             } else if(token == ".."){
                 if(st.size()!=0){
                     st.pop_back();
                 }
-            } else {
+            } else if(token!="") {
+                
                 st.push_back(token);
             }
         }
         
+        string res="";
+        
         for(auto x:st){
-            res += x + "/";
+            res += "/" + x;
         }
-        if(res.length()!=1){
-            res.pop_back();
-        }
-        return res;
+        
+        return res.length() == 0 ? "/" : res;
     }
 };
