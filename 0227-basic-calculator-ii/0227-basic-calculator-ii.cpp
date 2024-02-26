@@ -3,44 +3,52 @@ public:
     int calculate(string s) {
         stack<int> st;
         char op = '+';
-        for(int i=0;i<s.length();i++){
-            if(s[i]==' '){
+        int d=0;
+        
+        for(auto x:s){    
+            if(x == ' '){
                 continue;
-            } else {
-                if(isdigit(s[i])){
-                    int d=0;
-                    while(i<s.length() && isdigit(s[i])){
-                        d = d*10 + (s[i]-'0');
-                        i+=1;
-                    }
-                    
-                    i-=1;
-                    if(op == '+'){
-                        st.push(d);
-                    } else if(op == '-'){
-                        st.push(-1*d);
-                    } else if(op == '*'){
-                        int top = st.top();
-                        st.pop();
-                        st.push(top * d);
-                    } else if(op == '/'){
-                        int top = st.top();
-                        st.pop();
-                        st.push(top / d);
-                    }
-                } else {
-                    op = s[i];
-                }
-                
-                
             }
+            if(isdigit(x)){
+                d = d*10 + (x-'0');
+            } else {
+                if(op == '+'){
+                    st.push(d);
+                } else if(op == '-'){
+                    st.push(-1*d);
+                } else if(op == '*'){
+                    int top = st.top();
+                    st.pop();
+                    st.push(top * d);
+                } else if(op == '/'){
+                    int top = st.top();
+                    st.pop();
+                    st.push(top / d);    
+                }
+                d=0;
+                op = x;
+            }    
         }
         
+        if(op == '+'){
+                    st.push(d);
+                } else if(op == '-'){
+                    st.push(-1*d);
+                } else if(op == '*'){
+                    int top = st.top();
+                    st.pop();
+                    st.push(top * d);
+                } else if(op == '/'){
+                    int top = st.top();
+                    st.pop();
+                    st.push(top / d);    
+                }
         int ans=0;
         while(!st.empty()){
             ans += st.top();
             st.pop();
         }
+        
         return ans;
     }
 };
