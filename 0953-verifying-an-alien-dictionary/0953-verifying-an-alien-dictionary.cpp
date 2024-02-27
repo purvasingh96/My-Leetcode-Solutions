@@ -1,25 +1,27 @@
 class Solution {
 private:
-    bool isSorted(string word1, string word2, vector<int>& m){
-        
+    bool ordered(string word1, string word2, unordered_map<char, int> m){
         for(int i=0;i<min(word1.length(), word2.length());i++){
-            if(m[word1[i]-'a'] > m[word2[i]-'a']){
-                return false;
-            } else if(m[word1[i]-'a'] < m[word2[i]-'a']){
-                return true;
+            if(word1[i]!=word2[i]){
+                if(m[word1[i]] > m[word2[i]]){
+                    return false;
+                } else {
+                    return true;
+                }
             }
         }
+        
         return word1.length() <= word2.length();
     }
 public:
     bool isAlienSorted(vector<string>& words, string order) {
-        vector<int> m(26, 0);
+        unordered_map<char, int> m;
         for(int i=0;i<order.length();i++){
-            m[order[i]-'a'] = i;
+            m[order[i]]=i;
         }
         
         for(int i=0;i<words.size()-1;i++){
-            if(!isSorted(words[i], words[i+1], m)){
+            if(!ordered(words[i], words[i+1], m)){
                 return false;
             }
         }
