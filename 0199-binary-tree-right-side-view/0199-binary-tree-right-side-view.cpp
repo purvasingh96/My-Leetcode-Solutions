@@ -12,36 +12,32 @@
 class Solution {
 public:
     vector<int> rightSideView(TreeNode* root) {
+        
         queue<TreeNode*> q;
-        vector<int> ans;
-        if(!root) return ans;
-        ans.push_back(root->val);
         q.push(root);
+        
+        vector<int> res;
+        if(!root){
+            return res;
+        }
         
         while(!q.empty()){
             int sz = q.size();
-            int rightmost=INT_MIN;
+            res.push_back(q.front()->val);
             while(sz--){
                 auto f = q.front();
                 q.pop();
-                if(f->right) {
+                
+                if(f->right){
                     q.push(f->right);
-                    if(rightmost == INT_MIN){
-                        rightmost = f->right->val;    
-                    }
-                }
+                } 
+                
                 if(f->left){
                     q.push(f->left);
-                    if(rightmost==INT_MIN){
-                        rightmost = f->left->val;
-                    }
                 }
-            }
-            if(rightmost != INT_MIN){
-                ans.push_back(rightmost);    
             }
         }
         
-        return ans;
+        return res;
     }
 };
