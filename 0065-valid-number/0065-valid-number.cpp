@@ -1,62 +1,77 @@
 class Solution {
 private:
-    bool isOneOrMoreDigits(string s){
-        if(s.length()==0) return false;
+    bool oneOrMoreDigits(string s){
+        if(s.length()==0){
+            return false;
+        }
+        
         for(int i=0;i<s.length();i++){
             if(!isdigit(s[i])){
                 return false;
             }
         }
+        
         return true;
     }
     
     bool isInteger(string s){
-        if(s.length()==0) return false;
-        if(s[0] == '+' || s[0] == '-'){
-            return isOneOrMoreDigits(s.substr(1));
+        if(s.length()==0){
+            return false;
         }
-        return isOneOrMoreDigits(s);
+        
+        if(s[0] == '+' || s[0] == '-'){
+            return oneOrMoreDigits(s.substr(1));
+        }
+        
+        return oneOrMoreDigits(s);
     }
     
     bool isDecimal(string s){
-        if(s.length()==0) return false;
+        if(s.length() == 0){
+            return false;
+        }
         if(s[0] == '+' || s[0] == '-'){
-            return isDecimal(s.substr(1));
+            s = s.substr(1);
         }
-        
-        string left="", right="";
-        for(int i=0;i<s.length();i++){
-            if(s[i] == '.'){
-                left = s.substr(0, i);
-                right = s.substr(i+1);
-                break;
+            string left="", right="";
+            int i=0;
+            bool dotFound=false;
+            
+            for(;i<s.length();i++){
+                if(s[i] == '.'){
+                    dotFound = true;
+                    break;
+                } else {
+                    left += s[i];
+                }
             }
-        }
-        
-        return isOneOrMoreDigits(left) && right.length()==0 || 
-            isOneOrMoreDigits(left) && isOneOrMoreDigits(right) ||
-            left.length()==0 && isOneOrMoreDigits(right);
+            if(!dotFound){
+                return false;
+            }
+            right = s.substr(i+1);
+            return ((oneOrMoreDigits(left) && right.length() == 0) ||
+                   (oneOrMoreDigits(left) && oneOrMoreDigits(right)) ||
+                   (left.length() == 0 && oneOrMoreDigits(right)));
         
     }
+    
 public:
     bool isNumber(string s) {
         string left="", right="";
+        bool eFound=false;
         for(int i=0;i<s.length();i++){
-            if(s[i] == 'E' || s[i]=='e'){
-                left = s.substr(0, i);
+            if(s[i] == 'e' || s[i] == 'E'){
+                eFound=true;
                 right = s.substr(i+1);
                 break;
+            } else {
+                left += s[i];
             }
         }
-        cout<<"left: "<<left<<" right: "<<right;
-        if(right.length()==0){
-            // no e's
-            cout<<"here";
-            cout<<"isDecimal(s):: "<<isDecimal(s)<<"\n";
-            cout<<"isInteger(s):: "<<isInteger(s)<<"\n";
-            return isDecimal(s) || isInteger(s);
+        if(!eFound){
+            return isDecimal(left) || isInteger(left);
+        } else {
+            return (isDecimal(left) || isInteger(left)) && (isInteger(right));
         }
-        
-        return (isDecimal(left) || isInteger(left)) && isInteger(right);
     }
 };
