@@ -21,50 +21,38 @@ public:
 
 class Solution {
 public:
-    Node* insert(Node* head, int x) {
-        bool insert=false;
+    Node* insert(Node* head, int insertVal) {
         if(!head){
-            Node* newNode = new Node(x);
+            Node* newNode = new Node(insertVal);
             newNode->next = newNode;
             return newNode;
         }
-        Node* prev=head;
-        Node* next = head->next;
+        Node* prev = head;
+        Node* ans = head;
+        head = head->next;
+        bool insertHere=false;
         
-        while(next!=head){
-            if(prev->val < next->val){
-                if(prev->val <= x && x<=next->val){
-                    insert=true;
+        
+        while(head!=ans){
+            if(prev->val <= head->val){
+                if(insertVal >= prev->val && insertVal <= head->val){
+                    break;
                 }
-            } else if(prev->val == next->val){
-                if(x == prev->val){
-                    insert=true;
-                }
-            } else if(prev->val > next->val){
-                if(x > prev->val || x < next->val){
-                    insert=true;
+            } else {
+                // inserting towards the end/first
+                if(insertVal > prev->val || insertVal < head->val){
+                    break;
                 }
             }
             
-            if(insert){
-                Node* nextNode = prev->next;
-                Node* newNode = new Node(x);
-                prev->next = newNode;
-                newNode->next = nextNode;
-                break;
-            } else {
-                prev = prev->next;
-                next = next->next;
-            }
+            prev=prev->next;
+            head=head->next;
         }
         
-        if(!insert){
-            Node* nextNode = prev->next;
-            Node* newNode = new Node(x);
-            prev->next = newNode;
-            newNode->next = nextNode;
-        }
+        Node* newNode = new Node(insertVal);
+        prev->next = newNode;
+        newNode->next = head;
+        return ans;
         
-        return head;
     }
 };
