@@ -11,26 +11,28 @@
  */
 class Solution {
 private:
-    void dfs(TreeNode* root, int low, int high, int& total){
-        if(!root) return;
-        if(root->val > low){
-            dfs(root->left, low, high, total);    
+    void helper(TreeNode* root, int low, int high, int& sum){
+        if(!root){
+            return;
         }
         
-        if(root->val >= low && root->val <=high){
-            total += root->val;
+        if(root->val >=low && root->val <= high){
+            sum += root->val;
+        }
+        
+        if(root->val > low){
+            helper(root->left, low, high, sum);
         }
         
         if(root->val < high){
-            dfs(root->right, low, high, total);    
+            helper(root->right, low, high, sum);
         }
-        
     }
+    
 public:
     int rangeSumBST(TreeNode* root, int low, int high) {
-        // inorder and add
-        int total=0;
-        dfs(root, low, high, total);
-        return total;
+        int sum=0;
+        helper(root, low, high, sum);
+        return sum;
     }
 };
