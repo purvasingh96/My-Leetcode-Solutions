@@ -1,22 +1,21 @@
 class Solution {
 private:
-    void backtrack(string digits, int i, unordered_map<int, vector<char>>& m, string& res, vector<string>& ans){
+    void backtrack(string digits, int i, string temp, vector<string>& ans, unordered_map<int, vector<char>>& m){
         if(i >= digits.length()){
-            ans.push_back(res);
+            if(temp!=""){
+                ans.push_back(temp);    
+            }
             return;
         }
         
-        for(auto c:m[digits[i] -'0']){
-            res += c;
-            backtrack(digits, i+1, m, res, ans);
-            res.pop_back();
+        for(auto c:m[digits[i]-'0']){
+            temp += c;
+            backtrack(digits, i+1, temp, ans, m);
+            temp.pop_back();
         }
     }
 public:
     vector<string> letterCombinations(string digits) {
-        if(digits.length()==0){
-            return {};
-        }
         unordered_map<int, vector<char>> m;
         m[2] = {'a', 'b', 'c'};
         m[3] = {'d', 'e', 'f'};
@@ -26,13 +25,9 @@ public:
         m[7] = {'p', 'q', 'r', 's'};
         m[8] = {'t', 'u', 'v'};
         m[9] = {'w', 'x', 'y', 'z'};
-        
         vector<string> ans;
-        string res="";
         
-        backtrack(digits, 0, m, res, ans);
-        
+        backtrack(digits, 0, "", ans, m);
         return ans;
-        
     }
 };
