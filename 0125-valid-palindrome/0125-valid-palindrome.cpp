@@ -1,25 +1,22 @@
 class Solution {
 public:
     bool isPalindrome(string s) {
-        int i=0, j=s.length()-1;
+        int l=0, r=s.length()-1;
         
-        while(i<j){
-            if(isalnum(s[i]) && isalnum(s[j])){
-                char si = tolower(s[i]);
-                char sj = tolower(s[j]);
-                
-                if(si!=sj) {
+        while(l<r){
+            if(isalnum(s[l]) && isalnum(s[r])){
+                if(tolower(s[l]) != tolower(s[r])){
                     return false;
-                } else {
-                    i+=1;
-                    j-=1;
+                } else if(tolower(s[l]) == tolower(s[r])){
+                    l+=1;
+                    r-=1;
                 }
             } else {
-                if(!isalnum(s[i])){
-                    i+=1;
+                while(l<r && !isalnum(s[l])){
+                    l+=1;
                 }
-                if(!isalnum(s[j])){
-                    j-=1;
+                while(r>l && !isalnum(s[r])){
+                    r-=1;
                 }
             }
         }
