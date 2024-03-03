@@ -23,17 +23,19 @@ public:
 */
 
 class Solution {
+
 public:
     Node* treeToDoublyList(Node* root) {
-        if(!root) return root;
-        Node* head = new Node();
+        if(!root){
+            return NULL;
+        }
+        Node* head = new Node(-1);
         Node* last = head;
-        
         while(root){
             if(root->left==NULL){
-                last->right=root;
-                root->left =last;
-                last = root;
+                last->right = root;
+                root->left=last;
+                last =root;
                 root=root->right;
             } else {
                 Node* pred = root->left;
@@ -44,19 +46,18 @@ public:
                 if(pred->right==NULL){
                     pred->right=root;
                     root=root->left;
-                }
-                else if(pred->right==root){
+                } else if(pred->right==root){
                     last->right = root;
-                    root->left = last;
-                    last = root;
+                    root->left=last;
+                    last =root;
                     root=root->right;
                 }
-                    
             }
         }
         
-        last->right=head->right;
+        last->right = head->right;
         head->right->left = last;
         return head->right;
+        
     }
 };
