@@ -11,25 +11,29 @@
 class Solution {
 public:
     ListNode* _head;
+    
     Solution(ListNode* head) {
-        _head = head;
+        _head=head;
+    
     }
     
     int getRandom() {
-        ListNode* res = _head;
-        int ans=-1, c=0;
-        cout<<res->val;
-        while(res){
+        int ans=-1;
+        int sz=0;
+        ListNode* root = _head;
+        
+        while(root){
             if(ans==-1){
-                ans=res->val;
-                c+=1;
+                ans = root->val;
+                sz+=1;
             } else {
-                c+=1;
-                if(rand()%c==0){
-                    ans = res->val;
-                }
+                sz+=1;
+                int val = rand()%sz;
+                if(val == 0){
+                    ans = root->val;
+                } 
             }
-             res = res->next;   
+            root = root->next;
         }
         
         return ans;
