@@ -9,63 +9,58 @@
  */
 class Solution {
 private:
-    void dfs(TreeNode* root, TreeNode* parent, map<TreeNode*, vector<TreeNode*>>& m){
-        if(!root) {
+    void dfs(TreeNode* root, unordered_map<TreeNode*, vector<TreeNode*>>& m){
+        if(!root){
             return;
         }
         
-        if(parent){
-            m[root].push_back(parent);    
+        if(root->left){
+            m[root->left].push_back(root);
+            m[root].push_back(root->left);
+            dfs(root->left, m);
         }
         
-        if(root->left){
-            m[root].push_back(root->left);
-            dfs(root->left, root, m);
-        }
         if(root->right){
+            m[root->right].push_back(root);
             m[root].push_back(root->right);
-            dfs(root->right, root, m);
+            dfs(root->right, m);
         }
+        
     }
-
 public:
     vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        map<TreeNode*, vector<TreeNode*>> m;
-        dfs(root, NULL, m);
-        vector<int> res;
+        unordered_map<TreeNode*, vector<TreeNode*>> m;
+        dfs(root, m);
         queue<TreeNode*> q;
         q.push(target);
-        int d=0;
-        map<TreeNode*, bool> visited;
+        vector<int> ans;
+        unordered_map<TreeNode*, bool> visited;
         visited[target]=true;
-        //cout<<"m.size():: "<<m.size();
         
-        
-        while(q.size()!=0){
-            int sz = q.size();
+        while(!q.empty() && k--){
+            int sz= q.size();
             while(sz--){
-                auto f =q.front();
+                auto f = q.front();
                 q.pop();
-                if(d==k){
-                    res.push_back(f->val);
-                    
+                for(auto x:m[f]){
+                    if(!visited[x]){
+                        visited[x]=true;
+                        q.push(x);
+                    }
                 }
-                else {
-                   if(m[f].size()!=0){
-                        for(auto x:m[f]){
-                            if(visited[x]==false){
-                                visited[x] = true;
-                                q.push(x);
-                            }
-                            
-                        }
-                    } 
-                }
-                
             }
-            d+=1;
+            if(k==0){
+               break; 
+            }
         }
         
-        return res;
+        while(!q.empty()){
+            auto f = q.front();
+            q.pop();
+            ans.push_back(f->val);
+        }
+        
+        return ans;
+        
     }
 };
