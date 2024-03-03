@@ -1,48 +1,32 @@
 class Solution {
 private:
-    bool isPeak(vector<int>& nums, int idx){
-        if(idx==0){
-            if(nums[1]<nums[idx]){
-                return true;    
-            }
-            return false;
-        }
-        
-        if(idx == nums.size()-1){
-            if(nums[nums.size()-2] < nums[idx]){
-                return true;    
-            }
-            return false;
+    bool isPeak(vector<int>& nums, int i){
+        if(i==0){
+            return nums[1] < nums[0];
         } 
-        if(nums[idx-1] < nums[idx] && nums[idx] > nums[idx+1]){
-            return true;
+        
+        if(i==nums.size()-1){
+            return nums[nums.size()-2] < nums[i];
         }
         
-        return false;
+        return nums[i-1] < nums[i] && nums[i] > nums[i+1];
     }
 public:
     int findPeakElement(vector<int>& nums) {
-        if(nums.size()==1){
-            return 0;
-        }
+        int l=0, r=nums.size()-1;
         
-        int low=0, high=nums.size()-1;
-        
-        
-        while(low<high){
-            int mid = low + (high-low)/2;
-            
-            if(isPeak(nums, mid)){
+        while(l<r){
+            int mid = l + (r-l)/2;
+            if(isPeak(nums,mid)){
                 return mid;
             }
-            else if(nums[mid+1] > nums[mid]){
-                low = mid+1;
-            }
-            else {
-                high = mid-1;
+            if(nums[mid] < nums[mid+1]){
+                l = mid+1;
+            } else {
+                r=mid-1;
             }
         }
-            
-        return isPeak(nums, low) ? low : -1;
+        
+        return l;
     }
 };
