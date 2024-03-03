@@ -1,17 +1,13 @@
 class Solution {
 private:
-    bool ordered(string word1, string word2, unordered_map<char, int> m){
-        for(int i=0;i<min(word1.length(), word2.length());i++){
-            if(word1[i]!=word2[i]){
-                if(m[word1[i]] > m[word2[i]]){
-                    return false;
-                } else {
-                    return true;
-                }
+    bool isOrdered(string s1, string s2, unordered_map<char, int>& m){
+        for(int i=0;i<min(s1.length(), s2.length());i++){
+            if(s1[i] != s2[i]){
+                return m[s1[i]] < m[s2[i]];
             }
         }
         
-        return word1.length() <= word2.length();
+        return s1.length() <= s2.length();
     }
 public:
     bool isAlienSorted(vector<string>& words, string order) {
@@ -19,9 +15,8 @@ public:
         for(int i=0;i<order.length();i++){
             m[order[i]]=i;
         }
-        
         for(int i=0;i<words.size()-1;i++){
-            if(!ordered(words[i], words[i+1], m)){
+            if(!isOrdered(words[i], words[i+1], m)){
                 return false;
             }
         }
