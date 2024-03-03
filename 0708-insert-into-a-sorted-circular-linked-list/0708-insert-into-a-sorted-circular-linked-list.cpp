@@ -21,38 +21,39 @@ public:
 
 class Solution {
 public:
-    Node* insert(Node* head, int insertVal) {
+    Node* insert(Node* head, int x) {
         if(!head){
-            Node* newNode = new Node(insertVal);
+            Node* newNode = new Node(x);
             newNode->next = newNode;
             return newNode;
         }
+        Node* root = head;
         Node* prev = head;
-        Node* ans = head;
         head = head->next;
-        bool insertHere=false;
         
-        
-        while(head!=ans){
-            if(prev->val <= head->val){
-                if(insertVal >= prev->val && insertVal <= head->val){
+        while(prev->next!=root){
+            if(prev->val < head->val){
+                if(x >= prev->val && x <= head->val){
                     break;
                 }
-            } else {
-                // inserting towards the end/first
-                if(insertVal > prev->val || insertVal < head->val){
+            } else if(prev->val > head->val) {
+                // last node
+                if(prev->val <= x || x <= head->val){
+                    break;
+                }
+            } else if(prev->val == head->val){
+                if(x == prev->val){
                     break;
                 }
             }
-            
-            prev=prev->next;
+            prev = prev->next;
             head=head->next;
         }
         
-        Node* newNode = new Node(insertVal);
+        Node* newNode = new Node(x);
         prev->next = newNode;
         newNode->next = head;
-        return ans;
         
+        return root;
     }
 };
