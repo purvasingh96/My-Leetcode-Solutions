@@ -6,24 +6,25 @@ public:
     }
     
     int pick(int target) {
-        int ans=-1, count=0;
+        int sz=0, res=-1;
+        
         for(int i=0;i<_nums.size();i++){
+            
             if(_nums[i]!=target){
                 continue;
             } else {
-                if(count==0){
-                    count+=1;
-                    ans=i;
+                sz+=1;
+                if(res==-1){
+                    res = i;
                 } else {
-                    count+=1;
-                    if(rand()%count == 0){
-                        ans = i;
+                    if(rand()%sz==0){
+                        res = i;
                     }
                 }
             }
         }
         
-        return ans;
+        return res;
     }
 };
 
