@@ -1,29 +1,28 @@
 class Solution {
 public:
     int totalFruit(vector<int>& fruits) {
-        int l=0, r=0;
-        int ans=0;
         unordered_map<int, int> m;
+        int maxSum = INT_MIN;
+        int l=0;
         
-        for(;r<fruits.size();r++){
+        for(int r=0;r<fruits.size();r++){
             m[fruits[r]]+=1;
             
             if(m.size() > 2){
-                
-                while(m.size()>2 && l<r){
+                while(l<r && m.size()>2){
                     m[fruits[l]]-=1;
                     if(m[fruits[l]] == 0){
-                        m.erase(fruits[l]);
+                        m.erase(m.find(fruits[l]));
                     }
                     l+=1;
                 }
-                
             }
-            ans = max(ans, r-l+1);
+            
+            int sum = r-l+1;
+            maxSum = max(sum, maxSum);
+
         }
         
-        
-        return ans;
-        
+        return maxSum;
     }
 };
