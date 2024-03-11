@@ -31,10 +31,11 @@ private:
         head->isWord = true;
     }
     
-    void backtrack(int i, int j, vector<vector<char>>& board, TrieNode* root, unordered_set<string>& ans){
+    void backtrack(int i, int j, vector<vector<char>>& board, TrieNode* root, vector<string>& ans){
         
         if(root->isWord){
-            ans.insert(root->word);
+            ans.push_back(root->word);
+            root->isWord=false;
         }
         
         for(int k=0;k<4;k++){
@@ -65,7 +66,7 @@ public:
         for(auto word:words){
             insert(word);
         }
-        unordered_set<string> ans;
+        vector<string> ans;
         
         for(int i=0;i<board.size();i++){
             for(int j=0;j<board[0].size();j++){
@@ -85,8 +86,8 @@ public:
                 }        
             }
         }
-        vector<string> res(ans.begin(), ans.end());
-        return res;
+      
+        return ans;
         
     }
 };
