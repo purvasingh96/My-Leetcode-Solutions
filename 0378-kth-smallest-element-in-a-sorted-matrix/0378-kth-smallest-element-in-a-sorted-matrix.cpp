@@ -1,26 +1,49 @@
 class Solution {
-public:
-    int kthSmallest(vector<vector<int>>& matrix, int k) {
-        typedef pair<int, int> pp;
-        auto comp = [&](const pp& a, const pp& b) {
-            return matrix[a.first][a.second] > matrix[b.first][b.second];
-        };
-        priority_queue<pp, vector<pp>, decltype(comp)> pq(comp);
+private:
+    int count(vector<vector<int>>& matrix, int mid, vector<int>& smallLargePair){
+        int co=0;
         
-        for(int i=0;i<matrix.size();i++){
-            pq.push({i, 0});
-        }
+        int n = matrix.size();
+        int r=n-1, c=0;
         
-        pair<int, int> ans;
-        while(k--){
-            ans = pq.top();
-            int row = ans.first, col = ans.second;
-            pq.pop();
-            if(col+1 < matrix[0].size()){
-                pq.push({row, col+1});    
+        while(r>=0 && c<n){
+            if(matrix[r][c] > mid){
+                smallLargePair[1] = min(smallLargePair[1], matrix[r][c]);
+                r--;
+            } else {
+                smallLargePair[0] = max(smallLargePair[0], matrix[r][c]);
+                co += r+1;
+                c+=1;
             }
         }
         
-        return matrix[ans.first][ans.second];
+        return co;
+        
+    }
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        int n = matrix.size();
+        int l=matrix[0][0], r = matrix[n-1][n-1];
+        
+        while(l<r){
+            int mid = l+(r-l)/2;
+            vector<int> smallLargePair = {matrix[0][0], matrix[n-1][n-1]};
+            
+            int ck = count(matrix, mid, smallLargePair);
+            
+            if(ck == k){
+                return smallLargePair[0];
+            }
+            
+            if(ck < k){
+                l = smallLargePair[1];
+            } else {
+                r = smallLargePair[0];
+            }
+            
+        }
+        
+        return l;
+        
     }
 };
