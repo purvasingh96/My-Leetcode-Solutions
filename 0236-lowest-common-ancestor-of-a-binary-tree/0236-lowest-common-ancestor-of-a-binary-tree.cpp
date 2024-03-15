@@ -9,30 +9,39 @@
  */
 class Solution {
 private:
+    bool fp, fq;
     TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q){
         if(!root){
             return NULL;
         }
         
-        if(root->val == p->val || root->val == q->val){
+        auto left = lca(root->left, p, q);
+        auto right = lca(root->right, p, q);
+        
+        if(root==p){
+            fp=true;
             return root;
         }
         
-        auto left = lca(root->left, p, q);
-        auto right = lca(root->right, p, q);
+        if(root==q){
+            fq=true;
+            return root;
+        }
         
         if(left && right){
             return root;
         }
         
-        if(left){
-            return left;
-        }
-        
-        return right;
+        return left ? left : right;
     }
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        return lca(root, p, q);
+        fp=false, fq=false;
+        auto ans = lca(root, p, q);
+        if(fp && fq){
+            return ans;
+        }
+            
+        return NULL;
     }
 };
