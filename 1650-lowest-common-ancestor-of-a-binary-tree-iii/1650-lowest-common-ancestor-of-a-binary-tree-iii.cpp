@@ -21,16 +21,17 @@ private:
     }
 public:
     Node* lowestCommonAncestor(Node* p, Node * q) {
-        unordered_map<Node*,bool> visited;
+        unordered_map<Node*, bool> visited;
         dfs(p, visited);
         
         while(q){
             if(visited[q] == true){
                 return q;
-            }
+            } 
             q = q->parent;
         }
         
-        return p;
+        return q;
+        
     }
 };
