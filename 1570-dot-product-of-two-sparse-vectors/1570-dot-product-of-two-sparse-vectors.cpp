@@ -2,7 +2,7 @@ class SparseVector {
 public:
     unordered_map<int, int> m;
     SparseVector(vector<int> &nums) {
-        for(int i=0;i<nums.size();i++){
+        for(auto int i=0;i<nums.size();i++){
             if(nums[i]!=0){
                 m[i] = nums[i];
             }
@@ -12,10 +12,9 @@ public:
     // Return the dotProduct of two sparse vectors
     int dotProduct(SparseVector& vec) {
         int res=0;
-        
-        for(auto x:m){
-            if(vec.m.find(x.first)!=vec.m.end()){
-                res += vec.m[x.first]*x.second;
+        for(auto x:vec.m){
+            if(m.find(x.first)!=m.end()){
+                res += (m[x.first] * x.second);
             }
         }
         
