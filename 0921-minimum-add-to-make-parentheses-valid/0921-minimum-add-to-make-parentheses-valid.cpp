@@ -1,19 +1,19 @@
 class Solution {
 public:
     int minAddToMakeValid(string s) {
-        int balance =0, res=0;
-        for(auto c:s){
-            if(c == '('){
-                balance+=1;
-            } else if(c == ')'){
-                balance -=1;
-                if(balance <0){
-                    balance+=1;
-                    res+=1;
+        int b=0, c=0;
+        for(int i=0;i<s.length();i++){
+            if(s[i] == '('){
+                b+=1;
+            } else if(s[i] == ')'){
+                b-=1;
+                if(b<0){
+                    c+=1;
+                    b+=1;
                 }
             }
         }
         
-        return res + balance;
+        return c + b;
     }
 };
