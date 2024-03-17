@@ -1,20 +1,18 @@
 class Solution {
 public:
     vector<int> findBuildings(vector<int>& heights) {
-        // monotonic decreasing array
-        vector<int> res;
-        
+        vector<int> ans;
         for(int i=0;i<heights.size();i++){
-            if(res.size()==0 || heights[res.back()] > heights[i]){
-                res.push_back(i);
+            if(ans.size() == 0 || heights[ans.back()] > heights[i]){
+                ans.push_back(i);
             } else {
-                while(res.size()!=0 && heights[res.back()] <= heights[i]){
-                    res.pop_back();
+                while(ans.size()!=0 && heights[ans.back()] <= heights[i]){
+                    ans.pop_back();
                 }
-                res.push_back(i);
+                ans.push_back(i);
             }
         }
         
-        return res;
+        return ans;
     }
 };
