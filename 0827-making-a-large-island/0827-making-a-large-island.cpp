@@ -1,12 +1,15 @@
-class UnionFind{
+class dsu{
 public:
     vector<int> root;
-    vector<int> size;
-    UnionFind(int n){
+    vector<int> rank;
+    
+    dsu(int n){
         root.resize(n);
-        size.resize(n, 1);
+        rank.resize(n);
+        
         for(int i=0;i<n;i++){
-            root[i]=i;
+            root[i] = i;
+            rank[i] = 1;
         }
     }
     
@@ -14,6 +17,7 @@ public:
         if(root[x] == x){
             return x;
         }
+        
         return root[x] = find(root[x]);
     }
     
@@ -22,18 +26,19 @@ public:
         int ry = find(y);
         
         if(rx!=ry){
-            if(size[rx] >= size[ry]){
-                root[ry]=rx;
-                size[rx]+=size[ry];
+            if(rank[rx] >= rank[ry]){
+                root[ry] = rx;
+                rank[rx] += rank[ry];
             } else {
                 root[rx] = ry;
-                size[ry]+=size[rx];
+                rank[ry] += rank[rx];
             }
         }
     }
+    
 };
 class Solution {
-    private:
+private:
     int dx[4] = {0, 1, 0, -1};
     int dy[4] = {1, 0, -1, 0};
     
@@ -43,51 +48,50 @@ class Solution {
 public:
     int largestIsland(vector<vector<int>>& grid) {
         int n = grid.size();
-        UnionFind uf(n*n);
+        dsu d(n*n);
         
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
-                if(grid[i][j]==1){
+                if(grid[i][j] == 1){
                     for(int k=0;k<4;k++){
                         int new_x = i+dx[k];
                         int new_y = j+dy[k];
                         
                         if(isValid(new_x, new_y, n) && grid[new_x][new_y]==1){
-                            uf.merge(n*i+j, new_x*n+new_y);
+                            d.merge(n*i+j, new_x*n+new_y);
                         }
+                        
                     }
                 }
             }
         }
         
-        int ans=INT_MIN;
+        int maxSize=INT_MIN;
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
                 
                 if(grid[i][j] == 0){
-                    set<int> st;
+                    unordered_set<int> roots;
                     for(int k=0;k<4;k++){
                         int new_x = i+dx[k];
                         int new_y = j+dy[k];
                         
                         if(isValid(new_x, new_y, n) && grid[new_x][new_y]==1){
-                            st.insert(uf.find(new_x*n+new_y));
+                            roots.insert(d.find(n*new_x + new_y));
                         }
                     }
-                    int sum=1;
-                
-                    for(auto x:st){
-                        sum += uf.size[x];
+                    
+                    int size=1;
+                    for(auto x:roots){
+                        size += d.rank[x];
                     }
-                    //cout<<sum<<"\n";
-                    ans = max(ans, sum);
+                    maxSize = max(maxSize, size);
                 }
-                
-                
             }
         }
         
-        return ans==INT_MIN? n*n : ans;
+        return maxSize==INT_MIN ? n*n : maxSize;
+        
         
     }
 };
