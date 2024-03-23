@@ -15,49 +15,56 @@ private:
         }
         
         if(root->left){
-            m[root->left].push_back(root);
             m[root].push_back(root->left);
+            m[root->left].push_back(root);
             dfs(root->left, m);
         }
         
         if(root->right){
-            m[root->right].push_back(root);
             m[root].push_back(root->right);
+            m[root->right].push_back(root);
             dfs(root->right, m);
         }
-        
     }
+    
 public:
     vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
         unordered_map<TreeNode*, vector<TreeNode*>> m;
+        unordered_map<TreeNode*, bool> visited;
+        vector<int> ans;
+        
+        if(k==0){
+            return {target->val};
+        }
+        
         dfs(root, m);
+        
         queue<TreeNode*> q;
         q.push(target);
-        vector<int> ans;
-        unordered_map<TreeNode*, bool> visited;
-        visited[target]=true;
+        visited[target] = true;
         
-        while(!q.empty() && k--){
-            int sz= q.size();
+        while(!q.empty()){
+            int sz = q.size();
+            
             while(sz--){
                 auto f = q.front();
                 q.pop();
-                for(auto x:m[f]){
-                    if(!visited[x]){
-                        visited[x]=true;
-                        q.push(x);
+                
+                for(auto c:m[f]){
+                    if(visited[c] == false){
+                        visited[c] = true;
+                        q.push(c);
                     }
                 }
             }
+            k--;
             if(k==0){
-               break; 
+                while(!q.empty()){
+                    ans.push_back(q.front()->val);
+                    q.pop();
+                }
+                return ans;
             }
-        }
-        
-        while(!q.empty()){
-            auto f = q.front();
-            q.pop();
-            ans.push_back(f->val);
         }
         
         return ans;
