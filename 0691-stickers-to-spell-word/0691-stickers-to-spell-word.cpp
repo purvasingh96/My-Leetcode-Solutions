@@ -47,14 +47,18 @@ public:
                     continue;
                 }
                 
+                int seek = temp[0]-'a';
                 for(auto x:cf){
                     q.push(f);
-                    for(int i=0;i<26;i++){
-                        if(x[i]>0){
-                            q.back()[i] -= x[i];
-                            
+                    if(x[seek] > 0){
+                        for(int i=0;i<26;i++){
+                            if(x[i]>0){
+                                q.back()[i] -= x[i];
+
+                            }
                         }
                     }
+                    
                 }
                 
                 
