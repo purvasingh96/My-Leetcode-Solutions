@@ -2,20 +2,22 @@ class Solution {
 public:
     bool checkSubarraySum(vector<int>& nums, int k) {
         unordered_map<int, int> m;
-        int sum=0;
+        int ps=0;
         
         for(int i=0;i<nums.size();i++){
-            sum += nums[i];
-            if(sum%k==0 && i>=1){
-                return true;
+            ps += nums[i];
+            if(ps%k==0){
+                if(i+1 >= 2){
+                    return true;
+                }
             }
-            int idx = sum%k;
-            if(m.find(idx)!=m.end()){
-                if(i - m[idx] >= 2){
+            
+            if(m.find(ps%k)!=m.end()){
+                if(i - m[ps%k] >= 2){
                     return true;
                 }
             } else {
-                m[idx] = i;
+                m[ps%k] = i;
             }
         }
         
