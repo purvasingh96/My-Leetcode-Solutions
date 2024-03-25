@@ -22,35 +22,41 @@ public:
 class Solution {
 public:
     Node* cloneGraph(Node* node) {
-        if(!node) return NULL;
-        unordered_map<Node*, Node*> m;
+        if(!node){
+            return NULL;
+        }
+        map<Node*, Node*> m;
         queue<Node*> q;
         q.push(node);
-        unordered_map<Node*, bool> visited;
+        map<Node*, bool> visited;
         visited[node] = true;
         
         while(!q.empty()){
-            auto f = q.front();
-            q.pop();
-            
-            if(m.find(f)==m.end()){
-                m[f] = new Node(f->val);
-            }
-            
-            for(auto c:f->neighbors){
-                if(m.find(c)==m.end()){
-                    m[c] = new Node(c->val);
+            int sz = q.size();
+            while(sz--){
+                auto f = q.front();
+                q.pop();
+                
+                if(m.find(f)==m.end()){
+                    m[f] = new Node(f->val);
                 }
-                m[f]->neighbors.push_back(m[c]);
-                if(visited[c]==false){
-                    visited[c] = true; 
-                    q.push(c);    
+                
+                for(auto x:f->neighbors){
+                    if(m.find(x) == m.end()){
+                            m[x] = new Node(x->val);
+                        }
+                    m[f]->neighbors.push_back(m[x]);
+                    if(visited[x] == false){
+                        visited[x] = true;
+                        q.push(x);
+                        
+                    }
                 }
                 
             }
         }
         
         return m[node];
-            
+        
     }
 };
