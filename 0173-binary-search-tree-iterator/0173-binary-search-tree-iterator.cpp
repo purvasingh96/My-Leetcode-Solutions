@@ -11,41 +11,39 @@
  */
 class BSTIterator {
 public:
-    TreeNode* head;
-    TreeNode* rootCopy;
-    BSTIterator(TreeNode* root) {
-        head =  root;
-        rootCopy = root;
+    TreeNode* root;
+    BSTIterator(TreeNode* head) {
+        root = head;
     }
-    // Morris?
+    
     int next() {
-        while(head){
-            if(head->left==NULL){
-                int ans = head->val;
-                head = head->right;
+        
+        while(root){
+        if(!root->left){
+            int ans = root->val;
+            root=root->right;
+            return ans;
+        } else {
+            TreeNode* pred = root->left;
+            while(pred->right!=NULL && pred->right!=root){
+                pred = pred->right;
+            }
+            if(pred->right==NULL){
+                pred->right=root;
+                root=root->left;
+            } else if(pred->right==root){
+                pred->right=NULL;
+                int ans = root->val;
+                root = root->right;
                 return ans;
-            } else {
-                TreeNode* pred = head->left;
-                while(pred->right!=NULL && pred->right!=head){
-                    pred = pred->right;
-                }
-                if(pred->right==NULL){
-                    pred->right=head;
-                    head = head->left;
-                } else {
-                    pred->right=NULL;
-                    int ans = head->val;
-                    head = head->right;
-                    return ans;
-                }
             }
         }
-        
-        return head->val;
+        }
+        return root->val;
     }
     
     bool hasNext() {
-        return head!=NULL;
+        return root!=NULL;
     }
 };
 
