@@ -12,43 +12,38 @@
 class Solution {
 public:
     TreeNode* str2tree(string s) {
-        if(s.length() == 0){
+        if(s.length()==0){
             return NULL;
         }
-        stack<TreeNode*> st;
-        char op='(';
-        int d=0;
         
-        for(int i=0;i<s.length();i++){    
+        TreeNode* ans=NULL;
+        stack<TreeNode*> st;
+        int d=0;
+        char op = '(';
+        
+        for(int i=0;i<s.length();i++){
             if(isdigit(s[i])){
                 int j=i;
                 while(j<s.length() && isdigit(s[j])){
-                    d=d*10+(s[j]-'0');
+                    d=d*10 + (s[j]-'0');
                     j+=1;
                 }
-               if(op == '-'){
-                   d = d*-1;
-               }
                 i=j-1;
-                
+                if(op == '-'){
+                    d = d*-1;
+                }
                 TreeNode* node = new TreeNode(d);
-                
-                
-                
-                    if(st.empty()){
-                        st.push(node);
+                if(st.empty()){
+                    st.push(node);
+                } else {
+                    if(st.top()->left==NULL){
+                        st.top()->left = node;
                     } else {
-                        if(st.top()->left==NULL){
-                            st.top()->left = node;
-                        } else {
-                            st.top()->right=node;
-                        }
-                        st.push(node);
+                        st.top()->right = node;
                     }
-                
-                
+                    st.push(node);
+                }
                 d=0;
-                
             } else {
                 op = s[i];
                 if(op == ')'){
@@ -59,7 +54,6 @@ public:
             }
         }
         
-        return st.size()>0 ? st.top() : NULL;
-        
+        return st.size()>0 ? st.top():NULL;
     }
 };
