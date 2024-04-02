@@ -1,24 +1,24 @@
 class Solution {
 public:
     bool canPlaceFlowers(vector<int>& nums, int n) {
-        vector<int> temp = {0};
-        temp.insert(temp.end(), nums.begin(), nums.end());
-        temp.push_back(0);
-        int k =nums.size();
+        int c=0;
         
-        for(int i=1;i<temp.size()-1;i++){
-            
-                if(temp[i] ==0 && temp[i-1] !=1 && temp[i+1]!=1){
-                    n-=1;
-                    temp[i]=1;
+        for(int i=0;i<nums.size();i++){
+            if(nums[i] == 0){
+                bool emptyLeft = i==0 || nums[i-1]==0;
+                bool emptyRight = i==nums.size()-1 || nums[i+1]==0;
+
+                if(emptyLeft && emptyRight){
+                    c+=1;
+                    nums[i]=1;
+                    if(c>=n){
+                        return true;
+                    }
                 }
-            
-            
-            if(n<=0){
-                return true;
             }
+            
         }
         
-        return n<=0;
+        return c>=n;
     }
 };
