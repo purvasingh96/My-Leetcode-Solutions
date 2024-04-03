@@ -1,17 +1,18 @@
 class Solution {
 private:
-    void backtrack(string digits, int i, string temp, vector<string>& ans, unordered_map<int, vector<char>>& m){
-        if(i >= digits.length()){
-            if(temp!=""){
-                ans.push_back(temp);    
+    void backtrack(int idx, string digits, string currWord, unordered_map<int, vector<char>> m, vector<string>& ans){
+        
+        if(idx >= digits.length()){
+            if(currWord.length()!=0){
+                ans.push_back(currWord);
             }
             return;
         }
         
-        for(auto c:m[digits[i]-'0']){
-            temp += c;
-            backtrack(digits, i+1, temp, ans, m);
-            temp.pop_back();
+        for(auto x:m[digits[idx] - '0']){
+            currWord += x;
+            backtrack(idx+1, digits, currWord, m, ans);
+            currWord.pop_back();
         }
     }
 public:
@@ -27,7 +28,7 @@ public:
         m[9] = {'w', 'x', 'y', 'z'};
         vector<string> ans;
         
-        backtrack(digits, 0, "", ans, m);
+        backtrack(0, digits, "", m, ans);
         return ans;
     }
 };
