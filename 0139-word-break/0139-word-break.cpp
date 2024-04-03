@@ -1,32 +1,34 @@
 class Solution {
 private:
-    bool helper(string s, int i, string temp, vector<string>& dict, map<pair<int, string>, bool>& dp){
-        if(i>=s.length()){
-            if(temp=="" || find(dict.begin(), dict.end(), temp)!=dict.end()){
-                return dp[{i, temp}] = true;
+    bool backtrack(int idx, string s, string currWord, int length, vector<string>& dict, map<pair<string, int>, bool>& dp){
+        
+        if(idx>=s.length()){
+            if(length == s.length()){
+                return true;
             }
-            return dp[{i, temp}] = false;
+            return false;
         }
         
-        if(dp.find({i, temp})!=dp.end()){
-            return dp[{i, temp}];
+        if(dp.find({currWord, idx})!=dp.end()){
+            return dp[{currWord, idx}];
         }
         
-        temp += s[i];
+        currWord += s[idx];
         
         
-        if(find(dict.begin(), dict.end(), temp)!=dict.end()){
-            // element found
-            return dp[{i, temp}] = helper(s, i+1, "", dict, dp) || helper(s, i+1, temp, dict, dp);
-        } else {
-            return dp[{i, temp}] = helper(s, i+1, temp, dict, dp);
-        }
+        bool ans = backtrack(idx+1, s, currWord, length, dict, dp);
+        
+        if(find(dict.begin(), dict.end(), currWord)!=dict.end()){    
+            bool skip = backtrack(idx+1, s, "", length+currWord.length(), dict, dp);
+            ans = ans || skip;
+        } 
+          
+        return dp[{currWord, idx}] = ans;
         
     }
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
-        map<pair<int, string>, bool> dp;
-       
-        return helper(s, 0, "", wordDict, dp);
+        map<pair<string, int>, bool> dp;
+        return backtrack(0, s, "", 0, wordDict, dp);
     }
 };
